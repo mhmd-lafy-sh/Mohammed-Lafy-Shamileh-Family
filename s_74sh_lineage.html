@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>استوديو إدارة وتدقيق أنساب آل الشمايلة (لوحة التحكم والترتيب)</title>
+    
+    <!-- الخطوط والأيقونات والمكتبات -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;       /* كحلي ملكي غامق */
+            --primary-light: #1e293b;
+            --gold: #c5a85c;          /* ذهبي كلاسيكي */
+            --gold-hover: #dfc278;
+            --bg-color: #f1f5f9;      /* رمادي ناعم مريح */
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --female-color: #ec4899; 
+            --male-color: #0284c7;   
+            --success: #10b981;      
+            --danger: #ef4444;       
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
+
+        body {
+            margin: 0; padding: 0; background-color: var(--bg-color);
+            min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column;
+        }
+
+        /* الهيدر العلوي */
+        .admin-navbar {
+            background: var(--primary); color: #fff; height: 70px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); border-bottom: 2px solid var(--gold);
+        }
+        .admin-brand { display: flex; align-items: center; gap: 12px; }
+        .admin-brand i { font-size: 1.8rem; color: var(--gold); }
+        .admin-brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.4rem; font-weight: 700; color: #fff; }
+        .admin-brand span { font-size: 0.75rem; color: var(--gold-hover); display: block; }
+
+        .live-status-pill {
+            display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: bold;
+            background: rgba(255,255,255,0.08); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(197, 168, 92, 0.4); color: #fff;
+        }
+        .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 10px var(--success); }
+
+        /* الحاوية الرئيسية */
+        .admin-container {
+            flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 24px 16px;
+            display: grid; grid-template-columns: 340px 1fr; gap: 20px;
+        }
+        @media (max-width: 860px) {
+            .admin-container { grid-template-columns: 1fr; }
+        }
+
+        /* بطاقات العمل */
+        .panel-card {
+            background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04); display: flex; flex-direction: column; overflow: hidden;
+        }
+        .panel-header {
+            padding: 16px 20px; background: #fff; border-bottom: 1.5px solid #f1f5f9;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .panel-header h3 { margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .panel-header h3 i { color: var(--gold); }
+        .panel-body { padding: 20px; flex: 1; overflow-y: auto; max-height: calc(100vh - 160px); }
+
+        /* قائمة اختيار الفروع والأسر */
+        .search-box {
+            width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color);
+            background: #f8fafc; font-size: 0.9rem; margin-bottom: 14px; transition: all 0.2s;
+        }
+        .search-box:focus { background: #fff; border-color: var(--gold); box-shadow: 0 0 10px rgba(197, 168, 92, 0.2); }
+
+        .family-branch-item {
+            padding: 12px 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 8px;
+            background: #f8fafc; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+        }
+        .family-branch-item:hover { background: #fffdf9; border-color: var(--gold); transform: translateX(-3px); }
+        .family-branch-item.active { background: #fff; border-color: var(--gold); border-right: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(197, 168, 92, 0.15); }
+        .branch-name { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+        .branch-count { font-size: 0.75rem; background: #e2e8f0; color: var(--text-muted); padding: 2px 8px; border-radius: 12px; font-weight: bold; }
+
+        /* قائمة السحب والإفلات */
+        .reorder-header-banner {
+            background: #fffdf6; border: 1px solid #fef08a; border-radius: 12px; padding: 14px; margin-bottom: 18px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .reorder-tip { font-size: 0.85rem; color: #854d0e; margin: 0; line-height: 1.5; }
+
+        .sortable-siblings-box { list-style: none; padding: 0; margin: 0; }
+        .sibling-card-item {
+            padding: 14px 16px; background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px;
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03); cursor: grab; transition: all 0.2s;
+        }
+        .sibling-card-item:hover { border-color: var(--gold); box-shadow: 0 6px 16px rgba(197, 168, 92, 0.15); }
+        .sibling-card-item:active { cursor: grabbing; background: #fffdf9; border-color: var(--gold); }
+
+        .sibling-meta-left { display: flex; align-items: center; gap: 12px; }
+        .drag-handle { color: var(--border-color); font-size: 1.1rem; cursor: grab; }
+        .sibling-card-item:hover .drag-handle { color: var(--gold); }
+        
+        .avatar-badge {
+            width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 1rem; border: 1.5px solid #cbd5e1;
+        }
+        .avatar-badge.male { background: #f0f9ff; color: var(--male-color); border-color: var(--male-color); }
+        .avatar-badge.female { background: #fdf2f8; color: var(--female-color); border-color: var(--female-color); }
+
+        .sibling-info h4 { margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+        .sibling-mother-badge {
+            font-size: 0.72rem; color: #b45309; background: #fef3c7; border: 1px solid #fde68a;
+            padding: 1px 8px; border-radius: 12px; font-weight: bold;
+        }
+
+        .actions-right { display: flex; gap: 8px; align-items: center; }
+        .btn-edit-node {
+            background: #f1f5f9; border: 1px solid var(--border-color); color: var(--primary);
+            width: 34px; height: 34px; border-radius: 8px; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-edit-node:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+
+        /* محرر التفاصيل */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 0.82rem; font-weight: 700; color: var(--text-main); }
+        .form-group input, .form-group select {
+            width: 100%; padding: 10px 12px; border: 1.5px solid var(--border-color); border-radius: 8px;
+            font-size: 0.88rem; background: #f8fafc; transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { background: #fff; border-color: var(--gold); box-shadow: 0 0 10px rgba(197, 168, 92, 0.15); }
+
+        .btn-save-master {
+            background: var(--primary); color: #fff; border: 2px solid var(--gold); padding: 12px 20px;
+            border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 8px; font-size: 0.95rem; width: 100%; margin-top: 15px; transition: all 0.2s;
+        }
+        .btn-save-master:hover { background: var(--gold); color: var(--primary); transform: translateY(-2px); }
+
+        .btn-auto-sort {
+            background: #f1f5f9; border: 1px solid var(--border-color); color: var(--primary);
+            padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-auto-sort:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+
+        /* نافذة منبثقة */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+            z-index: 2000; display: none; justify-content: center; align-items: center; padding: 16px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: #fff; border-radius: 20px; width: 100%; max-width: 520px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25); border-top: 5px solid var(--gold); overflow: hidden;
+        }
+
+        /* رسالة التنبيه العائمة */
+        .toast-msg {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--primary); color: #fff; padding: 12px 24px; border-radius: 30px;
+            border: 1.5px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-weight: bold; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 10px; z-index: 9999; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-msg.active { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر الإداري المحمي -->
+    <header class="admin-navbar">
+        <div class="admin-brand">
+            <i class="fas fa-crown"></i>
+            <div>
+                <h1>استوديو أنساب آل الشمايلة</h1>
+                <span>لوحة التحكم وتدقيق الترتيب الزمني للأسر</span>
+            </div>
+        </div>
+        <div class="live-status-pill">
+            <div class="pulse-dot"></div> متصل بالسحاب
+        </div>
+    </header>
+
+    <!-- الحاوية الإدارية المركزية -->
+    <main class="admin-container">
+        
+        <!-- اللوحة الجانبية: اختيار الأب أو الأسرة -->
+        <section class="panel-card">
+            <div class="panel-header">
+                <h3><i class="fas fa-sitemap"></i> اختيار الأسرة / الأب</h3>
+            </div>
+            <div class="panel-body">
+                <input type="text" id="branchSearchInput" class="search-box" placeholder="ابحث عن رب الأسرة..." oninput="filterBranches()">
+                <div id="branchesListContainer">
+                    <p style="text-align:center; color:var(--text-muted); font-size:0.85rem;">جاري جلب فروع العائلة...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- اللوحة الرئيسية: محطة السحب والإفلات والترتيب -->
+        <section class="panel-card">
+            <div class="panel-header">
+                <h3 id="currentBranchTitle"><i class="fas fa-arrows-up-down-left-right"></i> محطة ترتيب الأشقاء والأبناء</h3>
+                <button class="btn-auto-sort" onclick="autoSortByBirth()"><i class="fas fa-arrow-down-1-9"></i> ترتيب تلقائي بالميلاد</button>
+            </div>
+            <div class="panel-body">
+                <div class="reorder-header-banner">
+                    <p class="reorder-tip">
+                        <i class="fas fa-hand-pointer"></i> <strong>الترتيب الزمني بالسحب والإفلات:</strong> اسحب البطاقة لأعلى أو لأسفل لترتيب الأشقاء من الأكبر للأصغر، وسيُحفظ الترتيب فوراً في جداول Google السحابية.
+                    </p>
+                </div>
+
+                <ul id="sortableSiblingsContainer" class="sortable-siblings-box">
+                    <p style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding:40px 0;">
+                        يرجى اختيار رب الأسرة من القائمة الجانبية لعرض أبنائه وترتيبهم.
+                    </p>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- نافذة تعديل بيانات العضو المباشرة -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-card">
+            <div class="panel-header">
+                <h3 id="modalMemberName"><i class="fas fa-user-pen"></i> تعديل بيانات العضو</h3>
+                <button onclick="closeModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+            </div>
+            <div style="padding:20px;">
+                <input type="hidden" id="editId">
+                
+                <div class="form-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="editName">
+                </div>
+
+                <div class="form-group">
+                    <label>اللقب أو الصفة (أبو فلان / شيخ / مهندس...)</label>
+                    <input type="text" id="editTitle">
+                </div>
+
+                <div class="form-group">
+                    <label>اسم الأم المباشرة</label>
+                    <input type="text" id="editMother" placeholder="مثال: خضرة الحباشنة / غندورة / جميلة...">
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>النوع / الجنس</label>
+                        <select id="editGender">
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>سنة الميلاد</label>
+                        <input type="text" id="editBirth" placeholder="1985">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>سنة الوفاة (اتركها فارغة للحي)</label>
+                    <input type="text" id="editDeath" placeholder="مثال: 2020">
+                </div>
+
+                <button class="btn-save-master" onclick="saveMemberData()">
+                    <i class="fas fa-cloud-arrow-up"></i> حفظ التعديلات في سحاب Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- إشعار الحفظ العائم -->
+    <div id="toast" class="toast-msg">
+        <i class="fas fa-circle-check" style="color:var(--success);"></i> <span id="toastText">تم حفظ الترتيب بنجاح!</span>
+    </div>
+
+    <script>
+        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
+        let treeData = null;
+        let branchesList = [];
+        let currentParentNode = null;
+        let sortableInstance = null;
+
+        // جلب البيانات السحابية الحية
+        function loadMasterTree() {
+            const script = document.createElement('script');
+            const callback = 'onAdminDataLoaded_' + Date.now();
+            window[callback] = function(res) {
+                if (res && res.status === 'success' && res.tree) {
+                    treeData = res.tree;
+                    extractAllParentBranches(treeData);
+                    renderBranchesList();
+                }
+                delete window[callback];
+                document.body.removeChild(script);
+            };
+            script.src = `${API_ENDPOINT}?action=get_full_tree_data&callback=${callback}&t=${Date.now()}`;
+            document.body.appendChild(script);
+        }
+
+        // استخراج كافة الآباء والأمهات الذين لديهم أبناء
+        function extractAllParentBranches(node) {
+            branchesList = [];
+            function traverse(n) {
+                if (n.children && n.children.length > 0) {
+                    branchesList.push(n);
+                    n.children.forEach(traverse);
+                }
+            }
+            traverse(node);
+        }
+
+        // عرض قائمة الأسر
+        function renderBranchesList(filterQuery = "") {
+            const container = document.getElementById('branchesListContainer');
+            container.innerHTML = '';
+
+            const filtered = branchesList.filter(b => b.name.includes(filterQuery) || (b.title && b.title.includes(filterQuery)));
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:0.85rem;">لا توجد أسرة بهذا الاسم</p>';
+                return;
+            }
+
+            filtered.forEach(b => {
+                const item = document.createElement('div');
+                item.className = `family-branch-item ${currentParentNode && currentParentNode.id === b.id ? 'active' : ''}`;
+                item.onclick = () => selectParentBranch(b);
+                item.innerHTML = `
+                    <div>
+                        <div class="branch-name">${b.name}</div>
+                        ${b.title ? `<div style="font-size:0.75rem; color:var(--gold);">${b.title}</div>` : ''}
+                    </div>
+                    <span class="branch-count">${b.children.length} أبناء</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterBranches() {
+            const query = document.getElementById('branchSearchInput').value.trim();
+            renderBranchesList(query);
+        }
+
+        // اختيار أسرة وعرض أبنائها في محطة السحب والإفلات
+        function selectParentBranch(parentNode) {
+            currentParentNode = parentNode;
+            renderBranchesList(document.getElementById('branchSearchInput').value.trim());
+
+            document.getElementById('currentBranchTitle').innerHTML = `
+                <i class="fas fa-arrows-up-down-left-right"></i> أبناء: <strong>${parentNode.name}</strong> (${parentNode.children.length} أفراد)
+            `;
+
+            const listContainer = document.getElementById('sortableSiblingsContainer');
+            listContainer.innerHTML = '';
+
+            parentNode.children.forEach((child, index) => {
+                const li = document.createElement('li');
+                li.className = 'sibling-card-item';
+                li.dataset.id = child.id;
+
+                const isFemale = child.gender === 'female';
+                const avatarCls = isFemale ? 'female' : 'male';
+                const icon = isFemale ? 'fa-female' : 'fa-user-tie';
+
+                li.innerHTML = `
+                    <div class="sibling-meta-left">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                        <div class="avatar-badge ${avatarCls}"><i class="fas ${icon}"></i></div>
+                        <div class="sibling-info">
+                            <h4>${index + 1}. ${child.name}</h4>
+                            <div>
+                                ${child.motherName ? `<span class="sibling-mother-badge"><i class="fas fa-heart" style="font-size:8px;"></i> الأم: ${child.motherName}</span>` : ''}
+                                ${child.birthDate ? `<span style="font-size:0.75rem; color:var(--text-muted); margin-right:6px;">مواليد: ${child.birthDate}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions-right">
+                        <button class="btn-edit-node" onclick="openEditModal('${child.id}')" title="تعديل البيانات"><i class="fas fa-pen-to-square"></i></button>
+                    </div>
+                `;
+                listContainer.appendChild(li);
+            });
+
+            // تفعيل محرك السحب والإفلات SortableJS
+            if (sortableInstance) sortableInstance.destroy();
+            sortableInstance = new Sortable(listContainer, {
+                animation: 200,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+                onEnd: function() {
+                    const orderedIds = Array.from(listContainer.children).map(item => item.dataset.id);
+                    // تحديث محلي
+                    currentParentNode.children.sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
+                    // تحديث العناوين بالأرقام
+                    selectParentBranch(currentParentNode);
+                    // حفظ سحابي
+                    saveReorderedSiblings(orderedIds);
+                }
+            });
+        }
+
+        // ترتيب تلقائي حسب سنة الميلاد
+        function autoSortByBirth() {
+            if (!currentParentNode || !currentParentNode.children) return;
+            currentParentNode.children.sort((a, b) => {
+                const yearA = parseInt(a.birthDate) || 9999;
+                const yearB = parseInt(b.birthDate) || 9999;
+                return yearA - yearB;
+            });
+            const orderedIds = currentParentNode.children.map(c => c.id);
+            selectParentBranch(currentParentNode);
+            saveReorderedSiblings(orderedIds);
+            showToast("تم الترتيب الزمني التلقائي بالميلاد بنجاح!");
+        }
+
+        // إرسال حفظ الترتيب للسحاب
+        function saveReorderedSiblings(orderedIds) {
+            sendCloudApi("reorder_siblings", { ordered_ids: orderedIds }, () => {
+                showToast("تم تحديث وحفظ الترتيب بالسحاب!");
+            });
+        }
+
+        // فتح نافذة تعديل العضو
+        function openEditModal(id) {
+            function findNode(root, targetId) {
+                if (root.id === targetId) return root;
+                if (root.children) {
+                    for (let c of root.children) {
+                        const r = findNode(c, targetId);
+                        if (r) return r;
+                    }
+                }
+                return null;
+            }
+
+            const person = findNode(treeData, id);
+            if (!person) return;
+
+            document.getElementById('editId').value = person.id;
+            document.getElementById('editName').value = person.name || '';
+            document.getElementById('editTitle').value = person.title || '';
+            document.getElementById('editMother').value = person.motherName || '';
+            document.getElementById('editGender').value = person.gender || 'male';
+            document.getElementById('editBirth').value = person.birthDate || '';
+            document.getElementById('editDeath').value = person.deathDate || '';
+            document.getElementById('modalMemberName').innerHTML = `<i class="fas fa-user-pen"></i> تعديل: ${person.name}`;
+
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // حفظ بيانات الفرد
+        function saveMemberData() {
+            const id = document.getElementById('editId').value;
+            const payload = {
+                id: id,
+                name: document.getElementById('editName').value.trim(),
+                title: document.getElementById('editTitle').value.trim(),
+                motherName: document.getElementById('editMother').value.trim(),
+                gender: document.getElementById('editGender').value,
+                birthYear: document.getElementById('editBirth').value.trim(),
+                deathYear: document.getElementById('editDeath').value.trim()
+            };
+
+            sendCloudApi("update_person_details", payload, () => {
+                closeModal();
+                showToast("تم حفظ وتحديث بيانات العضو بنجاح!");
+                loadMasterTree();
+            });
+        }
+
+        // دالة التواصل السحابي
+        function sendCloudApi(action, payload, onSuccess) {
+            const script = document.createElement('script');
+            const callback = 'onApiAction_' + Date.now();
+            window[callback] = function(res) {
+                if (onSuccess) onSuccess(res);
+                delete window[callback];
+                document.body.removeChild(script);
+            };
+            const encoded = encodeURIComponent(JSON.stringify(payload || {}));
+            script.src = `${API_ENDPOINT}?action=${action}&data=${encoded}&callback=${callback}`;
+            document.body.appendChild(script);
+        }
+
+        function showToast(text) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastText').innerText = text;
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 3000);
+        }
+
+        // تشغيل التحميل عند الفتح
+        loadMasterTree();
+    </script>
+</body>
+</html>
