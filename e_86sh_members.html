@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>استوديو إدارة وتعديل بطاقات أفراد آل الشمايلة</title>
+    
+    <!-- الخطوط والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0f172a;       /* كحلي ملكي غامق */
+            --primary-light: #1e293b;
+            --gold: #c5a85c;          /* ذهبي كلاسيكي */
+            --gold-hover: #dfc278;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --female-color: #ec4899; 
+            --male-color: #0284c7;   
+            --success: #10b981;      
+            --danger: #ef4444;       
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
+
+        body {
+            margin: 0; padding: 0; background-color: var(--bg-color);
+            min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column;
+        }
+
+        /* الهيدر العلوي */
+        .admin-header {
+            background: var(--primary); color: #fff; height: 72px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; border-bottom: 2.5px solid var(--gold);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+        .brand-block { display: flex; align-items: center; gap: 12px; }
+        .brand-block i { font-size: 1.8rem; color: var(--gold); }
+        .brand-block h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.4rem; color: #fff; font-weight: 700; }
+        .brand-block span { font-size: 0.75rem; color: var(--gold-hover); display: block; }
+
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .status-badge {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(197,168,92,0.4);
+            padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: #fff;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); }
+
+        .btn-new-member {
+            background: var(--gold); color: var(--primary); border: none; padding: 8px 16px;
+            border-radius: 10px; font-weight: bold; font-size: 0.85rem; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-new-member:hover { background: var(--gold-hover); transform: translateY(-2px); }
+
+        /* المحتوى الرئيسي المزدوج */
+        .workspace {
+            flex: 1; max-width: 1350px; width: 100%; margin: 0 auto; padding: 20px 16px;
+            display: grid; grid-template-columns: 360px 1fr; gap: 20px;
+        }
+        @media (max-width: 920px) {
+            .workspace { grid-template-columns: 1fr; }
+        }
+
+        /* العمود الأيمن: دليل وتصفية الأفراد */
+        .directory-panel {
+            background: #fff; border-radius: 16px; border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; overflow: hidden;
+            height: calc(100vh - 120px);
+        }
+        .dir-header { padding: 16px; border-bottom: 1px solid var(--border); background: #fafafa; }
+        .search-input {
+            width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+            font-size: 0.9rem; background: #fff; transition: all 0.2s;
+        }
+        .search-input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(197,168,92,0.15); }
+
+        .filter-pills-row {
+            display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 2px 0;
+        }
+        .filter-pill {
+            background: #f1f5f9; border: 1px solid var(--border); border-radius: 20px;
+            padding: 4px 10px; font-size: 0.75rem; font-weight: bold; cursor: pointer; white-space: nowrap;
+            color: var(--text-muted); transition: all 0.2s;
+        }
+        .filter-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        .members-scroll-list { flex: 1; overflow-y: auto; padding: 12px; }
+        .member-list-item {
+            padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
+            background: #fff; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px;
+        }
+        .member-list-item:hover { border-color: var(--gold); background: #fffdf9; transform: translateX(-3px); }
+        .member-list-item.selected {
+            background: #fffdf6; border-color: var(--gold); border-right: 4px solid var(--gold);
+            box-shadow: 0 4px 12px rgba(197,168,92,0.18);
+        }
+
+        .item-avatar {
+            width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 1.1rem; flex-shrink: 0; border: 1.5px solid #cbd5e1;
+        }
+        .item-avatar.male { background: #f0f9ff; color: var(--male-color); border-color: var(--male-color); }
+        .item-avatar.female { background: #fdf2f8; color: var(--female-color); border-color: var(--female-color); }
+        .item-avatar.deceased { filter: grayscale(100%); background: #e2e8f0; color: #64748b; }
+
+        .item-details { flex: 1; overflow: hidden; }
+        .item-details h4 { margin: 0; font-size: 0.92rem; font-weight: 700; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; display: flex; gap: 8px; align-items: center; }
+        .mother-tag { color: #b45309; background: #fef3c7; padding: 1px 6px; border-radius: 8px; font-weight: bold; font-size: 0.7rem; }
+
+        /* العمود الأيسر: بطاقة التعديل الشاملة للفرد */
+        .editor-dossier-panel {
+            background: #fff; border-radius: 16px; border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; flex-direction: column; overflow: hidden;
+            height: calc(100vh - 120px);
+        }
+
+        .dossier-banner {
+            padding: 20px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff;
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold);
+        }
+        .dossier-profile { display: flex; align-items: center; gap: 16px; }
+        .dossier-avatar {
+            width: 60px; height: 60px; border-radius: 50%; background: #fff; display: flex; justify-content: center; align-items: center;
+            font-size: 1.8rem; border: 2.5px solid var(--gold);
+        }
+        .dossier-name-box h2 { margin: 0; font-family: 'Amiri', serif; font-size: 1.5rem; color: #fff; }
+        .dossier-name-box span { font-size: 0.8rem; color: var(--gold-hover); font-weight: bold; }
+
+        .quick-contact-actions { display: flex; gap: 8px; }
+        .btn-quick-icon {
+            width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: #fff; text-decoration: none; font-size: 1rem; transition: transform 0.2s; border: 1.5px solid rgba(255,255,255,0.2);
+        }
+        .btn-quick-icon.phone { background: var(--male-color); }
+        .btn-quick-icon.whatsapp { background: var(--success); }
+        .btn-quick-icon:hover { transform: scale(1.1); }
+
+        /* التبويبات الداخلية */
+        .tabs-nav {
+            display: flex; border-bottom: 1.5px solid var(--border); background: #fafafa; padding: 0 12px;
+        }
+        .tab-btn {
+            padding: 12px 18px; border: none; background: transparent; font-size: 0.85rem; font-weight: 700;
+            color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--gold); background: #fff; }
+        .tab-btn i { font-size: 0.95rem; }
+
+        .tab-content-body { flex: 1; overflow-y: auto; padding: 24px; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; animation: fadeIn 0.2s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* نماذج الإدخال */
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        @media (max-width: 650px) {
+            .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+        }
+
+        .field-group { margin-bottom: 16px; }
+        .field-group label { display: block; margin-bottom: 6px; font-size: 0.82rem; font-weight: 700; color: var(--text-main); }
+        .field-group input, .field-group select, .field-group textarea {
+            width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+            font-size: 0.88rem; background: #f8fafc; transition: all 0.2s;
+        }
+        .field-group input:focus, .field-group select:focus, .field-group textarea:focus {
+            background: #fff; border-color: var(--gold); box-shadow: 0 0 10px rgba(197,168,92,0.15);
+        }
+
+        /* إدارة الزوجات */
+        .spouses-container { background: #f8fafc; border: 1.5px dashed var(--border); border-radius: 12px; padding: 16px; margin-top: 10px; }
+        .spouse-row-item {
+            display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--border);
+            padding: 10px 14px; border-radius: 10px; margin-bottom: 8px;
+        }
+
+        /* أزرار الحفظ والإجراءات */
+        .dossier-footer {
+            padding: 16px 24px; border-top: 1px solid var(--border); background: #fafafa;
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+        }
+        .btn-save-dossier {
+            background: var(--primary); color: #fff; border: 2px solid var(--gold); padding: 12px 28px;
+            border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+        }
+        .btn-save-dossier:hover { background: var(--gold); color: var(--primary); transform: translateY(-2px); }
+
+        /* رسالة التنبيه العائمة */
+        .toast-popup {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--primary); color: #fff; padding: 12px 24px; border-radius: 30px;
+            border: 1.5px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-weight: bold;
+            display: flex; align-items: center; gap: 10px; z-index: 9999; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-popup.active { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر الإداري -->
+    <header class="admin-header">
+        <div class="brand-block">
+            <i class="fas fa-id-card-clip"></i>
+            <div>
+                <h1>استوديو تعديل بطاقات أفراد آل الشمايلة</h1>
+                <span>الملف الإداري الموحد لإدارة النسب، الأمهات، الزوجات، وأرقام التواصل</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="status-badge"><div class="status-dot"></div> سحابي مباشر</div>
+            <button class="btn-new-member" onclick="openNewMemberModal()"><i class="fas fa-user-plus"></i> إضافة عضو جديد</button>
+        </div>
+    </header>
+
+    <!-- الحاوية المزدوجة -->
+    <main class="workspace">
+        
+        <!-- العمود الأيمن: دليل الأفراد والتصفية -->
+        <aside class="directory-panel">
+            <div class="dir-header">
+                <input type="text" id="memberSearchInput" class="search-input" placeholder="ابحث بالاسم أو اللقب أو المدينة..." oninput="filterMembersDirectory()">
+                <div class="filter-pills-row">
+                    <button class="filter-pill active" onclick="setFilterCategory('all', this)">الكل</button>
+                    <button class="filter-pill" onclick="setFilterCategory('male', this)">الذكور</button>
+                    <button class="filter-pill" onclick="setFilterCategory('female', this)">الإناث</button>
+                    <button class="filter-pill" onclick="setFilterCategory('jamila', this)">سلالة جميلة</button>
+                    <button class="filter-pill" onclick="setFilterCategory('lafi', this)">فرع لافي</button>
+                    <button class="filter-pill" onclick="setFilterCategory('alive', this)">الأحياء</button>
+                    <button class="filter-pill" onclick="setFilterCategory('deceased', this)">المتوفين</button>
+                </div>
+            </div>
+            <div class="members-scroll-list" id="membersListContainer">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:20px 0;">جاري تحميل سجلات الأفراد السحابية...</p>
+            </div>
+        </aside>
+
+        <!-- العمود الأيسر: بطاقة التعديل الشاملة للفرد -->
+        <section class="editor-dossier-panel">
+            
+            <!-- البانر العلوي للفرد المختار -->
+            <div class="dossier-banner">
+                <div class="dossier-profile">
+                    <div class="dossier-avatar" id="curAvatarIcon"><i class="fas fa-user-tie" style="color:var(--male-color);"></i></div>
+                    <div class="dossier-name-box">
+                        <h2 id="curDisplayName">اختر عضواً من القائمة</h2>
+                        <span id="curMemberIdTag">SHM-0000 | الجيل الموثق</span>
+                    </div>
+                </div>
+                <div class="quick-contact-actions" id="quickContactBox" style="display:none;">
+                    <a href="#" id="quickCallLink" class="btn-quick-icon phone" title="اتصال هاتفي"><i class="fas fa-phone"></i></a>
+                    <a href="#" id="quickWhatsAppLink" target="_blank" class="btn-quick-icon whatsapp" title="محادثة واتساب"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <!-- شريط التبويبات -->
+            <nav class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('tab-identity', this)"><i class="fas fa-address-card"></i> الهوية والنسب</button>
+                <button class="tab-btn" onclick="switchTab('tab-spouses', this)"><i class="fas fa-heart"></i> الزوجات والمصاهرات</button>
+                <button class="tab-btn" onclick="switchTab('tab-contacts', this)"><i class="fas fa-phone-volume"></i> التواصل والعنوان</button>
+                <button class="tab-btn" onclick="switchTab('tab-career', this)"><i class="fas fa-graduation-cap"></i> المهنة والسيرة</button>
+            </nav>
+
+            <!-- محتويات التبويبات -->
+            <div class="tab-content-body">
+                <input type="hidden" id="field_id">
+
+                <!-- 1. تبويب الهوية والنسب -->
+                <div id="tab-identity" class="tab-pane active">
+                    <div class="form-grid-2">
+                        <div class="field-group">
+                            <label>الاسم الكامل</label>
+                            <input type="text" id="field_name" placeholder="الاسم الصافي...">
+                        </div>
+                        <div class="field-group">
+                            <label>اللقب أو رتبة الشرف (باشا / شيخ / أبو فلان...)</label>
+                            <input type="text" id="field_title" placeholder="اللقب التكريمي...">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-3">
+                        <div class="field-group">
+                            <label>النوع / الجنس</label>
+                            <select id="field_gender">
+                                <option value="male">ذكر</option>
+                                <option value="female">أنثى</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label>اسم الأم المباشرة</label>
+                            <input type="text" id="field_motherName" placeholder="مثال: خضرة الحباشنة / غندورة / جميلة...">
+                        </div>
+                        <div class="field-group">
+                            <label>الفرع العائلي</label>
+                            <input type="text" id="field_branch" placeholder="فرع لافي / سلالة جميلة...">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="field-group">
+                            <label>سنة الميلاد</label>
+                            <input type="text" id="field_birthYear" placeholder="مثال: 1980">
+                        </div>
+                        <div class="field-group">
+                            <label>سنة الوفاة (اتركها فارغة للحي)</label>
+                            <input type="text" id="field_deathYear" placeholder="مثال: 2021">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. تبويب الزوجات -->
+                <div id="tab-spouses" class="tab-pane">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; color:var(--primary); font-size:0.95rem;">قائمة الزوجات / الأزواج المسجلين</h4>
+                        <button type="button" class="btn-new-member" style="padding:4px 10px; font-size:0.75rem;" onclick="addSpouseRow()"><i class="fas fa-plus"></i> إضافة زوج/ة</button>
+                    </div>
+                    <div id="spousesListWrapper" class="spouses-container">
+                        <p style="text-align:center; color:var(--text-muted); font-size:0.8rem;">لا توجد زوجات مسجلات لهذا العضو</p>
+                    </div>
+                </div>
+
+                <!-- 3. تبويب التواصل والعناوين -->
+                <div id="tab-contacts" class="tab-pane">
+                    <div class="form-grid-2">
+                        <div class="field-group">
+                            <label><i class="fas fa-phone"></i> رقم الهاتف للاتصال المباشر</label>
+                            <input type="text" id="field_phoneCall" placeholder="077xxxxxxx">
+                        </div>
+                        <div class="field-group">
+                            <label><i class="fab fa-whatsapp" style="color:var(--success);"></i> رقم الواتساب</label>
+                            <input type="text" id="field_phoneWhatsApp" placeholder="96277xxxxxxx">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="field-group">
+                            <label><i class="fas fa-id-card"></i> الرقم الوطني (اختياري للتوثيق)</label>
+                            <input type="text" id="field_nationalId" placeholder="الرقم الوطني...">
+                        </div>
+                        <div class="field-group">
+                            <label><i class="fas fa-location-dot"></i> مكان الإقامة الحالي</label>
+                            <input type="text" id="field_currentCity" placeholder="العقبة / الكرك / عمّان / الاغتراب...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. تبويب المهنة والسيرة -->
+                <div id="tab-career" class="tab-pane">
+                    <div class="field-group">
+                        <label><i class="fas fa-briefcase"></i> المهنة أو المؤهل العلمي</label>
+                        <input type="text" id="field_jobProfession" placeholder="طبيب / مهندس / لواء متقاعد / بكالوريوس...">
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="field-group">
+                            <label><i class="fab fa-facebook" style="color:#1877f2;"></i> رابط حساب فيسبوك</label>
+                            <input type="text" id="field_socialFacebook" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="field-group">
+                            <label><i class="fab fa-linkedin" style="color:#0a66c2;"></i> رابط حساب لينكد إن</label>
+                            <input type="text" id="field_socialLinkedIn" placeholder="https://linkedin.com/in/...">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label><i class="fas fa-feather-pointed"></i> ملاحظات السيرة العطرة والمآثر</label>
+                        <textarea id="field_notes" rows="3" placeholder="مواقف مشرفة، محطات كفاح، أو وصايا..."></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ذيل الحفظ والإجراءات -->
+            <footer class="dossier-footer">
+                <span id="saveStatusIndicator" style="font-size:0.8rem; color:var(--text-muted);">جاهز لحفظ التعديلات في السحاب</span>
+                <button class="btn-save-dossier" onclick="saveFullMemberDossier()">
+                    <i class="fas fa-cloud-arrow-up"></i> حفظ وتحديث السجل السحابي
+                </button>
+            </footer>
+
+        </section>
+
+    </main>
+
+    <!-- إشعار الحفظ العائم -->
+    <div id="toast" class="toast-popup">
+        <i class="fas fa-circle-check" style="color:var(--success); font-size:1.2rem;"></i>
+        <span id="toastMessage">تم الحفظ السحابي بنجاح!</span>
+    </div>
+
+    <script>
+        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
+        let allMembers = [];
+        let selectedMember = null;
+        let currentFilter = 'all';
+
+        // جلب السجل الشامل للأفراد
+        function loadMembersRegistry() {
+            const script = document.createElement('script');
+            const callback = 'onRegistryLoaded_' + Date.now();
+            window[callback] = function(res) {
+                if (res && res.status === 'success' && res.members) {
+                    allMembers = res.members;
+                    renderDirectoryList();
+                    if (allMembers.length > 0) selectMember(allMembers[0].id);
+                }
+                delete window[callback];
+                document.body.removeChild(script);
+            };
+            script.src = `${API_ENDPOINT}?action=get_full_members_registry&callback=${callback}&t=${Date.now()}`;
+            document.body.appendChild(script);
+        }
+
+        // عرض قائمة الأفراد
+        function renderDirectoryList() {
+            const container = document.getElementById('membersListContainer');
+            container.innerHTML = '';
+
+            const query = document.getElementById('memberSearchInput').value.trim().toLowerCase();
+            
+            const filtered = allMembers.filter(m => {
+                const matchQuery = m.name.toLowerCase().includes(query) || (m.title && m.title.toLowerCase().includes(query)) || (m.currentCity && m.currentCity.toLowerCase().includes(query)) || (m.jobProfession && m.jobProfession.toLowerCase().includes(query));
+                if (!matchQuery) return false;
+
+                if (currentFilter === 'male') return m.gender === 'male';
+                if (currentFilter === 'female') return m.gender === 'female';
+                if (currentFilter === 'alive') return !m.deathYear;
+                if (currentFilter === 'deceased') return !!m.deathYear;
+                if (currentFilter === 'jamila') return m.branch.includes('جميلة');
+                if (currentFilter === 'lafi') return m.branch.includes('لافي');
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:20px 0;">لا يوجد أفراد مطابقين للبحث</p>';
+                return;
+            }
+
+            filtered.forEach(m => {
+                const item = document.createElement('div');
+                item.className = `member-list-item ${selectedMember && selectedMember.id === m.id ? 'selected' : ''}`;
+                item.onclick = () => selectMember(m.id);
+
+                const isFemale = m.gender === 'female';
+                const isDeceased = !!m.deathYear;
+                const avatarCls = isDeceased ? 'deceased' : (isFemale ? 'female' : 'male');
+                const icon = isFemale ? 'fa-female' : 'fa-user-tie';
+
+                item.innerHTML = `
+                    <div class="item-avatar ${avatarCls}"><i class="fas ${icon}"></i></div>
+                    <div class="item-details">
+                        <h4>${m.name} ${m.title ? `<small style="color:var(--gold); font-size:0.75rem;">(${m.title})</small>` : ''}</h4>
+                        <div class="item-meta">
+                            ${m.motherName ? `<span class="mother-tag">الأم: ${m.motherName}</span>` : ''}
+                            ${m.phoneWhatsApp ? `<i class="fab fa-whatsapp" style="color:var(--success);"></i>` : ''}
+                            <span>${m.branch || 'فرع لافي'}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterMembersDirectory() { renderDirectoryList(); }
+
+        function setFilterCategory(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderDirectoryList();
+        }
+
+        // اختيار فرد وتعبئة كامل بياناته بالملف
+        function selectMember(id) {
+            selectedMember = allMembers.find(m => m.id === id);
+            if (!selectedMember) return;
+
+            renderDirectoryList();
+
+            // تحديث البانر العلوي
+            document.getElementById('curDisplayName').innerText = selectedMember.name;
+            document.getElementById('curMemberIdTag').innerText = `${selectedMember.id} | الجيل ${selectedMember.generation || 'الموثق'} (${selectedMember.branch || 'الأصل'})`;
+
+            const isFemale = selectedMember.gender === 'female';
+            document.getElementById('curAvatarIcon').innerHTML = `<i class="fas ${isFemale ? 'fa-female' : 'fa-user-tie'}" style="color:${isFemale ? 'var(--female-color)' : 'var(--male-color)'};"></i>`;
+
+            // أزرار الاتصال والواتساب السريعة
+            const contactBox = document.getElementById('quickContactBox');
+            if (selectedMember.phoneCall || selectedMember.phoneWhatsApp) {
+                contactBox.style.display = 'flex';
+                const callBtn = document.getElementById('quickCallLink');
+                if (selectedMember.phoneCall) { callBtn.href = `tel:${selectedMember.phoneCall}`; callBtn.style.display = 'flex'; }
+                else callBtn.style.display = 'none';
+
+                const waBtn = document.getElementById('quickWhatsAppLink');
+                if (selectedMember.phoneWhatsApp) { waBtn.href = `https://wa.me/${selectedMember.phoneWhatsApp.replace(/\D/g,'')}`; waBtn.style.display = 'flex'; }
+                else waBtn.style.display = 'none';
+            } else {
+                contactBox.style.display = 'none';
+            }
+
+            // تعبئة الحقول
+            document.getElementById('field_id').value = selectedMember.id;
+            document.getElementById('field_name').value = selectedMember.name || '';
+            document.getElementById('field_title').value = selectedMember.title || '';
+            document.getElementById('field_gender').value = selectedMember.gender || 'male';
+            document.getElementById('field_motherName').value = selectedMember.motherName || '';
+            document.getElementById('field_branch').value = selectedMember.branch || 'فرع لافي';
+            document.getElementById('field_birthYear').value = selectedMember.birthYear || '';
+            document.getElementById('field_deathYear').value = selectedMember.deathYear || '';
+
+            document.getElementById('field_phoneCall').value = selectedMember.phoneCall || '';
+            document.getElementById('field_phoneWhatsApp').value = selectedMember.phoneWhatsApp || '';
+            document.getElementById('field_nationalId').value = selectedMember.nationalId || '';
+            document.getElementById('field_currentCity').value = selectedMember.currentCity || '';
+
+            document.getElementById('field_jobProfession').value = selectedMember.jobProfession || '';
+            document.getElementById('field_socialFacebook').value = selectedMember.socialFacebook || '';
+            document.getElementById('field_socialLinkedIn').value = selectedMember.socialLinkedIn || '';
+            document.getElementById('field_notes').value = selectedMember.notes || '';
+
+            // عرض الزوجات
+            renderSpousesList(selectedMember.spouses || []);
+        }
+
+        // عرض وإدارة الزوجات
+        function renderSpousesList(spouses) {
+            const wrapper = document.getElementById('spousesListWrapper');
+            wrapper.innerHTML = '';
+
+            if (!spouses || spouses.length === 0) {
+                wrapper.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:0.8rem;">لا توجد زوجات مسجلات لهذا العضو</p>';
+                return;
+            }
+
+            spouses.forEach((sp, idx) => {
+                const row = document.createElement('div');
+                row.className = 'spouse-row-item';
+                row.innerHTML = `
+                    <input type="text" value="${sp.name || ''}" placeholder="اسم الزوج/ة..." oninput="updateSpouseData(${idx}, 'name', this.value)" style="flex:2; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-size:0.85rem;">
+                    <select onchange="updateSpouseData(${idx}, 'status', this.value)" style="flex:1; padding:8px; border:1px solid var(--border); border-radius:8px; font-size:0.85rem;">
+                        <option value="active" ${sp.status === 'active' ? 'selected' : ''}>على ذمته</option>
+                        <option value="divorced" ${sp.status === 'divorced' ? 'selected' : ''}>طلاق / انفصال</option>
+                        <option value="deceased" ${sp.status === 'deceased' ? 'selected' : ''}>متوفاة</option>
+                    </select>
+                    <button type="button" onclick="removeSpouseRow(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:1rem;"><i class="fas fa-trash-can"></i></button>
+                `;
+                wrapper.appendChild(row);
+            });
+        }
+
+        function addSpouseRow() {
+            if (!selectedMember) return;
+            if (!selectedMember.spouses) selectedMember.spouses = [];
+            selectedMember.spouses.push({ name: '', status: 'active', gender: selectedMember.gender === 'male' ? 'female' : 'male' });
+            renderSpousesList(selectedMember.spouses);
+        }
+
+        function removeSpouseRow(idx) {
+            if (!selectedMember || !selectedMember.spouses) return;
+            selectedMember.spouses.splice(idx, 1);
+            renderSpousesList(selectedMember.spouses);
+        }
+
+        function updateSpouseData(idx, key, val) {
+            if (selectedMember && selectedMember.spouses && selectedMember.spouses[idx]) {
+                selectedMember.spouses[idx][key] = val.trim();
+            }
+        }
+
+        // التبديل بين تبويبات الملف
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // حفظ وتحديث الملف الشامل
+        function saveFullMemberDossier() {
+            if (!selectedMember) return;
+
+            const payload = {
+                id: document.getElementById('field_id').value,
+                name: document.getElementById('field_name').value.trim(),
+                title: document.getElementById('field_title').value.trim(),
+                gender: document.getElementById('field_gender').value,
+                motherName: document.getElementById('field_motherName').value.trim(),
+                branch: document.getElementById('field_branch').value.trim(),
+                birthYear: document.getElementById('field_birthYear').value.trim(),
+                deathYear: document.getElementById('field_deathYear').value.trim(),
+                spouses: selectedMember.spouses || [],
+                phoneCall: document.getElementById('field_phoneCall').value.trim(),
+                phoneWhatsApp: document.getElementById('field_phoneWhatsApp').value.trim(),
+                nationalId: document.getElementById('field_nationalId').value.trim(),
+                currentCity: document.getElementById('field_currentCity').value.trim(),
+                jobProfession: document.getElementById('field_jobProfession').value.trim(),
+                socialFacebook: document.getElementById('field_socialFacebook').value.trim(),
+                socialLinkedIn: document.getElementById('field_socialLinkedIn').value.trim(),
+                notes: document.getElementById('field_notes').value.trim()
+            };
+
+            document.getElementById('saveStatusIndicator').innerHTML = '<i class="fas fa-spinner fa-spin" style="color:var(--gold);"></i> جاري الحفظ السحابي...';
+
+            sendCloudDossierApi("update_full_member_profile", payload, () => {
+                document.getElementById('saveStatusIndicator').innerHTML = '<span style="color:var(--success); font-weight:bold;">تم الحفظ والمزامنة السحابية بنجاح ✓</span>';
+                showToast(`تم تحديث سجل [${payload.name}] بنجاح`);
+                loadMembersRegistry();
+            });
+        }
+
+        function sendCloudDossierApi(action, payload, onSuccess) {
+            const script = document.createElement('script');
+            const callback = 'onDossierAction_' + Date.now();
+            window[callback] = function(res) {
+                if (onSuccess) onSuccess(res);
+                delete window[callback];
+                document.body.removeChild(script);
+            };
+            const encoded = encodeURIComponent(JSON.stringify(payload || {}));
+            script.src = `${API_ENDPOINT}?action=${action}&data=${encoded}&callback=${callback}`;
+            document.body.appendChild(script);
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 3500);
+        }
+
+        // بدء التحميل عند الفتح
+        loadMembersRegistry();
+    </script>
+</body>
+</html>
