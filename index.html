@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>سجل شجرة آل الشمايلة - المنظومة السحابية المركزية</title>
+    <title>سجل شجرة آل الشمايلة - المنظومة السحابية الملكية</title>
     
-    <!-- الخطوط والأيقونات والمكتبات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <style>
         :root {
-            --primary: #0f172a;       /* كحلي ملكي وقور */
-            --gold: #c5a85c;          /* ذهبي كلاسيكي */
+            --primary: #0f172a;
+            --gold: #c5a85c;
             --gold-hover: #dfc278;
-            --bg-color: #f8fafc;      /* رمادي ثلجي مريح للعين */
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
@@ -26,111 +25,60 @@
             --danger: #ef4444;       
         }
 
-        * {
-            box-sizing: border-box;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Tajawal', sans-serif;
-        }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
 
         body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-color);
+            margin: 0; padding: 0; background-color: var(--bg-color);
             background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
-            background-size: 24px 24px;
-            overflow: hidden;
-            height: 100vh; width: 100vw;
-            user-select: none;
-            color: var(--text-main);
-            touch-action: none;
+            background-size: 24px 24px; overflow: hidden; height: 100vh; width: 100vw;
+            user-select: none; color: var(--text-main); touch-action: none;
         }
 
-        /* --- الهيدر العلوي الملكي --- */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; height: 68px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            padding: 0 20px; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.04);
             border-bottom: 2px solid var(--gold);
         }
 
         .brand { display: flex; align-items: center; gap: 12px; color: var(--primary); }
         .brand i { font-size: 1.8rem; color: var(--gold); }
         .brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.45rem; font-weight: 700; }
-        .brand span { font-size: 0.75rem; color: var(--text-muted); display: block; }
 
-        /* البحث وأدوات التحكم */
-        .search-container {
-            position: relative; margin: 0 12px; flex: 1; max-width: 320px;
-        }
+        .search-container { position: relative; margin: 0 12px; flex: 1; max-width: 320px; }
         .search-input {
             width: 100%; padding: 8px 36px 8px 12px; border-radius: 20px;
             border: 1px solid #cbd5e1; background: #f1f5f9; color: var(--primary);
             font-size: 0.85rem; transition: all 0.25s ease;
         }
-        .search-input:focus {
-            background: #fff; border-color: var(--gold);
-            box-shadow: 0 4px 12px rgba(197, 168, 92, 0.2);
-        }
+        .search-input:focus { background: #fff; border-color: var(--gold); box-shadow: 0 4px 12px rgba(197, 168, 92, 0.2); }
         .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
 
         .toolbar { display: flex; gap: 8px; align-items: center; }
         .btn {
             background: #f1f5f9; color: var(--primary); border: 1px solid #cbd5e1;
             padding: 8px 12px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 500;
+            display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
         }
         .btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .btn-primary { background: var(--gold); color: #fff; border-color: var(--gold); font-weight: bold; }
-        .btn-primary:hover { background: var(--gold-hover); }
-        .btn.active-mode { background: var(--danger); color: #fff; border-color: var(--danger); }
 
-        /* شارة المزامنة السحابية الحية */
-        .sync-badge {
-            display: flex; align-items: center; gap: 6px; font-size: 0.75rem;
-            color: var(--success); background: #ecfdf5; padding: 4px 10px; border-radius: 20px;
-            border: 1px solid #a7f3d0; font-weight: bold;
-        }
-        .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse-green 2s infinite; }
-        @keyframes pulse-green { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-
-        /* --- لوحة الإحصائيات --- */
         .info-panel {
             position: fixed; bottom: 20px; right: 20px;
             background: rgba(255, 255, 255, 0.92); padding: 12px 16px; border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06); z-index: 900; width: 195px;
             border-right: 3px solid var(--gold); backdrop-filter: blur(10px);
         }
-        .info-panel h4 { margin: 0 0 6px 0; color: var(--primary); font-family: 'Tajawal', sans-serif; font-size: 0.85rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+        .info-panel h4 { margin: 0 0 6px 0; color: var(--primary); font-size: 0.85rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
         .stat-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px; font-weight: 500; }
 
-        /* --- مساحة العمل الشجرية --- */
-        #viewport {
-            width: 100%; height: 100%; cursor: grab; overflow: hidden;
-            display: flex; justify-content: center; align-items: center; position: relative;
-        }
+        #viewport { width: 100%; height: 100%; cursor: grab; overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative; }
         #viewport:active { cursor: grabbing; }
-        #tree-container {
-            transform-origin: center top; padding-top: 100px;
-            transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+        #tree-container { transform-origin: center top; padding-top: 100px; transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1); }
 
-        /* --- خطوط وهندسة الشجرة المتناظرة --- */
-        .tree ul {
-            padding-top: 30px; position: relative; transition: all 0.4s;
-            display: flex; justify-content: center; padding-right: 0; padding-left: 0;
-        }
-        .tree li {
-            text-align: center; list-style-type: none; position: relative;
-            padding: 30px 6px 0 6px; transition: all 0.4s;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .tree li::before, .tree li::after {
-            content: ''; position: absolute; top: 0; height: 30px; width: 50%;
-            border-top: 1.5px solid var(--line-color); z-index: -1;
-        }
+        .tree ul { padding-top: 30px; position: relative; transition: all 0.4s; display: flex; justify-content: center; padding-right: 0; padding-left: 0; }
+        .tree li { text-align: center; list-style-type: none; position: relative; padding: 30px 6px 0 6px; transition: all 0.4s; display: flex; flex-direction: column; align-items: center; }
+        .tree li::before, .tree li::after { content: ''; position: absolute; top: 0; height: 30px; width: 50%; border-top: 1.5px solid var(--line-color); z-index: -1; }
         .tree li::before { right: 50%; border-right: 0; }
         .tree li::after { left: 50%; border-left: 1.5px solid var(--line-color); }
         .tree li:first-child::after { border-top: none; border-left: none; }
@@ -139,34 +87,23 @@
         .tree li:last-child::after { border-radius: 8px 0 0 0; }
         .tree li:only-child::after, .tree li:only-child::before { display: none; }
         .tree li:only-child { padding-top: 0; }
-        .tree ul ul::before {
-            content: ''; position: absolute; top: 0; left: 50%;
-            border-left: 1.5px solid var(--line-color); width: 0; height: 30px; transform: translateX(-50%);
-        }
+        .tree ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 1.5px solid var(--line-color); width: 0; height: 30px; transform: translateX(-50%); }
 
-        /* --- بطاقات الأفراد التفاعلية --- */
-        .node-wrapper {
-            display: inline-flex; flex-direction: column; align-items: center; position: relative; z-index: 2;
-        }
+        .node-wrapper { display: inline-flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+        
+        /* تصميم مجموعة البطاقات مع الزوجات المتناظرة */
         .card-group {
             display: flex; align-items: center; background: var(--card-bg);
-            border-radius: 12px; padding: 4px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-            border: 1px solid #e2e8f0; transition: all 0.2s ease; cursor: pointer;
+            border-radius: 14px; padding: 4px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+            border: 1.5px solid #e2e8f0; transition: all 0.2s ease; cursor: pointer;
         }
-        .card-group:hover { 
-            transform: translateY(-2px); box-shadow: 0 8px 18px rgba(197, 168, 92, 0.18); border-color: var(--gold); 
-        }
-        .card-group.highlighted {
-            border: 2px solid var(--gold); box-shadow: 0 0 25px rgba(197, 168, 92, 0.5);
-            animation: pulse-glow 1.5s infinite;
-        }
+        .card-group:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(197, 168, 92, 0.2); border-color: var(--gold); }
+        .card-group.highlighted { border: 2.5px solid var(--gold); box-shadow: 0 0 25px rgba(197, 168, 92, 0.6); animation: pulse-glow 1.5s infinite; }
         @keyframes pulse-glow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 
-        .card-group.selected-bulk {
-            border: 2px dashed var(--gold) !important; background: #fffdf9; box-shadow: 0 0 15px rgba(197, 168, 92, 0.3);
-        }
+        .person-card { padding: 4px 10px; text-align: center; min-width: 95px; position: relative; }
+        .person-card.spouse { min-width: 85px; }
 
-        .person-card { padding: 4px 10px; text-align: center; min-width: 90px; position: relative; }
         .avatar {
             width: 38px; height: 38px; background: #f1f5f9; color: var(--primary);
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
@@ -175,16 +112,21 @@
         .avatar.female { color: var(--female-color); border-color: var(--female-color); background: #fdf2f8; }
         .avatar.male { color: var(--male-color); border-color: var(--male-color); background: #f0f9ff; }
         
-        .person-card.deceased { opacity: 0.65; }
-        .person-card.deceased .avatar { filter: grayscale(100%); background: #e2e8f0; color: #64748b; }
-        .person-card.deceased .p-name { color: #64748b; text-decoration: line-through; }
-        
         .p-name { font-weight: 700; color: var(--primary); font-size: 0.85rem; white-space: nowrap; }
-        .p-title { font-size: 0.7rem; color: var(--gold); font-weight: bold; margin-top: 1px; }
-        .p-dates { font-size: 0.62rem; color: var(--text-muted); margin-top: 2px; direction: ltr; }
+        .p-title { font-size: 0.68rem; color: var(--gold); font-weight: bold; margin-top: 1px; }
+        
+        /* شارة الأم الوقورة */
+        .p-mother {
+            font-size: 0.65rem; color: #b45309; background: #fef3c7; border: 1px solid #fde68a;
+            border-radius: 12px; padding: 1px 6px; margin-top: 3px; display: inline-block; white-space: nowrap;
+        }
 
-        .spouse-connector { width: 14px; height: 1.5px; background: var(--line-color); display: flex; align-items: center; justify-content: center; }
-        .spouse-connector i { font-size: 7px; color: var(--danger); background: #fff; border-radius: 50%; padding: 2px; }
+        /* رابط الزوجة المتناظر مع القلب */
+        .spouse-connector {
+            width: 18px; height: 2px; background: var(--gold);
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .spouse-connector i { font-size: 8px; color: var(--danger); background: #fff; border-radius: 50%; padding: 2px; border: 1px solid var(--gold); }
 
         .collapse-btn {
             width: 20px; height: 20px; background: var(--primary); color: #fff;
@@ -192,109 +134,13 @@
             font-size: 8px; cursor: pointer; margin-top: -10px; z-index: 5;
         }
 
-        /* --- الأدراج المنبثقة السريعة (Bottom Sheets) --- */
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px);
-            z-index: 1500; display: none;
-        }
-        .overlay.active { display: block; }
-        
-        .sidebar {
-            position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 520px; background: #fff; z-index: 2000;
-            box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.15);
-            transition: bottom 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            border-top-left-radius: 24px; border-top-right-radius: 24px;
-            display: flex; flex-direction: column; max-height: 85vh;
-        }
-        .sidebar.active { bottom: 0; }
-        .sidebar-header {
-            padding: 16px 20px; border-bottom: 1px solid #f1f5f9;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .sidebar-header h2 { margin: 0; font-family: 'Amiri', serif; font-size: 1.3rem; color: var(--primary); }
-        .sidebar-content { padding: 20px; overflow-y: auto; flex: 1; }
-        
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; color: var(--text-main); margin-bottom: 4px; font-size: 0.8rem; font-weight: 700; }
-        .form-group input, .form-group select {
-            width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;
-            font-size: 0.85rem; background: #f8fafc;
-        }
-        .form-group input:focus, .form-group select:focus { border-color: var(--gold); background: #fff; }
-        .row-group { display: flex; gap: 10px; }
-        .row-group > div { flex: 1; }
-
-        .btn-action {
-            padding: 10px; border: none; border-radius: 8px; color: white; cursor: pointer;
-            font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
-        }
-
-        /* أزرار الحالة السريعة */
-        .quick-toggle-group { display: flex; gap: 8px; margin-bottom: 15px; background: #f1f5f9; padding: 4px; border-radius: 10px; }
-        .quick-toggle-btn {
-            flex: 1; text-align: center; padding: 8px; font-size: 0.8rem; font-weight: bold;
-            border-radius: 8px; cursor: pointer; border: none; background: transparent; color: var(--text-muted);
-        }
-        .quick-toggle-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-
-        /* أداة ترتيب الأشقاء */
-        .sibling-sorter-wrap {
-            display: flex; align-items: center; justify-content: space-between;
-            background: #f8fafc; padding: 10px 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px;
-        }
-        .sibling-sorter-btn {
-            background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .sibling-sorter-btn:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
-        .sibling-sorter-btn.disabled { opacity: 0.3; pointer-events: none; }
-
-        /* فقاعات المعاينة التفاعلية للباني الذكي */
-        .smart-live-preview {
-            display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1; margin-top: 10px;
-        }
-        .smart-pill {
-            background: #fff; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px;
-            display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: bold;
-        }
-        .smart-pill-btn {
-            width: 20px; height: 20px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center;
-            font-size: 0.65rem; cursor: pointer; color: #fff;
-        }
-        .smart-pill-btn.male { background: var(--male-color); }
-        .smart-pill-btn.female { background: var(--female-color); }
-        .smart-pill-btn.alive { background: var(--success); }
-        .smart-pill-btn.deceased { background: #94a3b8; }
-
-        /* شريط التحديد المتعدد العائم */
-        .bulk-actions-bar {
-            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.95); border: 1.5px solid var(--gold);
-            border-radius: 30px; padding: 10px 20px; display: flex; align-items: center;
-            gap: 10px; z-index: 2200; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transition: bottom 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
-        }
-        .bulk-actions-bar.active { bottom: 20px; }
-        .bulk-btn {
-            background: rgba(255, 255, 255, 0.1); border: none; color: #fff; padding: 6px 12px;
-            border-radius: 20px; cursor: pointer; font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; gap: 4px;
-        }
-        .bulk-btn:hover { background: var(--gold); }
-        .bulk-btn.danger:hover { background: var(--danger); }
-
-        /* زر التاج العائم لتوسيط الكاميرا */
         .floating-action-bar { position: fixed; bottom: 20px; left: 20px; z-index: 900; display: flex; flex-direction: column; gap: 10px; }
         .btn-fab {
             width: 50px; height: 50px; border-radius: 50%; background: var(--primary); color: var(--gold);
             border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.25); cursor: pointer; transition: all 0.3s; font-size: 1.2rem;
         }
-        .btn-fab:hover { transform: scale(1.1); background: var(--gold); color: var(--primary); }
 
-        /* شاشة التحميل الأولية */
         #loading-overlay {
             position: fixed; inset: 0; background: #0f172a; color: #fff; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;
@@ -308,54 +154,33 @@
 </head>
 <body>
 
-    <!-- شاشة التحميل السحابي -->
     <div id="loading-overlay">
         <div class="loader-spin"></div>
         <div style="font-family:'Amiri', serif; font-size:1.3rem; color:var(--gold);">جاري مزامنة شجرة آل الشمايلة السحابية...</div>
-        <div style="font-size:0.8rem; color:#94a3b8;">صدقة جارية عن روح الحاج أبو علي الشمايلة رحمه الله</div>
     </div>
 
-    <!-- الهيدر والتحكم -->
     <nav class="navbar">
         <div class="brand">
             <i class="fas fa-crown"></i>
             <div>
                 <h1>شجرة آل الشمايلة</h1>
-                <span>المنظومة السحابية الموثقة</span>
             </div>
         </div>
         
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن الاسم أو جزء منه..." onkeyup="handleSearch(event)">
+            <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن أي اسم..." onkeyup="handleSearch(event)">
         </div>
 
         <div class="toolbar">
-            <div class="sync-badge"><div class="sync-dot"></div> سحابي مباشر</div>
-            <button class="btn btn-primary" onclick="openSmartWizard()" title="بناء النسب التلقائي"><i class="fas fa-wand-magic-sparkles"></i> <span style="margin-right:4px;">إضافة ذكية</span></button>
-            <button class="btn" id="btnMultiSelect" onclick="toggleMultiSelectMode()" title="تحديد وتعديل جماعي"><i class="fas fa-list-check"></i></button>
-            <button class="btn" onclick="openDirectoryModal()" title="دليل العائلة والواتساب"><i class="fas fa-address-book"></i></button>
             <button class="btn" onclick="screenshotTree()" title="لقطة الشجرة" style="color:var(--gold);"><i class="fas fa-camera"></i></button>
         </div>
     </nav>
 
-    <!-- الزر العائم للعودة للجد المؤسس وتوسيط الشاشة -->
     <div class="floating-action-bar">
-        <button class="btn-fab" onclick="resetView()" title="العودة لرأس الشجرة وتوسيط الكاميرا"><i class="fas fa-crown"></i></button>
+        <button class="btn-fab" onclick="resetView()" title="العودة للجد المؤسس"><i class="fas fa-crown"></i></button>
     </div>
 
-    <!-- شريط الإجراءات الجماعية -->
-    <div id="bulkActionsBar" class="bulk-actions-bar">
-        <div id="bulkInfoText" style="color:#fff; font-size:0.8rem; font-weight:bold; margin-left:10px;">0 محدد</div>
-        <button class="bulk-btn" onclick="applyBulkGender('male')"><i class="fas fa-mars"></i> ذكور</button>
-        <button class="bulk-btn" onclick="applyBulkGender('female')"><i class="fas fa-venus"></i> إناث</button>
-        <button class="bulk-btn" onclick="applyBulkLifeStatus('alive')"><i class="fas fa-heart"></i> أحياء</button>
-        <button class="bulk-btn" onclick="applyBulkLifeStatus('deceased')"><i class="fas fa-skull"></i> متوفين</button>
-        <button class="bulk-btn danger" onclick="applyBulkDelete()"><i class="fas fa-trash-can"></i> حذف</button>
-        <button class="bulk-btn" onclick="disableMultiSelectMode()" style="background:rgba(255,255,255,0.15);"><i class="fas fa-xmark"></i></button>
-    </div>
-
-    <!-- لوحة الإحصائيات -->
     <div class="info-panel" id="statsPanel">
         <h4>إحصائيات الشجرة</h4>
         <div class="stat-row"><span>إجمالي الأفراد:</span> <span id="stat-total" style="color:var(--gold); font-weight:bold;">0</span></div>
@@ -364,126 +189,14 @@
         <div class="stat-row"><span>أقصى عمق للأجيال:</span> <span id="stat-depth">0</span></div>
     </div>
 
-    <!-- مساحة الشجرة والتمرير -->
     <div id="viewport">
         <div id="tree-container" class="tree"></div>
     </div>
 
-    <div class="overlay" id="overlay" onclick="closeAllDrawers()"></div>
-
-    <!-- واجهة الإدخال والنسب الذكي (Smart Lineage Builder) -->
-    <div class="sidebar" id="smartWizardDrawer">
-        <div class="sidebar-header">
-            <h2>باني وسجل النسب الذكي</h2>
-            <button onclick="closeAllDrawers()" style="background:none; border:none; color:var(--primary); font-size:1.5rem; cursor:pointer;">&times;</button>
-        </div>
-        <div class="sidebar-content">
-            <div class="form-group">
-                <label>أدخل سلسلة الاسم كاملة متصلة</label>
-                <input type="text" id="smartFullName" placeholder="مثال: أحمد محمد علي لافي قبلان حمد..." oninput="analyzeSmartName()">
-            </div>
-
-            <div id="pathAnalysisResult" style="display:none; margin-top:15px;">
-                <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:8px;">معاينة النسب وتخصيص النوع والحالة بنقرة زر:</label>
-                <div id="smartLivePreview" class="smart-live-preview"></div>
-                
-                <div class="form-group" style="margin-top:15px;">
-                    <label>إضافة إخوة/أخوات أشقاء لنفس الأب دفعة واحدة</label>
-                    <input type="text" id="smartSiblingsInput" placeholder="اكتب الأسماء مفصولة بفواصل...">
-                </div>
-            </div>
-
-            <button id="btnSmartSubmit" class="btn-action" style="background: var(--primary); color:#fff; display:none; margin-top:20px;" onclick="applySmartInsertion()">
-                <i class="fas fa-check-circle"></i> تثبيت وحفظ السلسلة في سحاب Google
-            </button>
-        </div>
-    </div>
-
-    <!-- لوحة التحكم السريعة وتعديل العضو (Quick Action Sheet) -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2 id="sheetMemberName">بيانات وتعديل العضو</h2>
-            <button onclick="closeAllDrawers()" style="background:none; border:none; color:var(--primary); font-size:1.5rem; cursor:pointer;">&times;</button>
-        </div>
-        <div class="sidebar-content">
-            <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">النوع والجنس</label>
-            <div class="quick-toggle-group">
-                <button id="toggleMale" class="quick-toggle-btn" onclick="setQuickGender('male')"><i class="fas fa-mars"></i> ذكر</button>
-                <button id="toggleFemale" class="quick-toggle-btn" onclick="setQuickGender('female')"><i class="fas fa-venus"></i> أنثى</button>
-            </div>
-
-            <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">الحالة</label>
-            <div class="quick-toggle-group">
-                <button id="toggleAlive" class="quick-toggle-btn" onclick="setQuickStatus('alive')"><i class="fas fa-heart"></i> حي يرزق</button>
-                <button id="toggleDeceased" class="quick-toggle-btn" onclick="setQuickStatus('deceased')"><i class="fas fa-skull"></i> متوفى (رحمه الله)</button>
-            </div>
-
-            <!-- أداة ترتيب الأشقاء الزمنية -->
-            <div id="sibling-sorter-section" style="display:none; margin-bottom:20px;">
-                <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">الترتيب بين الأشقاء (أكبر / أصغر)</label>
-                <div class="sibling-sorter-wrap">
-                    <button id="btnSortLeft" class="sibling-sorter-btn" title="أكبر سناً (لليمين)"><i class="fas fa-chevron-right"></i></button>
-                    <span id="siblingSortRankText" style="font-size:0.85rem; font-weight:bold; color:var(--primary);">الترتيب: الأول</span>
-                    <button id="btnSortRight" class="sibling-sorter-btn" title="أصغر سناً (لليسار)"><i class="fas fa-chevron-left"></i></button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>الاسم المباشر</label>
-                <input type="text" id="pName" oninput="quickUpdateName()">
-            </div>
-            <div class="form-group">
-                <label>اللقب أو رتبة الشرف (أبو فلان / باشا / دكتور...)</label>
-                <input type="text" id="pTitle" oninput="quickUpdateName()">
-            </div>
-            <div class="row-group">
-                <div class="form-group">
-                    <label>عام الولادة</label>
-                    <input type="text" id="pBirthDate" oninput="quickUpdateName()" placeholder="1950">
-                </div>
-                <div class="form-group" id="pDeathDateGroup" style="display:none;">
-                    <label>عام الوفاة</label>
-                    <input type="text" id="pDeathDate" oninput="quickUpdateName()" placeholder="2020">
-                </div>
-            </div>
-
-            <div style="margin-top:25px;">
-                <button class="btn-action" style="background: var(--danger); opacity: 0.9;" onclick="deleteNode()">
-                    <i class="fas fa-trash-can"></i> حذف هذا الشخص بجميع ذريته
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة دليل الأسرة للتواصل والواتساب السريع -->
-    <div class="sidebar" id="directoryModal">
-        <div class="sidebar-header">
-            <h2>دليل صلة الرحم والتواصل الحي</h2>
-            <button onclick="closeAllDrawers()" style="background:none; border:none; color:var(--primary); font-size:1.5rem; cursor:pointer;">&times;</button>
-        </div>
-        <div class="sidebar-content" id="directoryListContainer">
-            <p style="text-align:center; color:var(--text-muted); font-size:0.85rem;">جاري جلب أرقام الهواتف والتواصل...</p>
-        </div>
-    </div>
-
     <script>
-        // =========================================================================
-        // 🔗 نقطة الربط السحابية المعتمدة لآل الشمايلة
-        // =========================================================================
         const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
-
         let treeData = null;
-        let selectedId = null;
 
-        // تتبع الإدخال الذكي والتحديد المتعدد
-        let smartParsedNames = [];
-        let smartTempConfigs = [];
-        let multiSelectMode = false;
-        let selectedNodeIds = [];
-
-        // =========================================================================
-        // 🌐 مزامنة وجلب البيانات السحابية الحية (JSONP / Fetch API)
-        // =========================================================================
         function fetchCloudTreeData() {
             const script = document.createElement('script');
             const callbackName = 'onTreeDataLoaded_' + Date.now();
@@ -493,12 +206,6 @@
                     render();
                     resetView();
                     document.getElementById('loading-overlay').style.display = 'none';
-                } else {
-                    document.getElementById('loading-overlay').innerHTML = `
-                        <div style="color:var(--danger); font-size:1.1rem; text-align:center; padding:20px;">
-                            تعذر قراءة الشجرة. جاري إعادة الاتصال السحابي...
-                        </div>
-                    `;
                 }
                 delete window[callbackName];
                 document.body.removeChild(script);
@@ -507,9 +214,6 @@
             document.body.appendChild(script);
         }
 
-        // =========================================================================
-        // 🎨 محرك الرسم والتصيير (Render Engine)
-        // =========================================================================
         const container = document.getElementById('tree-container');
 
         function render() {
@@ -519,13 +223,6 @@
             ul.appendChild(createNode(treeData));
             container.appendChild(ul);
             updateStats();
-            
-            if (multiSelectMode) {
-                selectedNodeIds.forEach(id => {
-                    const el = document.getElementById(`node-${id}`);
-                    if (el) el.classList.add('selected-bulk');
-                });
-            }
         }
 
         function createNode(node) {
@@ -536,20 +233,12 @@
             const group = document.createElement('div');
             group.className = 'card-group';
             group.id = `node-${node.id}`;
-            
-            group.onclick = (e) => { 
-                e.stopPropagation(); 
-                if (multiSelectMode) {
-                    toggleNodeSelection(node.id);
-                } else {
-                    openSidebar(node.id); 
-                }
-            };
 
             let rightHtml = "";
             let leftHtml = "";
             const mainHtml = createPersonHTML(node);
 
+            // تمثيل الزوجات المتناظرة هندسياً (يمين ويسار بالتناوب مع قلوب الربط)
             if (node.spouses && node.spouses.length > 0) {
                 node.spouses.forEach((spouse, index) => {
                     const spouseCard = createPersonHTML(spouse, true);
@@ -589,46 +278,19 @@
             const isFemale = person.gender === 'female';
             const cls = isFemale ? 'avatar female' : 'avatar male';
             const icon = isFemale ? 'fa-female' : 'fa-user-tie';
-            let extraClass = '';
-            
-            if (person.deathDate) extraClass += ' deceased';
+            const cardClass = isSpouse ? 'person-card spouse' : 'person-card';
 
-            const dates = (person.birthDate || person.deathDate) 
-                ? `<div class="p-dates">${person.birthDate || ''} - ${person.deathDate || ''}</div>` : '';
+            const motherBadge = (!isSpouse && person.motherName) 
+                ? `<div class="p-mother"><i class="fas fa-heart" style="font-size:7px;"></i> الأم: ${person.motherName}</div>` : '';
 
             return `
-                <div class="person-card ${extraClass}">
+                <div class="${cardClass}">
                     <div class="${cls}"><i class="fas ${icon}"></i></div>
                     <div class="p-name">${person.name}</div>
                     ${person.title && !isSpouse ? `<div class="p-title">${person.title}</div>` : ''}
-                    ${dates}
+                    ${motherBadge}
                 </div>
             `;
-        }
-
-        // =========================================================================
-        // 🧠 خوارزميات البحث وتحديد الفروع
-        // =========================================================================
-        function findNode(root, id) {
-            if (!root) return null;
-            if (root.id === id) return root;
-            if (root.children) {
-                for (let child of root.children) {
-                    const res = findNode(child, id);
-                    if (res) return res;
-                }
-            }
-            return null;
-        }
-
-        function findParent(root, id) {
-            if (!root || !root.children) return null;
-            for (let child of root.children) {
-                if (child.id === id) return root;
-                const res = findParent(child, id);
-                if (res) return res;
-            }
-            return null;
         }
 
         function normalizeArabic(text) {
@@ -636,335 +298,6 @@
             return text.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/\s+/g, ' ').trim();
         }
 
-        // =========================================================================
-        // 🛠️ باني وسجل النسب الذكي
-        // =========================================================================
-        function openSmartWizard() {
-            closeAllDrawers();
-            document.getElementById('smartFullName').value = '';
-            document.getElementById('pathAnalysisResult').style.display = 'none';
-            document.getElementById('btnSmartSubmit').style.display = 'none';
-            document.getElementById('smartWizardDrawer').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-
-        function analyzeSmartName() {
-            const rawInput = document.getElementById('smartFullName').value;
-            if (!rawInput.trim()) {
-                document.getElementById('pathAnalysisResult').style.display = 'none';
-                return;
-            }
-
-            let parts = rawInput.split(/\s+(?:بن|ابن|بنت|ابنة|ال)\s+|\s+/);
-            parts = parts.map(p => p.trim()).filter(p => p.length > 0 && p !== 'بن' && p !== 'ابن' && p !== 'ال' && p !== 'الشمايلة' && p !== 'شمايلة');
-            if (parts.length === 0) return;
-
-            smartParsedNames = parts.reverse();
-            const candidates = findPathCandidates(treeData, smartParsedNames);
-
-            if (candidates.length === 0) {
-                showInteractiveTimeline(treeData, 0);
-            } else {
-                showInteractiveTimeline(candidates[0].lastMatchedNode, candidates[0].matchDepth);
-            }
-        }
-
-        function findPathCandidates(node, pathArray) {
-            let results = [];
-            function search(currentNode, currentDepth, historyNodes) {
-                const nodeNorm = normalizeArabic(currentNode.name);
-                const pathNorm = normalizeArabic(pathArray[currentDepth]);
-
-                if (nodeNorm.includes(pathNorm) || pathNorm.includes(nodeNorm)) {
-                    const nextDepth = currentDepth + 1;
-                    const updatedHistory = [...historyNodes, currentNode];
-
-                    if (nextDepth < pathArray.length && currentNode.children && currentNode.children.length > 0) {
-                        let childMatched = false;
-                        for (let child of currentNode.children) {
-                            const childCandidates = findPathCandidatesFromPoint(child, pathArray, nextDepth, updatedHistory);
-                            if (childCandidates.length > 0) { results.push(...childCandidates); childMatched = true; }
-                        }
-                        if (!childMatched) results.push({ lastMatchedNode: currentNode, matchDepth: nextDepth, history: updatedHistory });
-                    } else {
-                        results.push({ lastMatchedNode: currentNode, matchDepth: nextDepth, history: updatedHistory });
-                    }
-                }
-                if (currentDepth === 0 && currentNode.children) {
-                    currentNode.children.forEach(child => search(child, 0, []));
-                }
-            }
-            search(node, 0, []);
-            results.sort((a,b) => b.matchDepth - a.matchDepth);
-            return results;
-        }
-
-        function findPathCandidatesFromPoint(node, pathArray, depth, history) {
-            const nodeNorm = normalizeArabic(node.name);
-            const pathNorm = normalizeArabic(pathArray[depth]);
-            let results = [];
-            if (nodeNorm.includes(pathNorm) || pathNorm.includes(nodeNorm)) {
-                const nextDepth = depth + 1;
-                const updatedHistory = [...history, node];
-                if (nextDepth < pathArray.length && node.children && node.children.length > 0) {
-                    let childMatched = false;
-                    for (let child of node.children) {
-                        const r = findPathCandidatesFromPoint(child, pathArray, nextDepth, updatedHistory);
-                        if (r.length > 0) { results.push(...r); childMatched = true; }
-                    }
-                    if (!childMatched) results.push({ lastMatchedNode: node, matchDepth: nextDepth, history: updatedHistory });
-                } else {
-                    results.push({ lastMatchedNode: node, matchDepth: nextDepth, history: updatedHistory });
-                }
-            }
-            return results;
-        }
-
-        function showInteractiveTimeline(lastMatchedNode, matchDepth) {
-            const preview = document.getElementById('smartLivePreview');
-            preview.innerHTML = '';
-            document.getElementById('pathAnalysisResult').style.display = 'block';
-
-            smartTempConfigs = [];
-            const newNames = smartParsedNames.slice(matchDepth);
-
-            let current = lastMatchedNode;
-            let matchedChain = [];
-            while(current) {
-                matchedChain.unshift(current.name);
-                current = findParent(treeData, current.id);
-            }
-            matchedChain.forEach(name => {
-                preview.innerHTML += `
-                    <div class="smart-pill" style="border-color:var(--success); background:#f0fdf4;">
-                        <span style="color:#16a34a;">${name}</span>
-                        <i class="fas fa-check-circle" style="color:#16a34a; font-size:0.8rem;"></i>
-                    </div>
-                `;
-            });
-
-            if (newNames.length > 0) {
-                newNames.forEach((name, idx) => {
-                    smartTempConfigs.push({ name: name, gender: 'male', isAlive: true });
-                    const pill = document.createElement('div');
-                    pill.className = 'smart-pill';
-                    pill.innerHTML = `
-                        <span>${name}</span>
-                        <button class="smart-pill-btn male" id="temp-gender-${idx}" onclick="toggleTempGender(${idx})"><i class="fas fa-mars"></i></button>
-                        <button class="smart-pill-btn alive" id="temp-life-${idx}" onclick="toggleTempLife(${idx})"><i class="fas fa-heart"></i></button>
-                    `;
-                    preview.appendChild(pill);
-                });
-                document.getElementById('btnSmartSubmit').style.display = 'block';
-            } else {
-                document.getElementById('btnSmartSubmit').style.display = 'none';
-            }
-        }
-
-        function toggleTempGender(idx) {
-            const config = smartTempConfigs[idx];
-            config.gender = (config.gender === 'male') ? 'female' : 'male';
-            const btn = document.getElementById(`temp-gender-${idx}`);
-            btn.className = `smart-pill-btn ${config.gender}`;
-            btn.innerHTML = `<i class="fas fa-${config.gender === 'male' ? 'mars' : 'venus'}"></i>`;
-        }
-
-        function toggleTempLife(idx) {
-            const config = smartTempConfigs[idx];
-            config.isAlive = !config.isAlive;
-            const btn = document.getElementById(`temp-life-${idx}`);
-            btn.className = `smart-pill-btn ${config.isAlive ? 'alive' : 'deceased'}`;
-            btn.innerHTML = `<i class="fas fa-${config.isAlive ? 'heart' : 'skull'}"></i>`;
-        }
-
-        function applySmartInsertion() {
-            const payload = {
-                anchor_node_id: treeData.id,
-                new_nodes: smartTempConfigs.map(c => ({
-                    name: c.name, gender: c.gender, death_date: c.isAlive ? '' : 'متوفى'
-                }))
-            };
-
-            sendCloudApiRequest("smart_insert_lineage", payload, () => {
-                closeAllDrawers();
-                fetchCloudTreeData();
-            });
-        }
-
-        // =========================================================================
-        // ⚡ التعديل اللحظي وترتيب الأشقاء
-        // =========================================================================
-        function openSidebar(id) {
-            selectedId = id;
-            const node = findNode(treeData, id);
-            if (!node) return;
-
-            document.getElementById('sheetMemberName').innerText = node.name || 'بيانات العضو';
-            document.getElementById('pName').value = node.name || '';
-            document.getElementById('pTitle').value = node.title || '';
-            document.getElementById('pBirthDate').value = node.birthDate || '';
-            document.getElementById('pDeathDate').value = node.deathDate || '';
-
-            updateQuickGenderUI(node.gender);
-            updateQuickStatusUI(!node.deathDate);
-            setupSiblingSorter(node);
-
-            document.getElementById('sidebar').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-
-        function setQuickGender(gender) {
-            const node = findNode(treeData, selectedId);
-            if (node) {
-                node.gender = gender;
-                updateQuickGenderUI(gender);
-                render();
-                sendCloudApiRequest("quick_update_member", { id: node.id, gender: gender });
-            }
-        }
-
-        function updateQuickGenderUI(gender) {
-            document.getElementById('toggleMale').className = `quick-toggle-btn ${gender === 'male' ? 'active' : ''}`;
-            document.getElementById('toggleFemale').className = `quick-toggle-btn ${gender === 'female' ? 'active' : ''}`;
-        }
-
-        function setQuickStatus(status) {
-            const node = findNode(treeData, selectedId);
-            if (node) {
-                node.deathDate = (status === 'deceased') ? 'متوفى' : '';
-                updateQuickStatusUI(status === 'alive');
-                render();
-                sendCloudApiRequest("quick_update_member", { id: node.id, deathDate: node.deathDate });
-            }
-        }
-
-        function updateQuickStatusUI(isAlive) {
-            document.getElementById('toggleAlive').className = `quick-toggle-btn ${isAlive ? 'active' : ''}`;
-            document.getElementById('toggleDeceased').className = `quick-toggle-btn ${!isAlive ? 'active' : ''}`;
-            document.getElementById('pDeathDateGroup').style.display = isAlive ? 'none' : 'block';
-        }
-
-        function quickUpdateName() {
-            const node = findNode(treeData, selectedId);
-            if (node) {
-                node.name = document.getElementById('pName').value;
-                node.title = document.getElementById('pTitle').value;
-                node.birthDate = document.getElementById('pBirthDate').value;
-                if (node.deathDate) node.deathDate = document.getElementById('pDeathDate').value || 'متوفى';
-                render();
-                sendCloudApiRequest("quick_update_member", {
-                    id: node.id, name: node.name, title: node.title, birthDate: node.birthDate, deathDate: node.deathDate
-                });
-            }
-        }
-
-        function setupSiblingSorter(node) {
-            const parent = findParent(treeData, node.id);
-            const sorterSection = document.getElementById('sibling-sorter-section');
-            if (parent && parent.children && parent.children.length > 1) {
-                sorterSection.style.display = 'block';
-                const index = parent.children.findIndex(c => c.id === node.id);
-                document.getElementById('siblingSortRankText').innerText = `الترتيب: ${index + 1} من ${parent.children.length}`;
-                
-                const btnLeft = document.getElementById('btnSortLeft');
-                btnLeft.className = index === 0 ? 'sibling-sorter-btn disabled' : 'sibling-sorter-btn';
-                btnLeft.onclick = () => swapSibling(parent, index, index - 1);
-
-                const btnRight = document.getElementById('btnSortRight');
-                btnRight.className = index === parent.children.length - 1 ? 'sibling-sorter-btn disabled' : 'sibling-sorter-btn';
-                btnRight.onclick = () => swapSibling(parent, index, index + 1);
-            } else {
-                sorterSection.style.display = 'none';
-            }
-        }
-
-        function swapSibling(parent, idx1, idx2) {
-            const temp = parent.children[idx1];
-            parent.children[idx1] = parent.children[idx2];
-            parent.children[idx2] = temp;
-            render();
-            setupSiblingSorter(parent.children[idx2]);
-            sendCloudApiRequest("reorder_siblings", {
-                parent_id: parent.id, sibling_ids_ordered: parent.children.map(c => c.id)
-            });
-        }
-
-        function deleteNode() {
-            if (selectedId === treeData.id) return alert("لا يمكن حذف المؤسس الأول.");
-            if (confirm("تحذير: سيتم حذف هذا العضو وكافة ذريته في السحاب! هل تود الاستمرار؟")) {
-                sendCloudApiRequest("delete_member_branch", { target_id: selectedId }, () => {
-                    closeAllDrawers();
-                    fetchCloudTreeData();
-                });
-            }
-        }
-
-        // =========================================================================
-        // 📋 دليل الأسرة والتواصل الحي (Direct Directory)
-        // =========================================================================
-        function openDirectoryModal() {
-            closeAllDrawers();
-            const container = document.getElementById('directoryListContainer');
-            container.innerHTML = '<p style="text-align:center; color:var(--text-muted);">جاري تحميل الأرقام السحابية...</p>';
-            document.getElementById('directoryModal').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-
-            const script = document.createElement('script');
-            const callback = 'onDirLoaded_' + Date.now();
-            window[callback] = function(res) {
-                if (res && res.directory) {
-                    container.innerHTML = '';
-                    res.directory.forEach(m => {
-                        const card = document.createElement('div');
-                        card.style = 'background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;';
-                        card.innerHTML = `
-                            <div>
-                                <strong style="color:var(--primary); font-size:0.95rem;">${m.name}</strong>
-                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">${m.city || 'الأردن'} ${m.job ? '| ' + m.job : ''}</div>
-                            </div>
-                            <div style="display:flex; gap:8px;">
-                                ${m.phone_call ? `<a href="tel:${m.phone_call}" style="width:34px; height:34px; border-radius:50%; background:#e0f2fe; color:var(--male-color); display:flex; align-items:center; justify-content:center; text-decoration:none;"><i class="fas fa-phone"></i></a>` : ''}
-                                ${m.phone_whatsapp ? `<a href="https://wa.me/${m.phone_whatsapp.replace(/\D/g,'')}" target="_blank" style="width:34px; height:34px; border-radius:50%; background:#dcfce7; color:var(--success); display:flex; align-items:center; justify-content:center; text-decoration:none;"><i class="fab fa-whatsapp"></i></a>` : ''}
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    });
-                }
-                delete window[callback];
-                document.body.removeChild(script);
-            };
-            script.src = `${API_ENDPOINT}?action=get_family_directory&callback=${callback}`;
-            document.body.appendChild(script);
-        }
-
-        // =========================================================================
-        // 📡 الإرسال السحابي العام
-        // =========================================================================
-        function sendCloudApiRequest(action, payload, onSuccess) {
-            const script = document.createElement('script');
-            const callback = 'onCloudAction_' + Date.now();
-            window[callback] = function(res) {
-                if (onSuccess) onSuccess(res);
-                delete window[callback];
-                document.body.removeChild(script);
-            };
-            const encoded = encodeURIComponent(JSON.stringify(payload || {}));
-            script.src = `${API_ENDPOINT}?action=${action}&data=${encoded}&callback=${callback}`;
-            document.body.appendChild(script);
-        }
-
-        function closeAllDrawers() {
-            document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('smartWizardDrawer').classList.remove('active');
-            document.getElementById('directoryModal').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            document.querySelectorAll('.highlighted').forEach(el => el.classList.remove('highlighted'));
-            if (multiSelectMode) disableMultiSelectMode();
-        }
-
-        // =========================================================================
-        // 🔍 محرك البحث، الإحصاء، واللقطات
-        // =========================================================================
         function handleSearch(e) {
             const query = normalizeArabic(document.getElementById('searchInput').value);
             if (!query) return;
@@ -1022,18 +355,12 @@
             });
         }
 
-        // =========================================================================
-        // 🎮 محرك التحريك والتكبير باللمس (Touch Pinch & Clamping)
-        // =========================================================================
         const viewport = document.getElementById('viewport');
         let state = { scale: 0.9, panning: false, pointX: 0, pointY: 40, startX: 0, startY: 0 };
 
-        function setTransform() {
-            container.style.transform = `translate(${state.pointX}px, ${state.pointY}px) scale(${state.scale})`;
-        }
-
+        function setTransform() { container.style.transform = `translate(${state.pointX}px, ${state.pointY}px) scale(${state.scale})`; }
         function clampPoints() {
-            const maxPan = 3000;
+            const maxPan = 3500;
             state.pointX = Math.max(-maxPan, Math.min(maxPan, state.pointX));
             state.pointY = Math.max(-maxPan, Math.min(maxPan, state.pointY));
         }
@@ -1110,7 +437,6 @@
             setTimeout(() => { container.style.transition = "transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)"; }, 400);
         }
 
-        // بدء جلب ومزامنة الشجرة فور فتح الصفحة
         fetchCloudTreeData();
     </script>
 </body>
