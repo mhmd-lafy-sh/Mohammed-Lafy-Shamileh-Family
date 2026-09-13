@@ -3,32 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مجرة وسجل أجيال آل الشمايلة - الأطلس الفني المطور</title>
+    <title>مجرة وسجل أجيال آل الشمايلة - الأطلس الفلكي مع مدارات الزوجات</title>
     
-    <!-- الخطوط والأيقونات والمكتبات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <style>
         :root {
-            --gold-primary: #b45309;       /* ذهبي عسلي عالي التباين */
+            --gold-primary: #b45309;
             --gold-light: #fef08a;
             --gold-border: #d4af37;
-            --bg-deep: #f8fafc;            /* رمادي لؤلؤي ناصع مريح للعين */
+            --bg-deep: #f8fafc;
             --panel-bg: rgba(255, 255, 255, 0.95);
-            --text-main: #0f172a;          /* كحلي شديد الوضوح */
+            --text-main: #0f172a;
             --text-muted: #475569;
-            --female-color: #db2777;       /* وردي توتي بارز */
-            --male-color: #0284c7;         /* أزرق ياقوتي ساطع */
-            --gen-1: #b45309;
-            --gen-2: #d97706;
-            --gen-3: #059669;
-            --gen-4: #0284c7;
-            --gen-5: #7c3aed;
-            --gen-6: #db2777;
-            --gen-7: #e11d48;
-            --gen-8: #9333ea;
+            --female-color: #db2777;
+            --male-color: #0284c7;
+            --wife-1: #f59e0b; /* قمر ذهبي عنبري للزوجة الأولى فاطمة */
+            --wife-2: #10b981; /* قمر زمردي لؤلؤي للزوجة الثانية خضرة */
+            --wife-3: #ec4899; /* قمر ياقوتي وردي */
+            --wife-4: #38bdf8; /* قمر فيروزي */
+            --gen-1: #b45309; --gen-2: #d97706; --gen-3: #059669; --gen-4: #0284c7;
+            --gen-5: #7c3aed; --gen-6: #db2777; --gen-7: #e11d48; --gen-8: #9333ea;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
@@ -36,20 +33,16 @@
         body {
             margin: 0; padding: 0; background: var(--bg-deep); color: var(--text-main);
             overflow: hidden; height: 100vh; width: 100vw; user-select: none;
-            background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
-            background-size: 28px 28px;
+            background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px); background-size: 28px 28px;
         }
 
-        /* خلفية ذرات الذهب */
         #stars-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.5; }
 
-        /* الهيدر العلوي المضيء */
         .galaxy-header {
             position: fixed; top: 0; left: 0; right: 0; height: 75px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px); z-index: 1000; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 24px; border-bottom: 2px solid var(--gold-border);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 24px;
+            border-bottom: 2px solid var(--gold-border); box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
         .galaxy-brand { display: flex; align-items: center; gap: 14px; }
@@ -57,10 +50,8 @@
         .galaxy-brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.55rem; color: var(--text-main); font-weight: 700; }
         .galaxy-brand span { font-size: 0.78rem; color: var(--gold-primary); display: block; font-weight: bold; }
 
-        /* التبديل بين النمطين فقط */
         .view-mode-selector {
-            display: flex; background: #f1f5f9; border: 1.5px solid #cbd5e1;
-            border-radius: 30px; padding: 4px; gap: 4px;
+            display: flex; background: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: 30px; padding: 4px; gap: 4px;
         }
         .mode-btn {
             background: transparent; border: none; color: var(--text-muted); padding: 8px 18px;
@@ -68,23 +59,20 @@
             display: flex; align-items: center; gap: 6px;
         }
         .mode-btn.active { background: var(--text-main); color: #fff; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.2); }
-        .mode-btn:hover:not(.active) { color: var(--text-main); background: rgba(0, 0, 0, 0.05); }
 
         .search-galaxy-box { position: relative; width: 260px; }
         .search-galaxy-input {
             width: 100%; padding: 9px 38px 9px 14px; border-radius: 20px;
             border: 1.5px solid #cbd5e1; background: #fff; color: var(--text-main); font-size: 0.88rem;
         }
-        .search-galaxy-input:focus { border-color: var(--gold-border); box-shadow: 0 0 12px rgba(212, 175, 55, 0.3); }
         .search-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--gold-primary); font-size: 0.85rem; }
 
-        /* مساحة العمل الفلكية */
         #galaxy-viewport {
             position: absolute; inset: 0; z-index: 2; cursor: grab; display: flex; justify-content: center; align-items: center;
         }
         #galaxy-viewport:active { cursor: grabbing; }
 
-        /* وحدة التحكم بالتدوير الفلكي 360° */
+        /* وحدة التدوير 360° */
         .rotation-control-panel {
             position: fixed; top: 90px; right: 20px; z-index: 900;
             background: var(--panel-bg); border: 1.5px solid var(--gold-border);
@@ -93,13 +81,12 @@
         }
         .btn-rot {
             background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); width: 32px; height: 32px;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer;
-            transition: all 0.2s; font-size: 0.85rem;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s;
         }
-        .btn-rot:hover { background: var(--text-main); color: #fff; border-color: var(--text-main); }
-        .btn-rot.active { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+        .btn-rot:hover { background: var(--text-main); color: #fff; }
+        .btn-rot.active { background: var(--gold-primary); color: #fff; }
 
-        /* شريط الأجيال والمدارات السفلي */
+        /* شريط الأجيال والمدارات */
         .generations-orbit-bar {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
             background: var(--panel-bg); border: 1.5px solid var(--gold-border);
@@ -111,7 +98,6 @@
             font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.25s;
             border: 1px solid #e2e8f0; background: #fff; color: var(--text-main);
         }
-        .gen-pill:hover { border-color: var(--gold-border); transform: translateY(-2px); }
         .gen-pill.active { background: var(--text-main); border-color: var(--text-main); color: #fff; }
         .gen-dot { width: 10px; height: 10px; border-radius: 50%; }
 
@@ -127,9 +113,9 @@
         .chain-step i { color: var(--gold-primary); font-size: 0.75rem; }
         .chain-step.last { color: var(--gold-primary); background: #fef3c7; padding: 2px 8px; border-radius: 12px; }
 
-        /* بطاقة العضو الفنية */
+        /* بطاقة العضو الفنية المنبثقة */
         .member-art-card-modal {
-            position: fixed; bottom: 95px; right: 25px; width: 340px;
+            position: fixed; bottom: 95px; right: 25px; width: 350px;
             background: #fff; border: 2px solid var(--gold-border);
             border-radius: 20px; padding: 20px; z-index: 1000;
             box-shadow: 0 15px 40px rgba(0,0,0,0.12); display: none; flex-direction: column;
@@ -149,15 +135,24 @@
         }
         .art-btn-icon:hover { background: var(--text-main); color: #fff; border-color: var(--text-main); }
 
-        /* رسومات الـ SVG المضيئة */
+        /* رسومات D3.js المضيئة مع أقمار الزوجات */
         .node-circle { cursor: pointer; transition: all 0.3s ease; stroke-width: 2.5px; }
         .node-circle:hover { stroke: var(--text-main) !important; stroke-width: 4px; }
         .node-circle.active-target { stroke: var(--text-main) !important; stroke-width: 4.5px; filter: drop-shadow(0 0 15px var(--gold-primary)); }
         
+        /* قمر الزوجة المداري النوراني */
+        .spouse-moon {
+            cursor: pointer; stroke: #ffffff; stroke-width: 2px; transition: all 0.25s ease;
+        }
+        .spouse-moon:hover { transform: scale(1.3); stroke-width: 3px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); }
+        
+        .spouse-orbit-ring {
+            fill: none; stroke: rgba(180, 83, 9, 0.25); stroke-dasharray: 2 3; stroke-width: 1.2px;
+        }
+
         .link-line { fill: none; stroke: rgba(180, 83, 9, 0.3); stroke-width: 1.5px; transition: all 0.3s ease; }
         .link-line.highlighted { stroke: var(--gold-primary) !important; stroke-width: 3.5px !important; }
 
-        /* تقنية الإحاطة البيضاء للنصوص العازلة لضمان مقروئية تامة */
         .node-text {
             font-size: 12px; font-weight: 800; fill: var(--text-main); text-anchor: middle; pointer-events: none;
             paint-order: stroke fill; stroke: #ffffff; stroke-width: 3.5px; stroke-linejoin: round;
@@ -181,7 +176,7 @@
 
     <div id="galaxy-loader">
         <div class="orbit-spinner"><div class="orbit-core"></div></div>
-        <div style="font-family:'Amiri', serif; font-size:1.4rem; color:var(--text-main); font-weight:bold;">جاري استحضار الأطلس الفني لآل الشمايلة...</div>
+        <div style="font-family:'Amiri', serif; font-size:1.4rem; color:var(--text-main); font-weight:bold;">جاري استحضار الأطلس الفلكي لآل الشمايلة...</div>
         <div style="font-size:0.85rem; color:var(--text-muted);">صدقة جارية عن روح الحاج أبو علي الشمايلة رحمه الله</div>
     </div>
 
@@ -190,12 +185,12 @@
             <i class="fas fa-crown"></i>
             <div>
                 <h1>أطلس ومجرة آل الشمايلة</h1>
-                <span>الأفق الفني المطور لكافة الأجيال والذراري</span>
+                <span>الأفق الفني المطور مع أقمار الزوجات وسلسلة الأنساب</span>
             </div>
         </div>
 
         <div class="view-mode-selector">
-            <button class="mode-btn active" id="btnModeRadial" onclick="switchVisualMode('radial')"><i class="fas fa-atom"></i> مجرة المدارات (360°)</button>
+            <button class="mode-btn active" id="btnModeRadial" onclick="switchVisualMode('radial')"><i class="fas fa-atom"></i> مجرة المدارات والأقمار (360°)</button>
             <button class="mode-btn" id="btnModeStream" onclick="switchVisualMode('stream')"><i class="fas fa-water"></i> أنهار السلالة الأفقية</button>
         </div>
 
@@ -205,7 +200,7 @@
         </div>
     </header>
 
-    <!-- وحدة التدوير الفلكي 360° -->
+    <!-- وحدة التدوير 360° -->
     <div class="rotation-control-panel" id="rotationPanel">
         <span style="font-size:0.75rem; font-weight:bold; color:var(--gold-primary);"><i class="fas fa-arrows-rotate"></i> التدوير 360°:</span>
         <button class="btn-rot" onclick="rotateGalaxyBy(-30)" title="تدوير لليمين 30°"><i class="fas fa-rotate-left"></i></button>
@@ -214,7 +209,7 @@
         <button class="btn-rot" onclick="resetGalaxyRotation()" title="إعادة التمركز"><i class="fas fa-compass"></i></button>
     </div>
 
-    <!-- شريط سلسلة النسب الذهبية -->
+    <!-- سلسلة النسب الذهبية -->
     <div class="golden-chain-bar" id="goldenChainBar">
         <span style="font-size:0.85rem; color:var(--gold-primary); font-weight:bold;"><i class="fas fa-crown"></i> سلسلة النسب:</span>
         <div id="chainStepsContainer" style="display:flex; align-items:center; gap:8px;"></div>
@@ -229,16 +224,17 @@
     <!-- شريط مدارات الأجيال -->
     <nav class="generations-orbit-bar" id="generationBar">
         <span style="font-size:0.8rem; color:var(--gold-primary); font-weight:bold;"><i class="fas fa-layer-group"></i> المدارات:</span>
-        <div class="gen-pill active" onclick="filterByGeneration(0, this)"><div class="gen-dot" style="background:#0f172a;"></div> الكل (113+)</div>
+        <div class="gen-pill active" onclick="filterByGeneration(0, this)"><div class="gen-dot" style="background:#0f172a;"></div> الكل (200+)</div>
         <div class="gen-pill" onclick="filterByGeneration(1, this)"><div class="gen-dot" style="background:var(--gen-1);"></div> الجيل 1 (حمد)</div>
         <div class="gen-pill" onclick="filterByGeneration(2, this)"><div class="gen-dot" style="background:var(--gen-2);"></div> الجيل 2 (قبلان)</div>
-        <div class="gen-pill" onclick="filterByGeneration(3, this)"><div class="gen-dot" style="background:var(--gen-3);"></div> الجيل 3 (لافي)</div>
-        <div class="gen-pill" onclick="filterByGeneration(4, this)"><div class="gen-dot" style="background:var(--gen-4);"></div> الجيل 4 (أبناء لافي)</div>
-        <div class="gen-pill" onclick="filterByGeneration(5, this)"><div class="gen-dot" style="background:var(--gen-5);"></div> الجيل 5 (جميلة والأبناء)</div>
-        <div class="gen-pill" onclick="filterByGeneration(6, this)"><div class="gen-dot" style="background:var(--gen-6);"></div> الجيل 6-8 (الأحفاد والذرية)</div>
+        <div class="gen-pill" onclick="filterByGeneration(3, this)"><div class="gen-dot" style="background:var(--gen-3);"></div> الجيل 3 (شهاب)</div>
+        <div class="gen-pill" onclick="filterByGeneration(4, this)"><div class="gen-dot" style="background:var(--gen-4);"></div> الجيل 4 (لافي وإخوانه)</div>
+        <div class="gen-pill" onclick="filterByGeneration(5, this)"><div class="gen-dot" style="background:var(--gen-5);"></div> الجيل 5 (محمد وإخوانه)</div>
+        <div class="gen-pill" onclick="filterByGeneration(6, this)"><div class="gen-dot" style="background:var(--gen-6);"></div> الجيل 6 (أبناء محمد)</div>
+        <div class="gen-pill" onclick="filterByGeneration(7, this)"><div class="gen-dot" style="background:var(--gen-7);"></div> الجيل 7-9 (الذرية المباركة)</div>
     </nav>
 
-    <!-- بطاقة العضو الفنية -->
+    <!-- بطاقة العضو الفنية المنبثقة -->
     <div class="member-art-card-modal" id="memberArtCard">
         <div class="art-card-header">
             <div>
@@ -251,7 +247,7 @@
         <div style="border-top:1.5px dashed #e2e8f0; padding-top:10px; margin-top:6px;">
             <div class="art-card-meta" id="cardGenTier"><i class="fas fa-circle-nodes"></i> الجيل: <strong style="color:var(--text-main);">الجيل الرابع</strong></div>
             <div class="art-card-meta" id="cardMotherBox"><i class="fas fa-heart"></i> الأم المباشرة: <strong id="cardMotherName" style="color:var(--gold-primary);">خضرة الحباشنة</strong></div>
-            <div class="art-card-meta" id="cardSpousesBox"><i class="fas fa-ring"></i> الزوجات: <span id="cardSpousesList" style="color:var(--text-main); font-weight:bold;">مهى الأورفه لي</span></div>
+            <div class="art-card-meta" id="cardSpousesBox"><i class="fas fa-ring"></i> الزوجات (الأقمار): <span id="cardSpousesList" style="color:var(--text-main); font-weight:bold;">مهى الأورفه لي</span></div>
             <div class="art-card-meta" id="cardDatesBox"><i class="fas fa-calendar-alt"></i> الحقبة: <span id="cardDates" style="color:var(--text-main); font-weight:bold;">1950 - حي يرزق</span></div>
         </div>
 
@@ -273,9 +269,10 @@
         let isAutoSpinning = false;
         let autoSpinInterval = null;
 
+        const wifeColors = ["#f59e0b", "#10b981", "#ec4899", "#38bdf8", "#8b5cf6"];
         const genColors = {
             1: "#b45309", 2: "#d97706", 3: "#059669", 4: "#0284c7",
-            5: "#7c3aed", 6: "#db2777", 7: "#e11d48", 8: "#9333ea"
+            5: "#7c3aed", 6: "#db2777", 7: "#e11d48", 8: "#9333ea", 9: "#6366f1"
         };
 
         function loadGalaxyData() {
@@ -321,12 +318,12 @@
         }
 
         // =========================================================================
-        // 🌌 نمط 1: مجرة المدارات الحلقية مع التحريك الدائري 360° وتوجيه النصوص الذكي
+        // 🌌 نمط 1: مجرة المدارات الفلكية مع أقمار الزوجات الملونة
         // =========================================================================
         let gRadialContainer = null;
 
         function renderRadialGalaxy(width, height) {
-            const radius = Math.min(width, height) * 0.95;
+            const radius = Math.min(width, height) * 0.98;
             const treeLayout = d3.tree()
                 .size([2 * Math.PI, radius])
                 .separation((a, b) => (a.parent == b.parent ? 1.1 : 2.2) / a.depth);
@@ -349,7 +346,7 @@
                     .attr("stroke-dasharray", "4 6");
             }
 
-            // الروابط
+            // روابط النسب المشعة
             const linkGenerator = d3.linkRadial().angle(d => d.x).radius(d => d.y);
             gRadialContainer.append("g")
                 .selectAll("path")
@@ -359,7 +356,7 @@
                 .attr("id", d => `link-${d.source.data.id}-${d.target.data.id}`)
                 .attr("d", d => linkGenerator(d));
 
-            // العقد الفلكية
+            // العقد والنجوم
             const nodeGroup = gRadialContainer.append("g")
                 .selectAll("g")
                 .data(rootHierarchy.descendants())
@@ -368,14 +365,52 @@
                 .attr("id", d => `node-g-${d.data.id}`)
                 .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y}, 0)`);
 
+            // دوائر النجوم الرئيسية
             nodeGroup.append("circle")
                 .attr("class", "node-circle")
-                .attr("r", d => d.depth === 0 ? 15 : (d.depth === 1 ? 12 : (d.depth === 2 ? 10 : 8)))
+                .attr("r", d => d.depth === 0 ? 16 : (d.depth <= 2 ? 13 : (d.depth <= 4 ? 10 : 7.5)))
                 .attr("fill", d => d.data.gender === 'female' ? "var(--female-color)" : "var(--male-color)")
                 .attr("stroke", "#ffffff")
                 .on("click", (e, d) => selectGalaxyNode(d));
 
-            // نصوص الأسماء الذكية غير القابلة للانقلاب
+            // 🌕 رسم مدارات وأقمار الزوجات حول النجم (كواكب وأقمار)
+            nodeGroup.each(function(d) {
+                if (d.data.spouses && d.data.spouses.length > 0) {
+                    const gSpouses = d3.select(this).append("g").attr("class", "spouses-orbit-group");
+                    
+                    // حلقة مدار الزوجات
+                    gSpouses.append("circle")
+                        .attr("class", "spouse-orbit-ring")
+                        .attr("r", 20);
+
+                    // أقمار الزوجات
+                    d.data.spouses.forEach((sp, idx) => {
+                        const totalSp = d.data.spouses.length;
+                        const angle = (idx * (2 * Math.PI / totalSp)) - (Math.PI / 2);
+                        const mx = 20 * Math.cos(angle);
+                        const my = 20 * Math.sin(angle);
+                        const moonColor = sp.color || wifeColors[idx % wifeColors.length];
+
+                        const moon = gSpouses.append("g")
+                            .attr("class", "spouse-moon-group")
+                            .attr("transform", `translate(${mx}, ${my})`)
+                            .on("click", (e) => {
+                                e.stopPropagation();
+                                highlightWifeBranch(d, sp.name);
+                            });
+
+                        moon.append("circle")
+                            .attr("class", "spouse-moon")
+                            .attr("r", 5.5)
+                            .attr("fill", moonColor);
+
+                        moon.append("title")
+                            .text(`الزوجة: ${sp.name} (انقر لعرض ذريتها)`);
+                    });
+                }
+            });
+
+            // نصوص الأسماء المستقيمة
             nodeGroup.append("text")
                 .attr("class", "node-text")
                 .attr("dy", "0.32em")
@@ -383,6 +418,26 @@
 
             updateSmartTextOrientation();
             svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(0.85));
+        }
+
+        // فلترة وإضاءة ذرية الزوجة عند النقر على قمرها
+        function highlightWifeBranch(parentNode, wifeName) {
+            d3.selectAll(".node-element").style("opacity", d => {
+                if (d.data.id === parentNode.data.id) return 1;
+                if (d.data.motherName && d.data.motherName.includes(wifeName)) return 1;
+                if (d.parent && d.parent.data.motherName && d.parent.data.motherName.includes(wifeName)) return 1;
+                return 0.12;
+            });
+            d3.selectAll(".link-line").style("opacity", 0.1);
+
+            const card = document.getElementById('memberArtCard');
+            document.getElementById('cardName').innerText = `فرع الزوجة: ${wifeName}`;
+            document.getElementById('cardTitle').innerText = `زوجة ${parentNode.data.name}`;
+            document.getElementById('cardGenTier').innerHTML = `<i class="fas fa-moon"></i> مدار القمر: <strong style="color:var(--gold-primary);">${wifeName}</strong>`;
+            document.getElementById('cardMotherBox').style.display = 'none';
+            document.getElementById('cardSpousesBox').style.display = 'none';
+            document.getElementById('cardDatesBox').innerHTML = `<i class="fas fa-users"></i> ذرية هذه الزوجة مضاءة الآن في الشجرة`;
+            card.style.display = 'flex';
         }
 
         function updateSmartTextOrientation() {
@@ -393,7 +448,7 @@
                 const isLeftHalf = normalized > 90 && normalized < 270;
 
                 d3.select(this).select("text")
-                    .attr("x", isLeftHalf ? -14 : 14)
+                    .attr("x", isLeftHalf ? -16 : 16)
                     .attr("text-anchor", isLeftHalf ? "end" : "start")
                     .attr("transform", isLeftHalf ? "rotate(180)" : null);
             });
@@ -424,7 +479,7 @@
             isAutoSpinning = !isAutoSpinning;
             if (isAutoSpinning) {
                 btn.classList.add('active');
-                autoSpinInterval = setInterval(() => { rotateGalaxyBy(0.4); }, 40);
+                autoSpinInterval = setInterval(() => { rotateGalaxyBy(0.35); }, 40);
             } else {
                 btn.classList.remove('active');
                 clearInterval(autoSpinInterval);
@@ -432,7 +487,7 @@
         }
 
         // =========================================================================
-        // 🌊 نمط 2: أنهار السلالة الأفقية الحقيقية من اليمين لليسار (RTL Flow)
+        // 🌊 نمط 2: أنهار السلالة الأفقية الحقيقية (RTL)
         // =========================================================================
         function renderHorizontalStream(width, height) {
             const treeLayout = d3.tree().nodeSize([54, 240]);
@@ -475,7 +530,6 @@
             svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(0.8));
         }
 
-        // اختيار العضو وعرض تفاصيله
         function selectGalaxyNode(d) {
             selectedNodeData = d;
             d3.selectAll(".node-circle").classed("active-target", false);
@@ -512,7 +566,6 @@
 
         function closeArtCard() { document.getElementById('memberArtCard').style.display = 'none'; }
 
-        // رسم وإضاءة مسار النسب
         function traceFullLineage() {
             if (!selectedNodeData) return;
             const chain = [];
@@ -562,7 +615,7 @@
                 d3.selectAll(".node-element").style("opacity", 1);
                 d3.selectAll(".link-line").style("opacity", 1);
             } else {
-                d3.selectAll(".node-element").style("opacity", d => (d.data.generation === gen || (gen === 6 && d.data.generation >= 6)) ? 1 : 0.12);
+                d3.selectAll(".node-element").style("opacity", d => (d.data.generation === gen || (gen === 7 && d.data.generation >= 7)) ? 1 : 0.12);
                 d3.selectAll(".link-line").style("opacity", 0.08);
             }
         }
@@ -577,7 +630,6 @@
             if (matched) selectGalaxyNode(matched);
         }
 
-        // ذرات الذهب العائمة
         const canvas = document.getElementById("stars-canvas");
         const ctx = canvas.getContext("2d");
         let stars = [];
