@@ -3,25 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>أطلس ومجرة آل الشمايلة</title>
     
+    <!-- العنوان النظيف -->
+    <title>أطلس ومجرة آل الشمايلة</title>
+
+    <!-- وسوم الميتا (Meta Tags) لإجبار الواتساب وفيسبوك على قراءة العنوان النظيف -->
+    <meta property="og:title" content="أطلس ومجرة آل الشمايلة">
+    <meta property="og:description" content="المجرة الفلكية الشاملة لكافة أجيال وذرية المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="أطلس ومجرة آل الشمايلة">
+    <meta name="twitter:description" content="المجرة الفلكية الشاملة لكافة أجيال وذرية المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة">
+    
+    <!-- الخطوط والأيقونات والمكتبات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <style>
         :root {
-            --gold-primary: #b45309; --gold-border: #d4af37; --bg-canvas: #faf8f5; --panel-bg: rgba(255, 255, 255, 0.94);
-            --text-main: #0f172a; --text-muted: #475569; --female-color: #db2777; --male-color: #0284c7;
-            --wife-1: #f59e0b; --wife-2: #10b981; --wife-3: #ec4899; --sun-core: #d97706;
+            --gold-primary: #b45309;
+            --gold-border: #d4af37;
+            --bg-canvas: #faf8f5;
+            --panel-bg: rgba(255, 255, 255, 0.94);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --female-color: #db2777;
+            --male-color: #0284c7;
+            --wife-1: #f59e0b;
+            --wife-2: #10b981;
+            --wife-3: #ec4899;
+            --wife-4: #38bdf8;
+            --sun-core: #d97706;
+            --gen-1: #b45309; --gen-2: #d97706; --gen-3: #059669; --gen-4: #0284c7;
+            --gen-5: #7c3aed; --gen-6: #db2777; --gen-7: #e11d48; --gen-8: #9333ea;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
-        body { margin: 0; padding: 0; background: var(--bg-canvas); color: var(--text-main); overflow: hidden; height: 100vh; width: 100vw; user-select: none; }
-        
+
+        body {
+            margin: 0; padding: 0; background: var(--bg-canvas); color: var(--text-main);
+            overflow: hidden; height: 100vh; width: 100vw; user-select: none;
+        }
+
         #stars-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.35; }
 
-        /* شاشة التحميل الملكية المانعة للشاشة البيضاء */
+        /* شاشة الاستقبال الملكية */
+        #welcome-modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 16px;
+            transition: opacity 0.5s ease;
+        }
+        .welcome-card {
+            background: #ffffff; border: 2.5px solid var(--gold-border); border-radius: 24px;
+            max-width: 520px; width: 100%; padding: 28px 24px; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: zoomInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes zoomInCard { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .welcome-crest {
+            width: 70px; height: 70px; border-radius: 50%; background: #fffdf6; border: 2px solid var(--gold-border);
+            display: flex; justify-content: center; align-items: center; margin: 0 auto 14px auto;
+            font-size: 2rem; color: var(--gold-primary); box-shadow: 0 4px 15px rgba(180,83,9,0.15);
+        }
+        .welcome-title { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--text-main); margin: 0 0 6px 0; font-weight: 700; }
+        .welcome-dedication { font-size: 0.88rem; color: var(--gold-primary); font-weight: bold; margin-bottom: 16px; }
+        
+        .hadith-quote-box {
+            background: #fffdf9; border: 1.5px dashed var(--gold-border); border-radius: 16px;
+            padding: 14px; margin-bottom: 20px; color: #78350f; font-size: 0.86rem; line-height: 1.6;
+        }
+        .btn-enter-galaxy {
+            background: var(--text-main); color: #fff; border: 2px solid var(--gold-border);
+            padding: 12px 30px; border-radius: 30px; font-weight: 800; font-size: 1rem; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 20px rgba(15,23,42,0.2);
+        }
+        .btn-enter-galaxy:hover { background: var(--gold-primary); transform: translateY(-2px); }
+
+        /* الهيدر العلوي */
+        .galaxy-header {
+            position: fixed; top: 0; left: 0; right: 0; height: 72px;
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(15px); z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+            border-bottom: 2px solid var(--gold-border); box-shadow: 0 4px 20px rgba(180,83,9,0.06);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .galaxy-brand { display: flex; align-items: center; gap: 12px; }
+        .galaxy-brand i { font-size: 2rem; color: var(--gold-border); filter: drop-shadow(0 2px 6px rgba(180,83,9,0.2)); }
+        .galaxy-brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.45rem; color: var(--text-main); font-weight: 700; }
+        .galaxy-brand span { font-size: 0.75rem; color: var(--gold-primary); display: block; font-weight: bold; }
+
+        .header-controls { display: flex; align-items: center; gap: 10px; }
+
+        .btn-cinema {
+            background: #fffdf6; border: 1.5px solid var(--gold-border); color: var(--gold-primary);
+            padding: 7px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-cinema:hover { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+
+        .search-galaxy-box { position: relative; width: 220px; }
+        @media (max-width: 650px) { .search-galaxy-box { display: none; } }
+        .search-galaxy-input {
+            width: 100%; padding: 8px 34px 8px 12px; border-radius: 20px;
+            border: 1.5px solid #cbd5e1; background: #fff; color: var(--text-main); font-size: 0.85rem;
+        }
+        .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--gold-primary); font-size: 0.8rem; }
+
+        /* مساحة العمل الفلكية D3 */
+        #galaxy-viewport {
+            position: absolute; inset: 0; z-index: 2; cursor: grab; display: flex; justify-content: center; align-items: center;
+        }
+        #galaxy-viewport:active { cursor: grabbing; }
+
+        /* لوحة التحكم بالدوران */
+        .rotation-speed-panel {
+            position: fixed; top: 85px; right: 16px; z-index: 900;
+            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 30px; padding: 6px 12px; display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); backdrop-filter: blur(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .speed-pill-group { display: flex; gap: 3px; background: #f1f5f9; padding: 3px; border-radius: 20px; }
+        .btn-speed {
+            background: transparent; border: none; font-size: 0.72rem; font-weight: bold; color: var(--text-muted);
+            padding: 4px 8px; border-radius: 14px; cursor: pointer;
+        }
+        .btn-speed.active { background: var(--text-main); color: #fff; }
+
+        .btn-rot-step {
+            background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); width: 28px; height: 28px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.75rem;
+        }
+
+        /* أدوات التقريب السريع */
+        .quick-zoom-dock {
+            position: fixed; top: 85px; left: 16px; z-index: 900;
+            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 30px; padding: 6px 10px; display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); backdrop-filter: blur(10px);
+        }
+        .btn-dock-tool {
+            background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); padding: 4px 10px;
+            border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px;
+        }
+        .btn-dock-tool:hover { background: var(--text-main); color: #fff; }
+
+        /* شريط الأجيال السفلي */
+        .generations-orbit-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 40px; padding: 6px 16px; z-index: 1000; backdrop-filter: blur(20px);
+            display: flex; align-items: center; gap: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            max-width: 95vw; overflow-x: auto;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .gen-pill {
+            display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px;
+            font-size: 0.74rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+            border: 1px solid #e2e8f0; background: #fff; color: var(--text-main);
+        }
+        .gen-pill.active { background: var(--text-main); border-color: var(--text-main); color: #fff; }
+        .gen-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        .btn-auto-trace {
+            background: linear-gradient(45deg, var(--gold-primary), #f59e0b); color: #fff; border: none;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3);
+            animation: pulseGlow 2s infinite; white-space: nowrap; flex-shrink: 0;
+        }
+        .btn-auto-trace.active { background: var(--text-main); animation: none; }
+        @keyframes pulseGlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* زر الإرجاع لوضع العرض الصافي */
+        .cinema-restore-trigger {
+            position: fixed; top: 18px; right: 18px; z-index: 1100;
+            background: rgba(255, 255, 255, 0.95); border: 2px solid var(--gold-border);
+            border-radius: 30px; padding: 8px 16px; display: none; align-items: center; gap: 8px;
+            box-shadow: 0 6px 25px rgba(180, 83, 9, 0.2); cursor: pointer; font-weight: bold; color: var(--gold-primary);
+        }
+
+        body.cinema-mode .galaxy-header { opacity: 0; transform: translateY(-100%); pointer-events: none; }
+        body.cinema-mode .rotation-speed-panel { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+        body.cinema-mode .quick-zoom-dock { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+        body.cinema-mode .generations-orbit-bar { opacity: 0; transform: translateX(-50%) translateY(100%); pointer-events: none; }
+        body.cinema-mode .cinema-restore-trigger { display: flex; }
+
+        /* سلسلة النسب الذهبية */
+        .golden-chain-bar {
+            position: fixed; top: 85px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: #fff; border: 2px solid var(--gold-border); border-radius: 30px; padding: 8px 18px;
+            z-index: 950; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(180,83,9,0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; pointer-events: none;
+            max-width: 90vw; overflow-x: auto;
+        }
+        .golden-chain-bar.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+        .chain-step { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 800; color: var(--text-main); white-space: nowrap; }
+        .chain-step i { color: var(--gold-primary); font-size: 0.7rem; }
+        .chain-step.last { color: var(--gold-primary); background: #fef3c7; padding: 2px 8px; border-radius: 12px; }
+
+        /* بطاقة العضو الفنية المتجاوبة */
+        .member-art-card-modal {
+            position: fixed; bottom: 85px; right: 20px; width: 340px; max-width: 90vw;
+            background: #fff; border: 2px solid var(--gold-border);
+            border-radius: 20px; padding: 18px; z-index: 1000;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12); display: none; flex-direction: column;
+        }
+        @media (max-width: 500px) {
+            .member-art-card-modal { right: 5vw; left: 5vw; width: 90vw; bottom: 75px; }
+            .rotation-speed-panel { top: auto; bottom: 80px; right: 50%; transform: translateX(50%); }
+            .quick-zoom-dock { top: 85px; left: 50%; transform: translateX(-50%); width: auto; justify-content: center; }
+            .golden-chain-bar { top: 130px; }
+        }
+        .art-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .art-card-avatar {
+            width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold-border);
+            display: flex; justify-content: center; align-items: center; font-size: 1.3rem; background: #f8fafc;
+        }
+        .art-card-name { font-family: 'Amiri', serif; font-size: 1.35rem; font-weight: 700; color: var(--text-main); margin: 0; }
+        .art-card-meta { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; font-weight: 600; }
+        .art-card-contacts { display: flex; gap: 8px; margin-top: 12px; }
+        .art-btn-icon {
+            flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid var(--gold-border);
+            background: #fffdf6; color: var(--gold-primary); text-decoration: none; font-size: 0.82rem; font-weight: bold;
+            display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer;
+        }
+
+        /* رسومات D3 */
+        .node-circle { cursor: pointer; transition: all 0.3s ease; stroke-width: 2.5px; }
+        .node-circle:hover { stroke: var(--text-main) !important; stroke-width: 4px; }
+        .node-circle.active-target { stroke: var(--text-main) !important; stroke-width: 4.5px; filter: drop-shadow(0 0 16px var(--gold-border)); }
+        
+        .spouse-moon { cursor: pointer; stroke: #ffffff; stroke-width: 2px; transition: transform 0.25s ease; }
+        .spouse-moon:hover { transform: scale(1.4); filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); }
+        .spouse-orbit-ring { fill: none; stroke: rgba(180, 83, 9, 0.2); stroke-dasharray: 3 3; stroke-width: 1.2px; }
+
+        .link-line { fill: none; stroke: rgba(180, 83, 9, 0.2); stroke-width: 1.5px; transition: all 0.3s ease; }
+        .link-line.highlighted { stroke: var(--gold-primary) !important; stroke-width: 3.5px !important; }
+
+        .node-text {
+            font-weight: 800; fill: var(--text-main); text-anchor: middle; pointer-events: none;
+            paint-order: stroke fill; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round;
+        }
+
+        /* شاشة التحميل الملكية المعدلة للتكسير السطري */
         #galaxy-loader {
             position: fixed; inset: 0; background: var(--bg-canvas); z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px;
@@ -33,118 +258,49 @@
         }
         .orbit-core { width: 24px; height: 24px; background: var(--gold-primary); border-radius: 50%; box-shadow: 0 0 25px var(--gold-border); }
         @keyframes spinOrbit { to { transform: rotate(360deg); } }
-
-        .galaxy-header {
-            position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(15px); z-index: 1000; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; border-bottom: 2px solid var(--gold-border); box-shadow: 0 4px 20px rgba(180, 83, 9, 0.08);
-            transition: all 0.5s ease;
-        }
-        .galaxy-brand { display: flex; align-items: center; gap: 10px; }
-        .galaxy-brand i { font-size: 1.8rem; color: var(--gold-border); }
-        .galaxy-brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.3rem; color: var(--text-main); font-weight: 700; }
-        .galaxy-brand span { font-size: 0.7rem; color: var(--gold-primary); display: block; font-weight: bold; }
-
-        .header-controls { display: flex; align-items: center; gap: 10px; }
-        .btn-cinema {
-            background: #fffdf6; border: 1.5px solid var(--gold-border); color: var(--gold-primary);
-            padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
-            display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(180,83,9,0.1);
-        }
-        .search-galaxy-box { position: relative; width: 180px; }
-        @media (max-width: 650px) { .search-galaxy-box { display: none; } .galaxy-brand span { display: none; } }
-        .search-galaxy-input { width: 100%; padding: 7px 30px 7px 12px; border-radius: 20px; border: 1.5px solid #cbd5e1; font-size: 0.8rem; }
-        .search-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--gold-primary); font-size: 0.8rem; }
-
-        #galaxy-viewport { position: absolute; inset: 0; z-index: 2; cursor: grab; display: flex; justify-content: center; align-items: center; }
-        #galaxy-viewport:active { cursor: grabbing; }
-
-        .rotation-speed-panel {
-            position: fixed; top: 85px; right: 15px; z-index: 900; background: var(--panel-bg); border: 1.5px solid var(--gold-border);
-            border-radius: 30px; padding: 6px 10px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            transition: all 0.5s ease;
-        }
-        .speed-pill-group { display: flex; gap: 2px; background: #f1f5f9; padding: 3px; border-radius: 20px; }
-        .btn-speed { background: transparent; border: none; font-size: 0.75rem; font-weight: bold; color: var(--text-muted); padding: 4px 8px; border-radius: 14px; cursor: pointer; }
-        .btn-speed.active { background: var(--text-main); color: #fff; }
-
-        .quick-zoom-dock {
-            position: fixed; top: 85px; left: 15px; z-index: 900; background: var(--panel-bg); border: 1.5px solid var(--gold-border);
-            border-radius: 30px; padding: 6px 10px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            transition: all 0.5s ease;
-        }
-        .btn-dock-tool { background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); padding: 4px 10px; border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-
-        .generations-orbit-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--panel-bg); border: 1.5px solid var(--gold-border);
-            border-radius: 40px; padding: 6px 12px; z-index: 1000; display: flex; align-items: center; gap: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            max-width: 90vw; overflow-x: auto; transition: all 0.5s ease;
-        }
-        
-        /* زر الإضاءة العشوائية الجديد */
-        .btn-auto-trace {
-            background: linear-gradient(45deg, var(--gold-primary), #f59e0b); color: #fff; border: none;
-            padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; cursor: pointer;
-            display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3);
-            animation: pulseGlow 2s infinite; white-space: nowrap; flex-shrink: 0;
-        }
-        .btn-auto-trace.active { background: var(--text-main); animation: none; }
-        @keyframes pulseGlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        .gen-pill { display: flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid #e2e8f0; background: #fff; color: var(--text-main); }
-        .gen-pill.active { background: var(--text-main); color: #fff; }
-
-        .golden-chain-bar {
-            position: fixed; top: 140px; left: 50%; transform: translateX(-50%) translateY(-150px);
-            background: #fff; border: 2px solid var(--gold-border); border-radius: 30px; padding: 8px 16px;
-            z-index: 950; display: flex; align-items: center; gap: 6px; box-shadow: 0 10px 30px rgba(180,83,9,0.15);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; pointer-events: none; max-width: 90vw; overflow-x: auto;
-        }
-        .golden-chain-bar.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
-        .chain-step { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; font-weight: 800; color: var(--text-main); white-space: nowrap; }
-        .chain-step.last { color: var(--gold-primary); background: #fef3c7; padding: 2px 8px; border-radius: 12px; }
-
-        .cinema-restore-trigger {
-            position: fixed; top: 18px; right: 18px; z-index: 1100; background: rgba(255, 255, 255, 0.95); border: 2px solid var(--gold-border);
-            border-radius: 30px; padding: 8px 16px; display: none; align-items: center; gap: 8px; box-shadow: 0 6px 25px rgba(180, 83, 9, 0.2); cursor: pointer; font-weight: bold; color: var(--gold-primary);
-        }
-
-        body.cinema-mode .galaxy-header, body.cinema-mode .rotation-speed-panel, body.cinema-mode .quick-zoom-dock, body.cinema-mode .generations-orbit-bar { opacity: 0; pointer-events: none; }
-        body.cinema-mode .cinema-restore-trigger { display: flex; }
-
-        @media (max-width: 768px) {
-            .rotation-speed-panel { top: auto; bottom: 80px; right: 50%; transform: translateX(50%); }
-            .quick-zoom-dock { top: 85px; left: 50%; transform: translateX(-50%); width: auto; justify-content: center; }
-            .golden-chain-bar { top: 130px; }
-        }
-
-        /* رسومات D3 المتباعدة وحرم الأسماء */
-        .node-circle { cursor: pointer; transition: all 0.3s ease; stroke-width: 2.5px; }
-        .node-circle.active-target { stroke: var(--text-main) !important; stroke-width: 5px; filter: drop-shadow(0 0 16px var(--gold-border)); }
-        .spouse-moon { cursor: pointer; stroke: #ffffff; stroke-width: 2px; transition: transform 0.25s ease; }
-        .spouse-orbit-ring { fill: none; stroke: rgba(180, 83, 9, 0.2); stroke-dasharray: 3 3; stroke-width: 1.2px; }
-        .link-line { fill: none; stroke: rgba(180, 83, 9, 0.22); stroke-width: 1.5px; transition: all 0.3s ease; }
-        .link-line.highlighted { stroke: var(--gold-primary) !important; stroke-width: 3.5px !important; }
-        .node-text { font-weight: 800; fill: var(--text-main); text-anchor: middle; pointer-events: none; paint-order: stroke fill; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
     </style>
 </head>
 <body>
 
     <canvas id="stars-canvas"></canvas>
 
-    <!-- شاشة التحميل لا تختفي إلا بعد الرسم -->
+    <!-- شاشة التحميل المعدلة للترحم بسطرين -->
     <div id="galaxy-loader">
         <div class="orbit-spinner"><div class="orbit-core"></div></div>
         <div style="font-family:'Amiri', serif; font-size:1.55rem; color:var(--text-main); font-weight:700;">أطلس ومجرة آل الشمايلة المباركة</div>
-        <div style="font-size:0.92rem; color:var(--gold-primary); font-weight:bold;">صدقة جارية عن روح المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة</div>
+        <div style="font-size:0.92rem; color:var(--gold-primary); font-weight:bold; line-height:1.6; text-align:center;">
+            صدقة جارية عن روح المرحوم بإذن الله تعالى<br>الحاج أبو علي الشمايلة
+        </div>
+    </div>
+
+    <!-- شاشة الاستقبال الروحانية الملكية -->
+    <div id="welcome-modal-overlay">
+        <div class="welcome-card">
+            <div class="welcome-crest"><i class="fas fa-crown"></i></div>
+            <h2 class="welcome-title">أطلس ومجرة آل الشمايلة المباركة</h2>
+            <div class="welcome-dedication">صدقة جارية عن روح المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة</div>
+
+            <div class="hadith-quote-box">
+                <i class="fas fa-quote-right" style="color:var(--gold-border); margin-left:4px;"></i>
+                عَنْ أَنَسِ بْنِ مَالِكٍ رَضِيَ اللَّهُ عَنْهُ، أَنَّ رَسُولَ اللَّهِ ﷺ قَالَ:
+                <br>
+                <strong>«مَنْ أَحَبَّ أَنْ يُبْسَطَ لَهُ فِي رِزْقِهِ، وَيُنْسَأَ لَهُ فِي أَثَرِهِ، فَلْيَصِلْ رَحِمَهُ»</strong>
+                <br>
+                <small style="color:var(--text-muted);">[صحيح البخاري ومسلم]</small>
+            </div>
+
+            <button class="btn-enter-galaxy" onclick="dismissWelcomeModal()">
+                بِسْمِ اللَّهِ نَدْخُلُ مَجَرَّةَ الأَجْيَالِ <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
     </div>
 
     <header class="galaxy-header">
         <div class="galaxy-brand">
             <i class="fas fa-crown"></i>
             <div>
-                <h1>أطلس ومجرة آل الشمايلة</h1>
-                <span>المجرة الفلكية الشاملة لكافة الأجيال</span>
+                <h1>مجرة آل الشمايلة</h1>
+                <span></span>
             </div>
         </div>
         <div class="header-controls">
@@ -170,7 +326,10 @@
             <button class="btn-speed active" id="sp0" onclick="setSpinSpeed(0, this)">⏸ إيقاف</button>
             <button class="btn-speed" id="sp1" onclick="setSpinSpeed(1, this)">1x بطيء</button>
             <button class="btn-speed" id="sp2" onclick="setSpinSpeed(2, this)">2x متزن</button>
+            <button class="btn-speed" id="sp3" onclick="setSpinSpeed(3, this)">3x سريع</button>
         </div>
+        <button class="btn-rot-step" onclick="rotateGalaxyBy(-30)" title="تدوير يميناً 30°"><i class="fas fa-rotate-left"></i></button>
+        <button class="btn-rot-step" onclick="rotateGalaxyBy(30)" title="تدوير يساراً 30°"><i class="fas fa-rotate-right"></i></button>
     </div>
 
     <div class="golden-chain-bar" id="goldenChainBar">
@@ -184,7 +343,6 @@
     </div>
 
     <nav class="generations-orbit-bar" id="generationBar">
-        <!-- زر النبض العشوائي لإضاءة الأنساب -->
         <button class="btn-auto-trace" id="btnAutoTrace" onclick="toggleAutoTrace()"><i class="fas fa-magic"></i> إضاءة الأنساب</button>
         
         <div class="gen-pill active" onclick="filterByGeneration(0, this)"><div class="gen-dot" style="background:#0f172a;"></div> الكل</div>
@@ -195,14 +353,36 @@
         <div class="gen-pill" onclick="filterByGeneration(7, this)"><div class="gen-dot" style="background:var(--gen-7);"></div> ج7-9 (الأحفاد)</div>
     </nav>
 
+    <div class="member-art-card-modal" id="memberArtCard">
+        <div class="art-card-header">
+            <div>
+                <h3 class="art-card-name" id="cardName">الاسم</h3>
+                <span id="cardTitle" style="font-size:0.75rem; color:var(--gold-primary); font-weight:bold;">اللقب التكريمي</span>
+            </div>
+            <div class="art-card-avatar" id="cardAvatar"><i class="fas fa-user-tie" style="color:var(--male-color);"></i></div>
+        </div>
+
+        <div style="border-top:1.5px dashed #e2e8f0; padding-top:10px; margin-top:4px;">
+            <div class="art-card-meta" id="cardGenTier"><i class="fas fa-circle-nodes"></i> الجيل: <strong style="color:var(--text-main);">الجيل الرابع</strong></div>
+            <div class="art-card-meta" id="cardMotherBox"><i class="fas fa-heart"></i> الأم المباشرة: <strong id="cardMotherName" style="color:var(--gold-primary);">خضرة الحباشنة</strong></div>
+            <div class="art-card-meta" id="cardSpousesBox"><i class="fas fa-ring"></i> الزوجات (الأقمار): <span id="cardSpousesList" style="color:var(--text-main); font-weight:bold;">مهى الأورفه لي</span></div>
+            <div class="art-card-meta" id="cardDatesBox"><i class="fas fa-calendar-alt"></i> الحقبة: <span id="cardDates" style="color:var(--text-main); font-weight:bold;">1950 - حي يرزق</span></div>
+        </div>
+
+        <div class="art-card-contacts">
+            <button class="art-btn-icon" onclick="traceFullLineage()"><i class="fas fa-route" style="color:var(--gold-primary);"></i> إضاءة مسار النسب</button>
+            <button class="art-btn-icon" onclick="closeArtCard()" style="flex:0.35;"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
     <script>
         const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
-        const CACHE_KEY = "shamayleh_galaxy_cache_v2026_perfect";
+        const CACHE_KEY = "shamayleh_galaxy_cache_v2026_instant";
         
         let rawTreeData = null;
         let rootHierarchy = null;
         let selectedNodeData = null;
-        let allLeafNodes = []; // للإضاءة العشوائية
+        let allLeafNodes = []; 
         
         let currentRotation = 0;
         let spinSpeedLevel = 0;
@@ -213,7 +393,12 @@
 
         const wifeColors = ["#f59e0b", "#10b981", "#ec4899", "#38bdf8", "#8b5cf6"];
 
-        // المحرك السريع: يفتح الشاشة البيضاء ويحمل في الخلفية
+        function dismissWelcomeModal() {
+            const overlay = document.getElementById('welcome-modal-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
+        }
+
         function loadGalaxyDataFast() {
             try {
                 const cached = localStorage.getItem(CACHE_KEY);
@@ -233,7 +418,6 @@
                         rawTreeData = res.tree;
                         initGalaxyVisualization();
                     } else if (rawTreeData) {
-                        // إذا كانت البيانات نفسها والرسمة موجودة، فقط اخفِ شاشة التحميل
                         hideLoaderSafely();
                     }
                 }
@@ -245,7 +429,6 @@
         }
 
         function hideLoaderSafely() {
-            // نستخدم requestAnimationFrame لضمان أن المتصفح أنهى عمليات الرسم الثقيلة
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     const loader = document.getElementById('galaxy-loader');
@@ -266,10 +449,8 @@
             if (!rawTreeData) return;
             rootHierarchy = d3.hierarchy(rawTreeData);
             
-            // جمع الأطراف للإضاءة العشوائية
             allLeafNodes = rootHierarchy.descendants().filter(d => !d.children || d.children.length === 0);
             
-            // تأخير بسيط لعدم تجميد واجهة المستخدم أثناء الرسم
             setTimeout(() => {
                 renderRadialGalaxy();
                 hideLoaderSafely();
@@ -285,7 +466,6 @@
             const isMobile = width < 768;
 
             const maxDepth = d3.max(rootHierarchy.descendants(), d => d.depth) || 8;
-            // توسيع الحرم الفلكي لمنع تداخل النصوص
             const radius = Math.max(1600, maxDepth * 320);
 
             const treeLayout = d3.tree()
@@ -332,7 +512,7 @@
                 .attr("fill", d => d.depth === 0 ? "var(--sun-core)" : (d.data.gender === 'female' ? "var(--female-color)" : "var(--male-color)"))
                 .attr("stroke", "#ffffff")
                 .on("click", (e, d) => {
-                    if (isAutoTracing) toggleAutoTrace(); // إيقاف التتبع عند النقر اليدوي
+                    if (isAutoTracing) toggleAutoTrace();
                     traceFullLineage(d);
                 });
 
@@ -384,9 +564,6 @@
             });
         }
 
-        // =========================================================================
-        // 🔮 محرك النبض العشوائي لإضاءة الأنساب (Auto-Trace Engine)
-        // =========================================================================
         function toggleAutoTrace() {
             const btn = document.getElementById('btnAutoTrace');
             isAutoTracing = !isAutoTracing;
@@ -394,7 +571,6 @@
             if (isAutoTracing) {
                 btn.classList.add('active');
                 btn.innerHTML = '<i class="fas fa-stop"></i> إيقاف النبض';
-                // إغلاق أي نافذة مفتوحة
                 closeGoldenChain();
                 
                 function traceNextRandom() {
@@ -403,7 +579,6 @@
                         const randomNode = allLeafNodes[Math.floor(Math.random() * allLeafNodes.length)];
                         traceFullLineage(randomNode);
                         
-                        // توجيه الكاميرا نحو النجم المختار ببطء
                         const width = window.innerWidth;
                         const height = window.innerHeight;
                         const transform = d3.zoomIdentity.translate(width/2, height/2).scale(0.85).translate(-randomNode.y * Math.cos(randomNode.x - Math.PI/2), -randomNode.y * Math.sin(randomNode.x - Math.PI/2));
@@ -411,8 +586,8 @@
                     }
                     autoTraceInterval = setTimeout(() => {
                         closeGoldenChain();
-                        setTimeout(traceNextRandom, 800); // راحة قصيرة ثم نبض جديد
-                    }, 4500); // مدة إضاءة المسار
+                        setTimeout(traceNextRandom, 800);
+                    }, 4500); 
                 }
                 traceNextRandom();
 
@@ -425,14 +600,10 @@
             }
         }
 
-        // =========================================================================
-        // 🌟 إضاءة وتتبع السلسلة
-        // =========================================================================
         function traceFullLineage(node) {
             if (!node) return;
             selectedNodeData = node;
             
-            // إطفاء البقية وإضاءة النجم المختار
             d3.selectAll(".node-circle").classed("active-target", false);
             d3.select(`#node-g-${node.data.id} circle`).classed("active-target", true);
 
@@ -440,7 +611,6 @@
             let curr = node;
             while (curr) { chain.unshift(curr); curr = curr.parent; }
 
-            // إضاءة الروابط
             d3.selectAll(".link-line").classed("highlighted", false).style("opacity", 0.1);
             d3.selectAll(".node-element").style("opacity", 0.2);
 
@@ -451,7 +621,6 @@
                 }
             });
 
-            // تعبئة شريط النسب العلوي
             const container = document.getElementById('chainStepsContainer');
             container.innerHTML = '';
             chain.forEach((n, idx) => {
@@ -473,9 +642,6 @@
             d3.selectAll(".node-circle").classed("active-target", false);
         }
 
-        // =========================================================================
-        // 🎮 الدوران والتحكم بالكاميرا
-        // =========================================================================
         function setSpinSpeed(speedLevel, btn) {
             spinSpeedLevel = speedLevel;
             document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
@@ -517,7 +683,7 @@
         }
 
         function filterByGeneration(gen, btn) {
-            if (isAutoTracing) toggleAutoTrace(); // تعطيل الإضاءة العشوائية عند التصفية
+            if (isAutoTracing) toggleAutoTrace();
             document.querySelectorAll('.gen-pill').forEach(p => p.classList.remove('active'));
             btn.classList.add('active');
 
@@ -538,7 +704,6 @@
             if (matched) traceFullLineage(matched);
         }
 
-        // ذرات النور الخلفية
         const canvas = document.getElementById("stars-canvas");
         const ctx = canvas.getContext("2d");
         let stars = [];
@@ -564,7 +729,6 @@
         window.addEventListener('resize', () => { initStars(); if (rootHierarchy) renderRadialGalaxy(); });
         initStars(); drawStars();
 
-        // تشغيل التحميل اللحظي
         loadGalaxyDataFast();
     </script>
 </body>
