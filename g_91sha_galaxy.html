@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مجرة وسجل أجيال آل الشمايلة - الأطلس الفلكي السريع</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        :root {
+            --gold-primary: #b45309;
+            --gold-light: #fef08a;
+            --gold-border: #d4af37;
+            --bg-deep: #f8fafc;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --female-color: #db2777;
+            --male-color: #0284c7;
+            --wife-1: #f59e0b;
+            --wife-2: #10b981;
+            --wife-3: #ec4899;
+            --wife-4: #38bdf8;
+            --gen-1: #b45309; --gen-2: #d97706; --gen-3: #059669; --gen-4: #0284c7;
+            --gen-5: #7c3aed; --gen-6: #db2777; --gen-7: #e11d48; --gen-8: #9333ea;
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
+
+        body {
+            margin: 0; padding: 0; background: var(--bg-deep); color: var(--text-main);
+            overflow: hidden; height: 100vh; width: 100vw; user-select: none;
+            background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px); background-size: 28px 28px;
+        }
+
+        #stars-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.4; }
+
+        .galaxy-header {
+            position: fixed; top: 0; left: 0; right: 0; height: 75px;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 24px;
+            border-bottom: 2px solid var(--gold-border); box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .galaxy-brand { display: flex; align-items: center; gap: 14px; }
+        .galaxy-brand i { font-size: 2.2rem; color: var(--gold-border); filter: drop-shadow(0 2px 8px rgba(180,83,9,0.25)); }
+        .galaxy-brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.55rem; color: var(--text-main); font-weight: 700; }
+        .galaxy-brand span { font-size: 0.78rem; color: var(--gold-primary); display: block; font-weight: bold; }
+
+        .view-mode-selector {
+            display: flex; background: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: 30px; padding: 4px; gap: 4px;
+        }
+        .mode-btn {
+            background: transparent; border: none; color: var(--text-muted); padding: 8px 18px;
+            border-radius: 20px; font-size: 0.84rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .mode-btn.active { background: var(--text-main); color: #fff; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.2); }
+
+        .search-galaxy-box { position: relative; width: 260px; }
+        .search-galaxy-input {
+            width: 100%; padding: 9px 38px 9px 14px; border-radius: 20px;
+            border: 1.5px solid #cbd5e1; background: #fff; color: var(--text-main); font-size: 0.88rem;
+        }
+        .search-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--gold-primary); font-size: 0.85rem; }
+
+        #galaxy-viewport {
+            position: absolute; inset: 0; z-index: 2; cursor: grab; display: flex; justify-content: center; align-items: center;
+        }
+        #galaxy-viewport:active { cursor: grabbing; }
+
+        .rotation-control-panel {
+            position: fixed; top: 90px; right: 20px; z-index: 900;
+            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 30px; padding: 6px 14px; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); backdrop-filter: blur(10px);
+        }
+        .btn-rot {
+            background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); width: 32px; height: 32px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-rot:hover { background: var(--text-main); color: #fff; }
+        .btn-rot.active { background: var(--gold-primary); color: #fff; }
+
+        .generations-orbit-bar {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 40px; padding: 8px 20px; z-index: 1000; backdrop-filter: blur(20px);
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .gen-pill {
+            display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.25s;
+            border: 1px solid #e2e8f0; background: #fff; color: var(--text-main);
+        }
+        .gen-pill.active { background: var(--text-main); border-color: var(--text-main); color: #fff; }
+        .gen-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        .golden-chain-bar {
+            position: fixed; top: 90px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: #fff; border: 2px solid var(--gold-border); border-radius: 30px; padding: 10px 22px;
+            z-index: 950; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(180,83,9,0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; pointer-events: none;
+        }
+        .golden-chain-bar.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+        .chain-step { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 800; color: var(--text-main); }
+        .chain-step i { color: var(--gold-primary); font-size: 0.75rem; }
+        .chain-step.last { color: var(--gold-primary); background: #fef3c7; padding: 2px 8px; border-radius: 12px; }
+
+        .member-art-card-modal {
+            position: fixed; bottom: 95px; right: 25px; width: 350px;
+            background: #fff; border: 2px solid var(--gold-border);
+            border-radius: 20px; padding: 20px; z-index: 1000;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12); display: none; flex-direction: column;
+        }
+        .art-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .art-card-avatar {
+            width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--gold-border);
+            display: flex; justify-content: center; align-items: center; font-size: 1.4rem; background: #f8fafc;
+        }
+        .art-card-name { font-family: 'Amiri', serif; font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin: 0; }
+        .art-card-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-weight: 600; }
+        .art-card-contacts { display: flex; gap: 8px; margin-top: 14px; }
+        .art-btn-icon {
+            flex: 1; padding: 9px; border-radius: 10px; border: 1.5px solid var(--gold-border);
+            background: #fffdf6; color: var(--gold-primary); text-decoration: none; font-size: 0.85rem; font-weight: bold;
+            display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer;
+        }
+        .art-btn-icon:hover { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+
+        /* تباعد وحرم الأقمار والأسماء */
+        .node-circle { cursor: pointer; transition: all 0.3s ease; stroke-width: 2.5px; }
+        .node-circle:hover { stroke: var(--text-main) !important; stroke-width: 4px; }
+        .node-circle.active-target { stroke: var(--text-main) !important; stroke-width: 4.5px; filter: drop-shadow(0 0 15px var(--gold-primary)); }
+        
+        .spouse-moon {
+            cursor: pointer; stroke: #ffffff; stroke-width: 2.5px; transition: all 0.25s ease;
+        }
+        .spouse-moon:hover { transform: scale(1.35); filter: drop-shadow(0 0 10px rgba(0,0,0,0.35)); }
+        
+        .spouse-orbit-ring {
+            fill: none; stroke: rgba(180, 83, 9, 0.22); stroke-dasharray: 3 3; stroke-width: 1.2px;
+        }
+
+        .link-line { fill: none; stroke: rgba(180, 83, 9, 0.25); stroke-width: 1.5px; transition: all 0.3s ease; }
+        .link-line.highlighted { stroke: var(--gold-primary) !important; stroke-width: 3.5px !important; }
+
+        .node-text {
+            font-size: 12px; font-weight: 800; fill: var(--text-main); text-anchor: middle; pointer-events: none;
+            paint-order: stroke fill; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="stars-canvas"></canvas>
+
+    <header class="galaxy-header">
+        <div class="galaxy-brand">
+            <i class="fas fa-crown"></i>
+            <div>
+                <h1>أطلس ومجرة آل الشمايلة</h1>
+                <span>الأفق الفني المطور لكافة الأجيال والذراري</span>
+            </div>
+        </div>
+
+        <div class="view-mode-selector">
+            <button class="mode-btn active" id="btnModeRadial" onclick="switchVisualMode('radial')"><i class="fas fa-atom"></i> مجرة المدارات (360°)</button>
+            <button class="mode-btn" id="btnModeStream" onclick="switchVisualMode('stream')"><i class="fas fa-water"></i> أنهار السلالة الأفقية</button>
+        </div>
+
+        <div class="search-galaxy-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="galaxySearchInput" class="search-galaxy-input" placeholder="ابحث عن الاسم أو الفرع..." oninput="handleGalaxySearch(this.value)">
+        </div>
+    </header>
+
+    <div class="rotation-control-panel" id="rotationPanel">
+        <span style="font-size:0.75rem; font-weight:bold; color:var(--gold-primary);"><i class="fas fa-arrows-rotate"></i> التدوير 360°:</span>
+        <button class="btn-rot" onclick="rotateGalaxyBy(-30)" title="تدوير لليمين 30°"><i class="fas fa-rotate-left"></i></button>
+        <button class="btn-rot" onclick="rotateGalaxyBy(30)" title="تدوير لليسار 30°"><i class="fas fa-rotate-right"></i></button>
+        <button class="btn-rot" id="btnAutoSpin" onclick="toggleAutoSpin()" title="دوران كوني انسيابي"><i class="fas fa-circle-notch"></i></button>
+        <button class="btn-rot" onclick="resetGalaxyRotation()" title="إعادة التمركز"><i class="fas fa-compass"></i></button>
+    </div>
+
+    <div class="golden-chain-bar" id="goldenChainBar">
+        <span style="font-size:0.85rem; color:var(--gold-primary); font-weight:bold;"><i class="fas fa-crown"></i> سلسلة النسب:</span>
+        <div id="chainStepsContainer" style="display:flex; align-items:center; gap:8px;"></div>
+        <button onclick="closeGoldenChain()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem; margin-right:8px;">&times;</button>
+    </div>
+
+    <div id="galaxy-viewport">
+        <svg id="galaxy-svg" style="width:100%; height:100%;"></svg>
+    </div>
+
+    <nav class="generations-orbit-bar" id="generationBar">
+        <span style="font-size:0.8rem; color:var(--gold-primary); font-weight:bold;"><i class="fas fa-layer-group"></i> المدارات:</span>
+        <div class="gen-pill active" onclick="filterByGeneration(0, this)"><div class="gen-dot" style="background:#0f172a;"></div> الكل (200+)</div>
+        <div class="gen-pill" onclick="filterByGeneration(1, this)"><div class="gen-dot" style="background:var(--gen-1);"></div> الجيل 1 (حمد)</div>
+        <div class="gen-pill" onclick="filterByGeneration(2, this)"><div class="gen-dot" style="background:var(--gen-2);"></div> الجيل 2 (قبلان)</div>
+        <div class="gen-pill" onclick="filterByGeneration(3, this)"><div class="gen-dot" style="background:var(--gen-3);"></div> الجيل 3 (شهاب)</div>
+        <div class="gen-pill" onclick="filterByGeneration(4, this)"><div class="gen-dot" style="background:var(--gen-4);"></div> الجيل 4 (لافي وإخوانه)</div>
+        <div class="gen-pill" onclick="filterByGeneration(5, this)"><div class="gen-dot" style="background:var(--gen-5);"></div> الجيل 5 (محمد وإخوانه)</div>
+        <div class="gen-pill" onclick="filterByGeneration(6, this)"><div class="gen-dot" style="background:var(--gen-6);"></div> الجيل 6 (أبناء محمد)</div>
+        <div class="gen-pill" onclick="filterByGeneration(7, this)"><div class="gen-dot" style="background:var(--gen-7);"></div> الجيل 7-9 (الذرية المباركة)</div>
+    </nav>
+
+    <div class="member-art-card-modal" id="memberArtCard">
+        <div class="art-card-header">
+            <div>
+                <h3 class="art-card-name" id="cardName">الاسم</h3>
+                <span id="cardTitle" style="font-size:0.78rem; color:var(--gold-primary); font-weight:bold;">اللقب التكريمي</span>
+            </div>
+            <div class="art-card-avatar" id="cardAvatar"><i class="fas fa-user-tie" style="color:var(--male-color);"></i></div>
+        </div>
+
+        <div style="border-top:1.5px dashed #e2e8f0; padding-top:10px; margin-top:6px;">
+            <div class="art-card-meta" id="cardGenTier"><i class="fas fa-circle-nodes"></i> الجيل: <strong style="color:var(--text-main);">الجيل الرابع</strong></div>
+            <div class="art-card-meta" id="cardMotherBox"><i class="fas fa-heart"></i> الأم المباشرة: <strong id="cardMotherName" style="color:var(--gold-primary);">خضرة الحباشنة</strong></div>
+            <div class="art-card-meta" id="cardSpousesBox"><i class="fas fa-ring"></i> الزوجات (الأقمار): <span id="cardSpousesList" style="color:var(--text-main); font-weight:bold;">مهى الأورفه لي</span></div>
+            <div class="art-card-meta" id="cardDatesBox"><i class="fas fa-calendar-alt"></i> الحقبة: <span id="cardDates" style="color:var(--text-main); font-weight:bold;">1950 - حي يرزق</span></div>
+        </div>
+
+        <div class="art-card-contacts">
+            <button class="art-btn-icon" onclick="traceFullLineage()"><i class="fas fa-route" style="color:var(--gold-primary);"></i> إضاءة مسار النسب</button>
+            <button class="art-btn-icon" onclick="closeArtCard()" style="flex:0.4;"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <script>
+        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
+        const CACHE_KEY = "shamayleh_galaxy_cache_v2026";
+        let rawTreeData = null;
+        let rootHierarchy = null;
+        let currentVisualMode = 'radial';
+        let selectedNodeData = null;
+        let activeGenFilter = 0;
+
+        let currentRotation = 0;
+        let isAutoSpinning = false;
+        let autoSpinInterval = null;
+
+        const wifeColors = ["#f59e0b", "#10b981", "#ec4899", "#38bdf8", "#8b5cf6"];
+        const genColors = {
+            1: "#b45309", 2: "#d97706", 3: "#059669", 4: "#0284c7",
+            5: "#7c3aed", 6: "#db2777", 7: "#e11d48", 8: "#9333ea", 9: "#6366f1"
+        };
+
+        // محرك السرعة اللحظية: التحميل من الكاش في 0.01 ثانية والتحديث بالخلفية
+        function loadGalaxyDataFast() {
+            try {
+                const cached = localStorage.getItem(CACHE_KEY);
+                if (cached) {
+                    rawTreeData = JSON.parse(cached);
+                    initGalaxyVisualization();
+                }
+            } catch(e){}
+
+            // سحب التحديث من السيرفر بسلاسة
+            const script = document.createElement('script');
+            const callback = 'onGalaxyTreeLoaded_' + Date.now();
+            window[callback] = function(res) {
+                if (res && res.status === 'success' && res.tree) {
+                    const newJson = JSON.stringify(res.tree);
+                    const oldJson = localStorage.getItem(CACHE_KEY);
+                    if (newJson !== oldJson || !rawTreeData) {
+                        localStorage.setItem(CACHE_KEY, newJson);
+                        rawTreeData = res.tree;
+                        initGalaxyVisualization();
+                    }
+                }
+                delete window[callback];
+                try { document.body.removeChild(script); } catch(e){}
+            };
+            script.src = `${API_ENDPOINT}?action=get_full_tree_data&callback=${callback}&t=${Date.now()}`;
+            document.body.appendChild(script);
+        }
+
+        const svg = d3.select("#galaxy-svg");
+        const gMain = svg.append("g").attr("id", "galaxy-main-group");
+        const zoomBehavior = d3.zoom().scaleExtent([0.1, 4.0]).on("zoom", (e) => gMain.attr("transform", e.transform));
+        svg.call(zoomBehavior);
+
+        function initGalaxyVisualization() {
+            if (!rawTreeData) return;
+            rootHierarchy = d3.hierarchy(rawTreeData);
+            renderCurrentVisualMode();
+        }
+
+        function renderCurrentVisualMode() {
+            gMain.selectAll("*").remove();
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            const rotPanel = document.getElementById('rotationPanel');
+            if (currentVisualMode === 'radial') {
+                rotPanel.style.display = 'flex';
+                renderRadialGalaxy(width, height);
+            } else if (currentVisualMode === 'stream') {
+                rotPanel.style.display = 'none';
+                renderHorizontalStream(width, height);
+            }
+        }
+
+        // =========================================================================
+        // 🌌 نمط 1: مجرة المدارات مع حماية حرم الأسماء وتوسيع التباعد الفلكي
+        // =========================================================================
+        let gRadialContainer = null;
+
+        function renderRadialGalaxy(width, height) {
+            const maxDepth = d3.max(rootHierarchy.descendants(), d => d.depth) || 8;
+            // توسيع نصف القطر لضمان تباعد فسيح ومريح
+            const radius = Math.max(1350, maxDepth * 260);
+
+            const treeLayout = d3.tree()
+                .size([2 * Math.PI, radius])
+                .separation((a, b) => (a.parent == b.parent ? 2.6 : 4.5) / (a.depth || 1));
+
+            treeLayout(rootHierarchy);
+
+            gRadialContainer = gMain.append("g")
+                .attr("id", "radial-rotatable-group")
+                .attr("transform", `translate(${width / 2}, ${height / 2}) rotate(${currentRotation})`);
+
+            // دوائر المدارات
+            const orbitGroup = gRadialContainer.append("g").attr("class", "orbit-rings");
+            for (let i = 1; i <= maxDepth; i++) {
+                const r = (radius / maxDepth) * i;
+                orbitGroup.append("circle")
+                    .attr("r", r)
+                    .attr("fill", "none")
+                    .attr("stroke", "rgba(180, 83, 9, 0.12)")
+                    .attr("stroke-dasharray", "4 6");
+            }
+
+            // روابط النسب
+            const linkGenerator = d3.linkRadial().angle(d => d.x).radius(d => d.y);
+            gRadialContainer.append("g")
+                .selectAll("path")
+                .data(rootHierarchy.links())
+                .join("path")
+                .attr("class", "link-line")
+                .attr("id", d => `link-${d.source.data.id}-${d.target.data.id}`)
+                .attr("d", d => linkGenerator(d));
+
+            // العقد والنجوم
+            const nodeGroup = gRadialContainer.append("g")
+                .selectAll("g")
+                .data(rootHierarchy.descendants())
+                .join("g")
+                .attr("class", "node-element")
+                .attr("id", d => `node-g-${d.data.id}`)
+                .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y}, 0)`);
+
+            // دوائر النجوم
+            nodeGroup.append("circle")
+                .attr("class", "node-circle")
+                .attr("r", d => d.depth === 0 ? 17 : (d.depth <= 2 ? 13 : (d.depth <= 4 ? 10 : 8)))
+                .attr("fill", d => d.data.gender === 'female' ? "var(--female-color)" : "var(--male-color)")
+                .attr("stroke", "#ffffff")
+                .on("click", (e, d) => selectGalaxyNode(d));
+
+            // أقمار الزوجات مع زاوية تباعد وحرم محمي
+            nodeGroup.each(function(d) {
+                if (d.data.spouses && d.data.spouses.length > 0) {
+                    const gSpouses = d3.select(this).append("g").attr("class", "spouses-orbit-group");
+                    const orbitDist = 24;
+
+                    gSpouses.append("circle")
+                        .attr("class", "spouse-orbit-ring")
+                        .attr("r", orbitDist);
+
+                    d.data.spouses.forEach((sp, idx) => {
+                        const totalSp = d.data.spouses.length;
+                        const angle = (idx * (2 * Math.PI / totalSp)) - (Math.PI / 2);
+                        const mx = orbitDist * Math.cos(angle);
+                        const my = orbitDist * Math.sin(angle);
+                        const moonColor = sp.color || wifeColors[idx % wifeColors.length];
+
+                        const moon = gSpouses.append("g")
+                            .attr("class", "spouse-moon-group")
+                            .attr("transform", `translate(${mx}, ${my})`)
+                            .on("click", (e) => {
+                                e.stopPropagation();
+                                highlightWifeBranch(d, sp.name);
+                            });
+
+                        moon.append("circle")
+                            .attr("class", "spouse-moon")
+                            .attr("r", 6)
+                            .attr("fill", moonColor);
+
+                        moon.append("title")
+                            .text(`الزوجة: ${sp.name} (انقر لعرض ذريتها)`);
+                    });
+                }
+            });
+
+            // نصوص الأسماء مع الإزاحة الخارجية لمنع التداخل
+            nodeGroup.append("text")
+                .attr("class", "node-text")
+                .attr("dy", "0.32em")
+                .text(d => d.data.name);
+
+            updateSmartTextOrientation();
+            svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(0.7));
+        }
+
+        function updateSmartTextOrientation() {
+            if (!gRadialContainer) return;
+            gRadialContainer.selectAll(".node-element").each(function(d) {
+                const nodeAngleDeg = (d.x * 180 / Math.PI - 90 + currentRotation) % 360;
+                const normalized = (nodeAngleDeg + 360) % 360;
+                const isLeftHalf = normalized > 90 && normalized < 270;
+                const offset = (d.data.spouses && d.data.spouses.length > 0) ? 36 : 18;
+
+                d3.select(this).select("text")
+                    .attr("x", isLeftHalf ? -offset : offset)
+                    .attr("text-anchor", isLeftHalf ? "end" : "start")
+                    .attr("transform", isLeftHalf ? "rotate(180)" : null);
+            });
+        }
+
+        function rotateGalaxyBy(deltaDeg) {
+            currentRotation = (currentRotation + deltaDeg) % 360;
+            applyGalaxyRotation();
+        }
+
+        function resetGalaxyRotation() {
+            currentRotation = 0;
+            if (isAutoSpinning) toggleAutoSpin();
+            applyGalaxyRotation();
+        }
+
+        function applyGalaxyRotation() {
+            if (gRadialContainer) {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                gRadialContainer.attr("transform", `translate(${width / 2}, ${height / 2}) rotate(${currentRotation})`);
+                updateSmartTextOrientation();
+            }
+        }
+
+        function toggleAutoSpin() {
+            const btn = document.getElementById('btnAutoSpin');
+            isAutoSpinning = !isAutoSpinning;
+            if (isAutoSpinning) {
+                btn.classList.add('active');
+                autoSpinInterval = setInterval(() => { rotateGalaxyBy(0.3); }, 40);
+            } else {
+                btn.classList.remove('active');
+                clearInterval(autoSpinInterval);
+            }
+        }
+
+        function highlightWifeBranch(parentNode, wifeName) {
+            d3.selectAll(".node-element").style("opacity", d => {
+                if (d.data.id === parentNode.data.id) return 1;
+                if (d.data.motherName && d.data.motherName.includes(wifeName)) return 1;
+                if (d.parent && d.parent.data.motherName && d.parent.data.motherName.includes(wifeName)) return 1;
+                return 0.12;
+            });
+            d3.selectAll(".link-line").style("opacity", 0.1);
+
+            const card = document.getElementById('memberArtCard');
+            document.getElementById('cardName').innerText = `فرع الزوجة: ${wifeName}`;
+            document.getElementById('cardTitle').innerText = `زوجة ${parentNode.data.name}`;
+            document.getElementById('cardGenTier').innerHTML = `<i class="fas fa-moon"></i> مدار القمر: <strong style="color:var(--gold-primary);">${wifeName}</strong>`;
+            document.getElementById('cardMotherBox').style.display = 'none';
+            document.getElementById('cardSpousesBox').style.display = 'none';
+            document.getElementById('cardDatesBox').innerHTML = `<i class="fas fa-users"></i> ذرية هذه الزوجة مضاءة الآن في الشجرة`;
+            card.style.display = 'flex';
+        }
+
+        // =========================================================================
+        // 🌊 نمط 2: أنهار السلالة الأفقية الحقيقية (RTL Flow)
+        // =========================================================================
+        function renderHorizontalStream(width, height) {
+            // مباعدة أفقية 260px ورأسية 58px لمنع أي تداخل
+            const treeLayout = d3.tree().nodeSize([58, 260]);
+            treeLayout(rootHierarchy);
+
+            const streamGroup = gMain.append("g").attr("id", "stream-main-group");
+            const linkGen = d3.linkHorizontal().x(d => -d.y).y(d => d.x);
+
+            streamGroup.append("g")
+                .selectAll("path")
+                .data(rootHierarchy.links())
+                .join("path")
+                .attr("class", "link-line")
+                .attr("id", d => `link-${d.source.data.id}-${d.target.data.id}`)
+                .attr("d", d => linkGen(d))
+                .attr("transform", `translate(${width * 0.88}, ${height / 2})`);
+
+            const nodeGroup = streamGroup.append("g")
+                .selectAll("g")
+                .data(rootHierarchy.descendants())
+                .join("g")
+                .attr("class", "node-element")
+                .attr("id", d => `node-g-${d.data.id}`)
+                .attr("transform", d => `translate(${width * 0.88 - d.y}, ${height / 2 + d.x})`);
+
+            nodeGroup.append("circle")
+                .attr("class", "node-circle")
+                .attr("r", 9)
+                .attr("fill", d => d.data.gender === 'female' ? "var(--female-color)" : "var(--male-color)")
+                .attr("stroke", "#ffffff")
+                .on("click", (e, d) => selectGalaxyNode(d));
+
+            nodeGroup.append("text")
+                .attr("class", "node-text")
+                .attr("x", -16)
+                .attr("dy", "0.32em")
+                .attr("text-anchor", "end")
+                .text(d => d.data.name);
+
+            svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(0.75));
+        }
+
+        function selectGalaxyNode(d) {
+            selectedNodeData = d;
+            d3.selectAll(".node-circle").classed("active-target", false);
+            d3.select(`#node-g-${d.data.id} circle`).classed("active-target", true);
+
+            const card = document.getElementById('memberArtCard');
+            document.getElementById('cardName').innerText = d.data.name;
+            document.getElementById('cardTitle').innerText = d.data.title || `سليل فرع ${d.data.branch || 'لافي'}`;
+            document.getElementById('cardGenTier').innerHTML = `<i class="fas fa-circle-nodes"></i> مرتبة النسب: <strong style="color:var(--gold-primary);">الجيل ${d.data.generation || 1}</strong>`;
+
+            const isFemale = d.data.gender === 'female';
+            document.getElementById('cardAvatar').innerHTML = `<i class="fas ${isFemale ? 'fa-female' : 'fa-user-tie'}" style="color:${isFemale ? 'var(--female-color)' : 'var(--male-color)'};"></i>`;
+
+            if (d.data.motherName) {
+                document.getElementById('cardMotherBox').style.display = 'flex';
+                document.getElementById('cardMotherName').innerText = d.data.motherName;
+            } else {
+                document.getElementById('cardMotherBox').style.display = 'none';
+            }
+
+            if (d.data.spouses && d.data.spouses.length > 0) {
+                document.getElementById('cardSpousesBox').style.display = 'flex';
+                document.getElementById('cardSpousesList').innerText = d.data.spouses.map(s => s.name).join('، ');
+            } else {
+                document.getElementById('cardSpousesBox').style.display = 'none';
+            }
+
+            const birth = d.data.birthDate || '';
+            const death = d.data.deathDate || '';
+            document.getElementById('cardDates').innerText = (birth || death) ? `${birth || 'غير مسجل'} ➔ ${death || 'حي يرزق'}` : 'عقد موثق';
+
+            card.style.display = 'flex';
+        }
+
+        function closeArtCard() { document.getElementById('memberArtCard').style.display = 'none'; }
+
+        function traceFullLineage() {
+            if (!selectedNodeData) return;
+            const chain = [];
+            let curr = selectedNodeData;
+            while (curr) { chain.unshift(curr); curr = curr.parent; }
+
+            d3.selectAll(".link-line").classed("highlighted", false);
+            for (let i = 0; i < chain.length - 1; i++) {
+                d3.select(`#link-${chain[i].data.id}-${chain[i+1].data.id}`).classed("highlighted", true);
+            }
+
+            const container = document.getElementById('chainStepsContainer');
+            container.innerHTML = '';
+
+            chain.forEach((node, idx) => {
+                const isLast = (idx === chain.length - 1);
+                container.innerHTML += `
+                    <div class="chain-step ${isLast ? 'last' : ''}">
+                        <span>${node.data.name}</span>
+                        ${!isLast ? '<i class="fas fa-chevron-left"></i>' : ''}
+                    </div>
+                `;
+            });
+
+            document.getElementById('goldenChainBar').classList.add('active');
+        }
+
+        function closeGoldenChain() {
+            document.getElementById('goldenChainBar').classList.remove('active');
+            d3.selectAll(".link-line").classed("highlighted", false);
+        }
+
+        function switchVisualMode(mode) {
+            currentVisualMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            if (mode === 'radial') document.getElementById('btnModeRadial').classList.add('active');
+            if (mode === 'stream') document.getElementById('btnModeStream').classList.add('active');
+            renderCurrentVisualMode();
+        }
+
+        function filterByGeneration(gen, btn) {
+            activeGenFilter = gen;
+            document.querySelectorAll('.gen-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (gen === 0) {
+                d3.selectAll(".node-element").style("opacity", 1);
+                d3.selectAll(".link-line").style("opacity", 1);
+            } else {
+                d3.selectAll(".node-element").style("opacity", d => (d.data.generation === gen || (gen === 7 && d.data.generation >= 7)) ? 1 : 0.12);
+                d3.selectAll(".link-line").style("opacity", 0.08);
+            }
+        }
+
+        function handleGalaxySearch(query) {
+            if (!query.trim()) {
+                d3.selectAll(".node-circle").classed("active-target", false);
+                return;
+            }
+            const clean = query.trim().toLowerCase();
+            const matched = rootHierarchy.descendants().find(d => d.data.name.toLowerCase().includes(clean));
+            if (matched) selectGalaxyNode(matched);
+        }
+
+        const canvas = document.getElementById("stars-canvas");
+        const ctx = canvas.getContext("2d");
+        let stars = [];
+
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = Array.from({ length: 60 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.8 + 0.4,
+                alpha: Math.random() * 0.5 + 0.2,
+                dx: (Math.random() - 0.5) * 0.12,
+                dy: (Math.random() - 0.5) * 0.12
+            }));
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180, 83, 9, ${s.alpha})`;
+                ctx.fill();
+
+                s.x += s.dx; s.y += s.dy;
+                if (s.x < 0) s.x = canvas.width;
+                if (s.x > canvas.width) s.x = 0;
+                if (s.y < 0) s.y = canvas.height;
+                if (s.y > canvas.height) s.y = 0;
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        window.addEventListener('resize', initStars);
+        initStars();
+        drawStars();
+
+        // تشغيل التحميل الفوري
+        loadGalaxyDataFast();
+    </script>
+</body>
+</html>
