@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>مجرة وأطلس آل الشمايلة - الإصدار الفلكي الفوري</title>
+    <title>مجرة وأطلس آل الشمايلة - الإصدار الملكي الشامل المكتمل</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,7 +21,6 @@
             --male-color: #0284c7;
             --wife-1: #f59e0b;
             --wife-2: #10b981;
-            --wife-3: #ec4899;
             --sun-core: #d97706;
             --gen-1: #b45309; --gen-2: #d97706; --gen-3: #059669; --gen-4: #0284c7;
             --gen-5: #7c3aed; --gen-6: #db2777; --gen-7: #e11d48; --gen-8: #9333ea;
@@ -31,7 +30,6 @@
         body { margin: 0; padding: 0; background: var(--bg-canvas); color: var(--text-main); overflow: hidden; height: 100vh; width: 100vw; user-select: none; }
         #stars-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.35; }
 
-        /* شاشة التحميل السلسة التي تختفي فوراً */
         #galaxy-loader {
             position: fixed; inset: 0; background: var(--bg-canvas); z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px;
@@ -56,12 +54,18 @@
         .galaxy-brand span { font-size: 0.72rem; color: var(--gold-primary); display: block; font-weight: bold; }
 
         .header-controls { display: flex; align-items: center; gap: 10px; }
+        .status-pill {
+            display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold;
+            background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 20px;
+        }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+
         .btn-cinema {
             background: #fffdf6; border: 1.5px solid var(--gold-border); color: var(--gold-primary);
             padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
             display: flex; align-items: center; gap: 6px;
         }
-        .search-galaxy-box { position: relative; width: 200px; }
+        .search-galaxy-box { position: relative; width: 190px; }
         @media (max-width: 650px) { .search-galaxy-box, .galaxy-brand span { display: none; } }
         .search-galaxy-input { width: 100%; padding: 7px 32px 7px 12px; border-radius: 20px; border: 1.5px solid #cbd5e1; font-size: 0.82rem; }
         .search-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--gold-primary); font-size: 0.8rem; }
@@ -169,11 +173,12 @@
             <i class="fas fa-crown"></i>
             <div>
                 <h1>أطلس ومجرة آل الشمايلة</h1>
-                <span>المجرة الفلكية الشاملة لكافة الأجيال</span>
+                <span>المجرة الفلكية المكتملة (أكثر من 200 فرد موثق)</span>
             </div>
         </div>
 
         <div class="header-controls">
+            <div class="status-pill" id="cloudStatusBadge"><div class="status-dot"></div> <span id="statusText">سحابي مباشر</span></div>
             <button class="btn-cinema" onclick="toggleCinemaMode()"><i class="fas fa-expand"></i> المشهد الصافي</button>
             <div class="search-galaxy-box">
                 <i class="fas fa-search search-icon"></i>
@@ -213,7 +218,7 @@
 
     <nav class="generations-orbit-bar" id="generationBar">
         <button class="btn-auto-trace" id="btnAutoTrace" onclick="toggleAutoTrace()"><i class="fas fa-magic"></i> إضاءة الأنساب</button>
-        <div class="gen-pill active" onclick="filterByGeneration(0, this)"><div class="gen-dot" style="background:#0f172a;"></div> الكل</div>
+        <div class="gen-pill active" onclick="filterByGeneration(0, this)"><div class="gen-dot" style="background:#0f172a;"></div> الكل (<span id="totalNodesCount">200+</span>)</div>
         <div class="gen-pill" onclick="filterByGeneration(1, this)"><div class="gen-dot" style="background:var(--gen-1);"></div> ج1 (حمد)</div>
         <div class="gen-pill" onclick="filterByGeneration(2, this)"><div class="gen-dot" style="background:var(--gen-2);"></div> ج2 (قبلان)</div>
         <div class="gen-pill" onclick="filterByGeneration(3, this)"><div class="gen-dot" style="background:var(--gen-3);"></div> ج3 (شهاب)</div>
@@ -244,7 +249,9 @@
     </div>
 
     <script>
+        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
         const STORAGE_KEY = "shamayleh_active_tree_data_v1";
+        
         let rawTreeData = null;
         let rootHierarchy = null;
         let selectedNodeData = null;
@@ -262,23 +269,24 @@
             5: "#7c3aed", 6: "#db2777", 7: "#e11d48", 8: "#9333ea", 9: "#6366f1"
         };
 
-        // 🌟 بناء وتفكيك الشجرة فورياً من الذاكرة المحلية المشتركة مع صفحة الإدراج
-        function loadGalaxyInstant() {
+        // 🌟 1. استحضار كامل أسماء العائلة فورياً (200+ فرد) مع التحديث الحي من السحاب
+        function initGalaxyMaster() {
+            // أ. بناء الشجرة فوراً من القائمة المكتملة أو الذاكرة
             let list = null;
             try {
                 const saved = localStorage.getItem(STORAGE_KEY);
                 if (saved) list = JSON.parse(saved);
             } catch(e){}
 
-            // إذا لم توجد في الذاكرة، يتم استخدام القائمة الأساسية
-            if (!list || list.length === 0) {
-                list = getDefinitiveMasterList();
+            if (!list || list.length < 50) {
+                list = getAllDefinitiveMembers();
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch(e){}
             }
 
             rawTreeData = buildHierarchyFromFlatList(list);
             initGalaxyVisualization();
 
-            // إخفاء مؤشر التحميل فوراً في 0.2 ثانية
+            // إخفاء مؤشر التحميل في ثوانٍ معدودة
             setTimeout(() => {
                 const loader = document.getElementById('galaxy-loader');
                 if (loader) {
@@ -286,9 +294,29 @@
                     setTimeout(() => { loader.style.display = 'none'; }, 400);
                 }
             }, 200);
+
+            // ب. الاستجماع الحي من Google Sheets في الخلفية دون أي تعطيل
+            fetchLiveCloudUpdates();
         }
 
-        // خوارزمية ربط الآباء بالأبناء لبناء الهيكل الفلكي
+        // الاستجماع الحي من Google Apps Script
+        function fetchLiveCloudUpdates() {
+            const script = document.createElement('script');
+            const callback = 'onCloudTreeSync_' + Date.now();
+            window[callback] = function(res) {
+                if (res && res.status === 'success' && res.tree) {
+                    rawTreeData = res.tree;
+                    initGalaxyVisualization();
+                    document.getElementById('statusText').innerText = 'سحابي متصل ومحدث ✓';
+                }
+                delete window[callback];
+                try { document.body.removeChild(script); } catch(e){}
+            };
+            script.src = `${API_ENDPOINT}?action=get_full_tree_data&callback=${callback}&t=${Date.now()}`;
+            document.body.appendChild(script);
+        }
+
+        // تحويل القائمة المسطحة إلى هيكل شجري متداخل لـ D3
         function buildHierarchyFromFlatList(list) {
             const map = {};
             let root = null;
@@ -331,6 +359,10 @@
             if (!rawTreeData) return;
             rootHierarchy = d3.hierarchy(rawTreeData);
             allLeafNodes = rootHierarchy.descendants().filter(d => !d.children || d.children.length === 0);
+            
+            const countEl = document.getElementById('totalNodesCount');
+            if (countEl) countEl.innerText = rootHierarchy.descendants().length;
+
             renderRadialGalaxy();
         }
 
@@ -347,7 +379,7 @@
 
             const treeLayout = d3.tree()
                 .size([2 * Math.PI, radius])
-                .separation((a, b) => (a.parent == b.parent ? 3.0 : 5.0) / (a.depth || 1));
+                .separation((a, b) => (a.parent == b.parent ? 3.0 : 5.2) / (a.depth || 1));
 
             treeLayout(rootHierarchy);
 
@@ -355,11 +387,13 @@
                 .attr("id", "radial-rotatable-group")
                 .attr("transform", `translate(${width / 2}, ${height / 2}) rotate(${currentRotation})`);
 
+            // الدوائر المدارية
             const orbitGroup = gRadialContainer.append("g").attr("class", "orbit-rings");
             for (let i = 1; i <= maxDepth; i++) {
                 orbitGroup.append("circle").attr("r", (radius / maxDepth) * i).attr("fill", "none").attr("stroke", "rgba(180, 83, 9, 0.08)").attr("stroke-dasharray", "4 6");
             }
 
+            // الروابط
             const linkGenerator = d3.linkRadial().angle(d => d.x).radius(d => d.y);
             gRadialContainer.append("g")
                 .selectAll("path")
@@ -369,6 +403,7 @@
                 .attr("id", d => `link-${d.source.data.id}-${d.target.data.id}`)
                 .attr("d", d => linkGenerator(d));
 
+            // العقد والنجوم
             const nodeGroup = gRadialContainer.append("g")
                 .selectAll("g")
                 .data(rootHierarchy.descendants())
@@ -393,7 +428,7 @@
                     traceFullLineage(d);
                 });
 
-            // رسم أقمار الزوجات
+            // أقمار الزوجات الملونة
             nodeGroup.each(function(d) {
                 if (d.data.spouses && d.data.spouses.length > 0) {
                     const gSpouses = d3.select(this).append("g").attr("class", "spouses-orbit-group");
@@ -545,7 +580,8 @@
             svg.transition().duration(800).call(zoomBehavior.transform, d3.zoomIdentity.translate(w/2, h/2).scale(w < 768 ? 0.9 : 1.2).translate(-w/2, -h/2));
         }
         function zoomFitGalaxy() {
-            svg.transition().duration(800).call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(window.innerWidth < 768 ? 0.35 : 0.45));
+            const w = window.innerWidth;
+            svg.transition().duration(800).call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(w < 768 ? 0.35 : 0.45));
         }
 
         function filterByGeneration(gen, btn) {
@@ -596,83 +632,297 @@
         window.addEventListener('resize', () => { initStars(); if (rootHierarchy) renderRadialGalaxy(); });
         initStars(); drawStars();
 
-        // 📜 القائمة الأساسية الشاملة لآل الشمايلة المحققة بالكامل
-        function getDefinitiveMasterList() {
-            return [
-                { id: "SHM-001", name: "حَمَد الشمايلة", title: "الجد الأكبر", generation: 1, branch: "الأصل" },
-                { id: "SHM-002", name: "قَبْلان", title: "الجد", generation: 2, branch: "فرع قبلان", fatherId: "SHM-001" },
-                { id: "SHM-003", name: "شِهاب", title: "جد السلالة", generation: 3, branch: "فرع شهاب", fatherId: "SHM-002" },
-                { id: "SHM-007", name: "لافي", title: "عميد الأسرة", generation: 4, branch: "فرع لافي", fatherId: "SHM-003" },
-                { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 5, branch: "فرع محمد لافي", fatherId: "SHM-007", spouses: [{ name: "فاطمة", color: "#f59e0b" }, { name: "خضراء", color: "#10b981" }] },
-                
-                // بيت فاطمة
-                { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 6, branch: "فرع علي", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 6, branch: "فرع سارة", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 6, branch: "فرع جميلة", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 6, branch: "فرع يحيى", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة", color: "#ec4899" }] },
-                { id: "SHM-105", name: "صالح", title: "أبو طلال", generation: 6, branch: "فرع صالح", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-106", name: "خالد", title: "أبو وليد", generation: 6, branch: "فرع خالد", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-107", name: "طه", title: "أبو محمد", generation: 6, branch: "فرع طه", fatherId: "SHM-010", motherName: "فاطمة" },
+        // =========================================================================
+        // 📜 2. قاعدة الأنساب الكبرى الكاملة والمحققة 100% (أكثر من 200 فرد)
+        // =========================================================================
+        function getAllDefinitiveMembers() {
+            const list = [];
+            function addM(id, name, title, parentId, motherName, gender, gen, branch, spouses = []) {
+                list.push({ id, name, title: title || "", fatherId: parentId || "", motherName: motherName || "", gender, generation: gen, branch: branch || "الأصل", spouses: spouses || [] });
+            }
 
-                // بيت خضراء
-                { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 6, branch: "فرع فيصل", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي", color: "#ec4899" }] },
-                { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 6, branch: "فرع حنان", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 6, branch: "فرع زيد", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 6, branch: "فرع زياد", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 6, branch: "فرع خالدة", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء" },
+            // الجذع
+            addM("SHM-001", "حَمَد الشمايلة", "الجد الأكبر", "", "", "male", 1, "الأصل");
+            addM("SHM-002", "قَبْلان", "الجد", "SHM-001", "", "male", 2, "فرع قبلان");
+            addM("SHM-003", "شِهاب", "جد السلالة", "SHM-002", "", "male", 3, "فرع شهاب");
+            addM("SHM-007", "لافي", "عميد الأسرة", "SHM-003", "", "male", 4, "فرع لافي");
 
-                // ذرية سارة (أم أحمد)
-                { id: "SAR-01", name: "نوال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-02", name: "أحمد", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-03", name: "منال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-04", name: "محمود", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-05", name: "ماري", title: "زوجة غالب", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-06", name: "مالك", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-07", name: "رابعة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-08", name: "رائدة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-
-                // أبناء أحمد بن سارة
-                { id: "SA-01", name: "حسن", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
-                { id: "SA-02", name: "عبدالله", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
-                { id: "SA-03", name: "محمد", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
-                { id: "SA-04", name: "ياسين", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
-                { id: "SA-05", name: "عبدالرحمن", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
-                { id: "SA-06", name: "نوف", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
-                { id: "SA-061", name: "فهد", generation: 9, branch: "فرع سارة", fatherId: "SA-06", motherName: "نوف" },
-                { id: "SA-062", name: "رفيف", generation: 9, branch: "فرع سارة", fatherId: "SA-06", motherName: "نوف" },
-                { id: "SA-07", name: "شهد", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
-
-                // سلالة جميلة (8 فروع كاملين)
-                { id: "JAM-01", name: "فاطمة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-02", name: "غالب بن جميلة", title: "زوج ماري", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
-                { id: "JAM-03", name: "سميرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-04", name: "عبدالله بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
-                { id: "JAM-05", name: "أميرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-06", name: "وزيرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-07", name: "سمير بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
-                { id: "JAM-08", name: "زيدان بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
-
-                // أبناء عبدالله بن جميلة
-                { id: "JA-01", name: "براءة", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-02", name: "عبدالرحمن", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-021", name: "آدم", generation: 9, branch: "أبناء جميلة", fatherId: "JA-02" },
-                { id: "JA-022", name: "نبيل", generation: 9, branch: "أبناء جميلة", fatherId: "JA-02" },
-                { id: "JA-023", name: "كرم", generation: 9, branch: "أبناء جميلة", fatherId: "JA-02" },
-                { id: "JA-03", name: "ملاك", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-04", name: "نماء", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-05", name: "عمر", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-06", name: "ندى", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-061", name: "وسيم", generation: 9, branch: "أبناء جميلة", fatherId: "JA-06", motherName: "ندى" },
-                { id: "JA-07", name: "علي", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-08", name: "عثمان", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-09", name: "نورة", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
-                { id: "JA-10", name: "مريم", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" }
+            const mSpouses = [
+                { name: "فاطمة", color: "#f59e0b" },
+                { name: "خضراء", color: "#10b981" }
             ];
+            addM("SHM-010", "محمد", "عميد الأسرة", "SHM-007", "", "male", 5, "فرع محمد لافي", mSpouses);
+
+            // بيت فاطمة
+            addM("SHM-101", "علي", "أبو صفوان", "SHM-010", "فاطمة", "male", 6, "فرع علي");
+            addM("SHM-102", "سارة", "أم أحمد", "SHM-010", "فاطمة", "female", 6, "فرع سارة");
+            addM("SHM-103", "جميلة", "أم غالب", "SHM-010", "فاطمة", "female", 6, "فرع جميلة");
+            addM("SHM-104", "يحيى", "أبو أيمن", "SHM-010", "فاطمة", "male", 6, "فرع يحيى", [{ name: "دعد الحباشنة", color: "#ec4899" }]);
+            addM("SHM-105", "صالح", "أبو طلال", "SHM-010", "فاطمة", "male", 6, "فرع صالح");
+            addM("SHM-106", "خالد", "أبو وليد", "SHM-010", "فاطمة", "male", 6, "فرع خالد");
+            addM("SHM-107", "طه", "أبو محمد", "SHM-010", "فاطمة", "male", 6, "فرع طه");
+
+            // ذرية علي
+            addM("ALI-01", "ردينة", "", "SHM-101", "", "female", 7, "فرع علي");
+            ["شذى", "شروق", "آلاء", "آية"].forEach((n, i) => addM("ALI-01" + (i + 1), n, "", "ALI-01", "ردينة", "female", 8, "فرع علي"));
+            addM("ALI-015", "أحمد", "", "ALI-01", "ردينة", "male", 8, "فرع علي");
+            addM("ALI-02", "صفوان", "أبو علي", "SHM-101", "", "male", 7, "فرع علي");
+            addM("ALI-021", "راية", "", "ALI-02", "", "female", 8, "فرع علي");
+            addM("ALI-022", "ديما", "", "ALI-02", "", "female", 8, "فرع علي");
+            addM("ALI-023", "علي", "", "ALI-02", "", "male", 8, "فرع علي");
+            addM("ALI-03", "تقى", "", "SHM-101", "", "female", 7, "فرع علي");
+            addM("ALI-031", "مَيْس", "", "ALI-03", "تقى", "female", 8, "فرع علي");
+            addM("ALI-032", "عَطى", "", "ALI-03", "تقى", "male", 8, "فرع علي");
+            addM("ALI-04", "براء", "", "SHM-101", "", "male", 7, "فرع علي");
+            addM("ALI-05", "إبراهيم", "", "SHM-101", "", "male", 7, "فرع علي");
+            addM("ALI-051", "عبدالله", "", "ALI-05", "", "male", 8, "فرع علي");
+
+            // ذرية سارة
+            addM("SAR-01", "نوال", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            addM("SAR-02", "أحمد", "", "SHM-102", "سارة", "male", 7, "فرع سارة");
+            ["حسن", "عبدالله", "محمد", "ياسين", "عبدالرحمن"].forEach((n, i) => addM("SAR-02" + (i + 1), n, "", "SAR-02", "", "male", 8, "فرع سارة"));
+            addM("SAR-026", "نوف", "", "SAR-02", "", "female", 8, "فرع سارة");
+            addM("SAR-0261", "فهد", "", "SAR-026", "نوف", "male", 9, "فرع سارة");
+            addM("SAR-0262", "رفيف", "", "SAR-026", "نوف", "female", 9, "فرع سارة");
+            addM("SAR-027", "شهد", "", "SAR-02", "", "female", 8, "فرع سارة");
+            addM("SAR-03", "منال", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            addM("SAR-031", "بثينة", "", "SAR-03", "منال", "female", 8, "فرع سارة");
+            addM("SAR-0311", "سارة", "", "SAR-031", "بثينة", "female", 9, "فرع سارة");
+            addM("SAR-0312", "أحمد", "", "SAR-031", "بثينة", "male", 9, "فرع سارة");
+            addM("SAR-04", "محمود", "", "SHM-102", "سارة", "male", 7, "فرع سارة");
+            ["سارة", "بشرى", "تسنيم"].forEach((n, i) => addM("SAR-04" + (i + 1), n, "", "SAR-04", "", "female", 8, "فرع سارة"));
+            addM("SAR-05", "ماري", "زوجة غالب", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            ["هبة", "هلا", "شروق"].forEach((n, i) => addM("SAR-05" + (i + 1), n, "", "SAR-05", "ماري", "female", 8, "فرع سارة"));
+            addM("SAR-054", "محمد", "", "SAR-05", "ماري", "male", 8, "فرع سارة");
+            addM("SAR-06", "مالك", "", "SHM-102", "سارة", "male", 7, "فرع سارة");
+            addM("SAR-061", "ريف", "", "SAR-06", "", "female", 8, "فرع سارة");
+            addM("SAR-062", "فرح", "", "SAR-06", "", "female", 8, "فرع سارة");
+            addM("SAR-063", "أنس", "", "SAR-06", "", "male", 8, "فرع سارة");
+            addM("SAR-064", "محمد", "", "SAR-06", "", "male", 8, "فرع سارة");
+            addM("SAR-07", "رابعة", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            addM("SAR-08", "رائدة", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+
+            // سلالة جميلة الكاملة
+            addM("JAM-01", "فاطمة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-02", "غالب بن جميلة", "زوج ماري", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+            addM("JAM-03", "سميرة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-04", "عبدالله بن جميلة", "", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+            addM("JAM-05", "أميرة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-06", "وزيرة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-07", "سمير بن جميلة", "", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+            addM("JAM-08", "زيدان بن جميلة", "", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+
+            // تفريعات فاطمة بنت جميلة
+            addM("JF-01", "سكينة", "", "JAM-01", "فاطمة", "female", 8, "بنات جميلة");
+            addM("JF-011", "مَيْس", "", "JF-01", "سكينة", "female", 9, "بنات جميلة");
+            ["محمد وسيم", "يوسف", "مؤمن"].forEach((n, i) => addM("JF-01" + (i + 2), n, "", "JF-01", "سكينة", "male", 9, "بنات جميلة"));
+            addM("JF-02", "عامر", "", "JAM-01", "فاطمة", "male", 8, "بنات جميلة");
+            ["زيد", "يمان", "آسر"].forEach((n, i) => addM("JF-02" + (i + 1), n, "", "JF-02", "", "male", 9, "بنات جميلة"));
+            ["إيلين", "ورود"].forEach((n, i) => addM("JF-02" + (i + 4), n, "", "JF-02", "", "female", 9, "بنات جميلة"));
+            addM("JF-03", "عمار", "", "JAM-01", "فاطمة", "male", 8, "بنات جميلة");
+            addM("JF-031", "مثنى", "", "JF-03", "", "male", 9, "بنات جميلة");
+            addM("JF-04", "سمية", "", "JAM-01", "فاطمة", "female", 8, "بنات جميلة");
+            ["عبدالله", "عبدالرحمن", "كريم", "محمد"].forEach((n, i) => addM("JF-04" + (i + 1), n, "", "JF-04", "سمية", "male", 9, "بنات جميلة"));
+            addM("JF-05", "سلام", "", "JAM-01", "فاطمة", "female", 8, "بنات جميلة");
+            ["بيان", "أميرة", "ملك", "شام", "آسيا"].forEach((n, i) => addM("JF-05" + (i + 1), n, "", "JF-05", "سلام", "female", 9, "بنات جميلة"));
+            addM("JF-06", "أحمد", "", "JAM-01", "فاطمة", "male", 8, "بنات جميلة");
+            addM("JF-061", "إبراهيم", "", "JF-06", "", "male", 9, "بنات جميلة");
+            ["مريم", "ماريا"].forEach((n, i) => addM("JF-06" + (i + 2), n, "", "JF-06", "", "female", 9, "بنات جميلة"));
+            addM("JF-07", "عمر", "", "JAM-01", "فاطمة", "male", 8, "بنات جميلة");
+            addM("JF-071", "أصيل", "", "JF-07", "", "male", 9, "بنات جميلة");
+            ["فيّ", "ريم"].forEach((n, i) => addM("JF-07" + (i + 2), n, "", "JF-07", "", "female", 9, "بنات جميلة"));
+            addM("JF-08", "ساجدة", "", "JAM-01", "فاطمة", "female", 8, "بنات جميلة");
+            ["عمّار", "يامن"].forEach((n, i) => addM("JF-08" + (i + 1), n, "", "JF-08", "ساجدة", "male", 9, "بنات جميلة"));
+            addM("JF-083", "نسمة", "", "JF-08", "ساجدة", "female", 9, "بنات جميلة");
+
+            // غالب
+            ["هبة", "هلا", "شروق"].forEach((n, i) => addM("JG-0" + (i + 1), n, "", "JAM-02", "", "female", 8, "أبناء جميلة"));
+            addM("JG-04", "محمد", "", "JAM-02", "", "male", 8, "أبناء جميلة");
+
+            // سميرة
+            addM("JS-01", "سخاء", "", "JAM-03", "سميرة", "female", 8, "بنات جميلة");
+            ["سلمى", "بانا"].forEach((n, i) => addM("JS-01" + (i + 1), n, "", "JS-01", "سخاء", "female", 9, "بنات جميلة"));
+            ["براء", "أبان", "أُبَي", "أسلم"].forEach((n, i) => addM("JS-01" + (i + 3), n, "", "JS-01", "سخاء", "male", 9, "بنات جميلة"));
+            addM("JS-02", "ضياء", "", "JAM-03", "سميرة", "male", 8, "بنات جميلة");
+            ["محمد", "أمير", "جاد", "صفوان"].forEach((n, i) => addM("JS-02" + (i + 1), n, "", "JS-02", "", "male", 9, "بنات جميلة"));
+            ["جمان", "أشرقت"].forEach((n, i) => addM("JS-02" + (i + 5), n, "", "JS-02", "", "female", 9, "بنات جميلة"));
+            addM("JS-03", "محمد", "", "JAM-03", "سميرة", "male", 8, "بنات جميلة");
+            ["وزيرة", "طيبة", "فرح", "حبيبة", "بشرى", "مسرّة"].forEach((n, i) => addM("JS-03" + (i + 1), n, "", "JS-03", "", "female", 9, "بنات جميلة"));
+            addM("JS-04", "مجدي", "", "JAM-03", "سميرة", "male", 8, "بنات جميلة");
+            addM("JS-041", "جوان", "", "JS-04", "", "female", 9, "بنات جميلة");
+            ["خطّاب", "بايزيد"].forEach((n, i) => addM("JS-04" + (i + 2), n, "", "JS-04", "", "male", 9, "بنات جميلة"));
+            addM("JS-05", "سجى", "", "JAM-03", "سميرة", "female", 8, "بنات جميلة");
+            addM("JS-051", "مودة", "", "JS-05", "سجى", "female", 9, "بنات جميلة");
+            addM("JS-052", "بِشر", "", "JS-05", "سجى", "male", 9, "بنات جميلة");
+            addM("JS-06", "أحمد", "", "JAM-03", "سميرة", "male", 8, "بنات جميلة");
+            addM("JS-07", "سندس", "", "JAM-03", "سميرة", "female", 8, "بنات جميلة");
+            addM("JS-071", "محمد", "", "JS-07", "سندس", "male", 9, "بنات جميلة");
+            addM("JS-072", "حور", "", "JS-07", "سندس", "female", 9, "بنات جميلة");
+            addM("JS-08", "سنابل", "", "JAM-03", "سميرة", "female", 8, "بنات جميلة");
+
+            // عبدالله
+            addM("JA-01", "براءة", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            ["يعرب", "تميم"].forEach((n, i) => addM("JA-01" + (i + 1), n, "", "JA-01", "براءة", "male", 9, "أبناء جميلة"));
+            addM("JA-02", "عبدالرحمن", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            ["آدم", "نبيل", "كرم"].forEach((n, i) => addM("JA-02" + (i + 1), n, "", "JA-02", "", "male", 9, "أبناء جميلة"));
+            addM("JA-03", "ملاك", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            ["سيما", "خولة", "ريحانة"].forEach((n, i) => addM("JA-03" + (i + 1), n, "", "JA-03", "ملاك", "female", 9, "أبناء جميلة"));
+            addM("JA-034", "مصعب", "", "JA-03", "ملاك", "male", 9, "أبناء جميلة");
+            addM("JA-04", "نماء", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            ["يحيى", "يوسف"].forEach((n, i) => addM("JA-04" + (i + 1), n, "", "JA-04", "نماء", "male", 9, "أبناء جميلة"));
+            addM("JA-05", "عمر", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            addM("JA-06", "ندى", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            addM("JA-061", "وسيم", "", "JA-06", "ندى", "male", 9, "أبناء جميلة");
+            addM("JA-07", "علي", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            addM("JA-08", "عثمان", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            addM("JA-09", "نورة", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            addM("JA-10", "مريم", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+
+            // أميرة
+            addM("JAMR-01", "محمد", "", "JAM-05", "أميرة", "male", 8, "بنات جميلة");
+            ["ملاك", "أميرة"].forEach((n, i) => addM("JAMR-01" + (i + 1), n, "", "JAMR-01", "", "female", 9, "بنات جميلة"));
+            ["خالد", "جاسم"].forEach((n, i) => addM("JAMR-01" + (i + 3), n, "", "JAMR-01", "", "male", 9, "بنات جميلة"));
+            addM("JAMR-02", "فاطمة", "", "JAM-05", "أميرة", "female", 8, "بنات جميلة");
+            ["سارة", "ماريّا", "تاج"].forEach((n, i) => addM("JAMR-02" + (i + 1), n, "", "JAMR-02", "فاطمة", "female", 9, "بنات جميلة"));
+            addM("JAMR-03", "عائشة", "", "JAM-05", "أميرة", "female", 8, "بنات جميلة");
+            ["مظفر", "سلطان"].forEach((n, i) => addM("JAMR-03" + (i + 1), n, "", "JAMR-03", "عائشة", "male", 9, "بنات جميلة"));
+            addM("JAMR-033", "بتول", "", "JAMR-03", "عائشة", "female", 9, "بنات جميلة");
+            addM("JAMR-04", "سارة", "", "JAM-05", "أميرة", "female", 8, "بنات جميلة");
+            addM("JAMR-05", "عبدالله", "", "JAM-05", "أميرة", "male", 8, "بنات جميلة");
+            addM("JAMR-06", "بلقيس", "", "JAM-05", "أميرة", "female", 8, "بنات جميلة");
+            ["وجد", "جمان"].forEach((n, i) => addM("JAMR-06" + (i + 1), n, "", "JAMR-06", "بلقيس", "female", 9, "بنات جميلة"));
+            addM("JAMR-07", "عبدالرحمن", "", "JAM-05", "أميرة", "male", 8, "بنات جميلة");
+
+            // وزيرة
+            addM("JW-01", "إسراء", "", "JAM-06", "وزيرة", "female", 8, "بنات جميلة");
+            ["سند", "يزيد"].forEach((n, i) => addM("JW-01" + (i + 1), n, "", "JW-01", "إسراء", "male", 9, "بنات جميلة"));
+            ["غيد", "سارة"].forEach((n, i) => addM("JW-01" + (i + 3), n, "", "JW-01", "إسراء", "female", 9, "بنات جميلة"));
+            addM("JW-02", "أحمد", "", "JAM-06", "وزيرة", "male", 8, "بنات جميلة");
+            ["عائشة", "أميمة"].forEach((n, i) => addM("JW-02" + (i + 1), n, "", "JW-02", "", "female", 9, "بنات جميلة"));
+            addM("JW-03", "فاطمة", "", "JAM-06", "وزيرة", "female", 8, "بنات جميلة");
+            ["لينا", "سِدرة"].forEach((n, i) => addM("JW-03" + (i + 1), n, "", "JW-03", "فاطمة", "female", 9, "بنات جميلة"));
+            addM("JW-033", "تَيم", "", "JW-03", "فاطمة", "male", 9, "بنات جميلة");
+            addM("JW-04", "مريم", "", "JAM-06", "وزيرة", "female", 8, "بنات جميلة");
+            addM("JW-041", "سوار", "", "JW-04", "مريم", "female", 9, "بنات جميلة");
+            ["كرم", "كنان"].forEach((n, i) => addM("JW-04" + (i + 2), n, "", "JW-04", "مريم", "male", 9, "بنات جميلة"));
+            addM("JW-05", "يوسف", "", "JAM-06", "وزيرة", "male", 8, "بنات جميلة");
+            addM("JW-051", "محمد", "", "JW-05", "", "male", 9, "بنات جميلة");
+            addM("JW-06", "دانية", "", "JAM-06", "وزيرة", "female", 8, "بنات جميلة");
+            addM("JW-07", "عمر", "", "JAM-06", "وزيرة", "male", 8, "بنات جميلة");
+            addM("JW-08", "عبدالرحمن", "", "JAM-06", "وزيرة", "male", 8, "بنات جميلة");
+
+            // سمير وزيدان
+            ["ماجد", "زيد", "يحيى"].forEach((n, i) => addM("JSM-0" + (i + 1), n, "", "JAM-07", "", "male", 8, "أبناء جميلة"));
+            addM("JSM-04", "بتول", "", "JAM-07", "", "female", 8, "أبناء جميلة");
+            ["تالا", "ليان", "لديس"].forEach((n, i) => addM("JZ-0" + (i + 1), n, "", "JAM-08", "", "female", 8, "أبناء جميلة"));
+            addM("JZ-04", "عمر", "", "JAM-08", "", "male", 8, "أبناء جميلة");
+
+            // يحيى بن محمد
+            addM("YAH-01", "يمنى", "", "SHM-104", "فاطمة", "female", 7, "فرع يحيى");
+            addM("YAH-011", "وجد", "", "YAH-01", "يمنى", "female", 8, "فرع يحيى");
+            addM("YAH-0111", "عليا", "", "YAH-011", "وجد", "female", 9, "فرع يحيى");
+            addM("YAH-012", "سلمى", "", "YAH-01", "يمنى", "female", 8, "فرع يحيى");
+            ["محسن", "عمر"].forEach((n, i) => addM("YAH-01" + (i + 3), n, "", "YAH-01", "يمنى", "male", 8, "فرع يحيى"));
+            addM("YAH-02", "أيمن", "", "SHM-104", "فاطمة", "male", 7, "فرع يحيى");
+            addM("YAH-021", "يحيى", "", "YAH-02", "", "male", 8, "فرع يحيى");
+            addM("YAH-022", "مريم", "", "YAH-02", "", "female", 8, "فرع يحيى");
+            addM("YAH-03", "عروبة", "", "SHM-104", "فاطمة", "female", 7, "فرع يحيى");
+            addM("YAH-04", "يحيى", "", "SHM-104", "فاطمة", "male", 7, "فرع يحيى");
+            ["مها", "مهرة", "ميسان"].forEach((n, i) => addM("YAH-04" + (i + 1), n, "", "YAH-04", "", "female", 8, "فرع يحيى"));
+            ["أيمن", "زيد"].forEach((n, i) => addM("YAH-04" + (i + 4), n, "", "YAH-04", "", "male", 8, "فرع يحيى"));
+
+            // صالح بن محمد
+            addM("SAL-01", "نجود", "", "SHM-105", "فاطمة", "female", 7, "فرع صالح");
+            addM("SAL-02", "طلال", "أبو شهاب", "SHM-105", "فاطمة", "male", 7, "فرع صالح");
+            ["شهد", "ماريا"].forEach((n, i) => addM("SAL-02" + (i + 1), n, "", "SAL-02", "", "female", 8, "فرع صالح"));
+            ["فيصل", "محمد", "شهاب"].forEach((n, i) => addM("SAL-02" + (i + 3), n, "", "SAL-02", "", "male", 8, "فرع صالح"));
+            addM("SAL-03", "طارق", "", "SHM-105", "فاطمة", "male", 7, "فرع صالح");
+            ["سدين", "طيف", "سارة"].forEach((n, i) => addM("SAL-03" + (i + 1), n, "", "SAL-03", "", "female", 8, "فرع صالح"));
+            addM("SAL-034", "صالح", "", "SAL-03", "", "male", 8, "فرع صالح");
+            addM("SAL-04", "طاهر", "", "SHM-105", "فاطمة", "male", 7, "فرع صالح");
+            addM("SAL-041", "نجود", "", "SAL-04", "", "female", 8, "فرع صالح");
+            ["طارق", "طلال"].forEach((n, i) => addM("SAL-04" + (i + 2), n, "", "SAL-04", "", "male", 8, "فرع صالح"));
+            addM("SAL-05", "طلعت", "", "SHM-105", "فاطمة", "male", 7, "فرع صالح");
+            addM("SAL-051", "ليان", "", "SAL-05", "", "female", 8, "فرع صالح");
+            ["طاهر", "طراد", "شادي"].forEach((n, i) => addM("SAL-05" + (i + 2), n, "", "SAL-05", "", "male", 8, "فرع صالح"));
+            addM("SAL-06", "طايل", "", "SHM-105", "فاطمة", "male", 7, "فرع صالح");
+            addM("SAL-07", "طراد", "", "SHM-105", "فاطمة", "male", 7, "فرع صالح");
+
+            // خالد بن محمد
+            ["وجدان", "تيجان", "رلا", "ربى"].forEach((n, i) => addM("KHL-0" + (i + 1), n, "", "SHM-106", "فاطمة", "female", 7, "فرع خالد"));
+            addM("KHL-05", "وليد", "أبو خالد", "SHM-106", "فاطمة", "male", 7, "فرع خالد");
+            ["أيلا", "زينة", "سارة", "سالي"].forEach((n, i) => addM("KHL-05" + (i + 1), n, "", "KHL-05", "", "female", 8, "فرع خالد"));
+            addM("KHL-055", "خالد", "", "KHL-05", "", "male", 8, "فرع خالد");
+            addM("KHL-06", "خلدون", "", "SHM-106", "فاطمة", "male", 7, "فرع خالد");
+            addM("KHL-061", "مريم", "", "KHL-06", "", "female", 8, "فرع خالد");
+            ["إبراهيم", "محمد"].forEach((n, i) => addM("KHL-06" + (i + 2), n, "", "KHL-06", "", "male", 8, "فرع خالد"));
+            addM("KHL-07", "لما", "", "SHM-106", "فاطمة", "female", 7, "فرع خالد");
+
+            // طه بن محمد
+            ["وفاء", "فاطمة", "بتول", "صفاء"].forEach((n, i) => addM("TAH-0" + (i + 1), n, "", "SHM-107", "فاطمة", "female", 7, "فرع طه"));
+            addM("TAH-05", "محمد", "", "SHM-107", "فاطمة", "male", 7, "فرع طه");
+            ["القاسم", "أركان"].forEach((n, i) => addM("TAH-05" + (i + 1), n, "", "TAH-05", "", "male", 8, "فرع طه"));
+            addM("TAH-06", "وسن", "", "SHM-107", "فاطمة", "female", 7, "فرع طه");
+            ["مصطفى", "أحمد"].forEach((n, i) => addM("TAH-0" + (i + 7), n, "", "SHM-107", "فاطمة", "male", 7, "فرع طه"));
+
+            // بيت خضراء
+            addM("SHM-108", "فيصل", "أبو هيثم", "SHM-010", "خضراء", "male", 6, "فرع فيصل", [{ name: "مهى الأورفه لي", color: "#ec4899" }]);
+            addM("SHM-109", "حنان", "أم الليث", "SHM-010", "خضراء", "female", 6, "فرع حنان");
+            addM("SHM-110", "زيد", "أبو يحيى", "SHM-010", "خضراء", "male", 6, "فرع زيد");
+            addM("SHM-111", "إيمان", "كريمة محمد", "SHM-010", "خضراء", "female", 6, "فرع محمد لافي");
+            addM("SHM-112", "زياد", "أبو محمد", "SHM-010", "خضراء", "male", 6, "فرع زياد");
+            addM("SHM-113", "خالدة", "أم أسامة", "SHM-010", "خضراء", "female", 6, "فرع خالدة");
+            addM("SHM-114", "عبلة", "كريمة محمد", "SHM-010", "خضراء", "female", 6, "فرع محمد لافي");
+
+            // فيصل
+            addM("FSL-01", "هيثم", "سليل فيصل", "SHM-108", "مهى الأورفه لي", "male", 7, "فرع فيصل", [{ name: "علا الجمال", color: "#38bdf8" }]);
+            ["جود", "فرح", "مها"].forEach((n, i) => addM("FSL-01" + (i + 1), n, "", "FSL-01", "علا الجمال", "female", 8, "فرع فيصل"));
+            addM("FSL-02", "إيهاب", "", "SHM-108", "مهى الأورفه لي", "male", 7, "فرع فيصل");
+            addM("FSL-03", "أُنس", "", "SHM-108", "مهى الأورفه لي", "female", 7, "فرع فيصل");
+            addM("FSL-031", "فيصل", "", "FSL-03", "أُنس", "male", 8, "فرع فيصل");
+            addM("FSL-032", "ياسمينة", "", "FSL-03", "أُنس", "female", 8, "فرع فيصل");
+
+            // حنان
+            addM("HNN-01", "لانا", "", "SHM-109", "حنان", "female", 7, "فرع حنان");
+            ["زينة", "لين"].forEach((n, i) => addM("HNN-01" + (i + 1), n, "", "HNN-01", "لانا", "female", 8, "فرع حنان"));
+            addM("HNN-02", "ليث", "", "SHM-109", "حنان", "male", 7, "فرع حنان");
+            addM("HNN-03", "رانيا", "", "SHM-109", "حنان", "female", 7, "فرع حنان");
+            ["راما", "رغدة", "سلمى"].forEach((n, i) => addM("HNN-03" + (i + 1), n, "", "HNN-03", "رانيا", "female", 8, "فرع حنان"));
+            addM("HNN-04", "سيف", "", "SHM-109", "حنان", "male", 7, "فرع حنان");
+            addM("HNN-041", "سَنَد", "", "HNN-04", "", "male", 8, "فرع حنان");
+            addM("HNN-042", "حنان", "", "HNN-04", "", "female", 8, "فرع حنان");
+            addM("HNN-05", "غيث", "", "SHM-109", "حنان", "male", 7, "فرع حنان");
+            addM("HNN-051", "راية", "", "HNN-05", "", "female", 8, "فرع حنان");
+            addM("HNN-052", "فيصل", "", "HNN-05", "", "male", 8, "فرع حنان");
+            addM("HNN-06", "عبدالكريم", "", "SHM-109", "حنان", "male", 7, "فرع حنان");
+            addM("HNN-061", "محمد", "", "HNN-06", "", "male", 8, "فرع حنان");
+
+            // زيد
+            ["حلا", "وجد"].forEach((n, i) => addM("ZYD-0" + (i + 1), n, "", "SHM-110", "خضراء", "female", 7, "فرع زيد"));
+            addM("ZYD-03", "يحيى", "", "SHM-110", "خضراء", "male", 7, "فرع زيد");
+            addM("ZYD-031", "عزيّة", "", "ZYD-03", "", "female", 8, "فرع زيد");
+            addM("ZYD-04", "عبدالله", "", "SHM-110", "خضراء", "male", 7, "فرع زيد");
+
+            // زياد
+            addM("ZYAD-01", "روعة", "", "SHM-112", "خضراء", "female", 7, "فرع زياد");
+            ["هزاع", "شاكر"].forEach((n, i) => addM("ZYAD-01" + (i + 1), n, "", "ZYAD-01", "روعة", "male", 8, "فرع زياد"));
+            addM("ZYAD-02", "محمد", "", "SHM-112", "خضراء", "male", 7, "فرع زياد");
+            ["نسرينة", "سارة"].forEach((n, i) => addM("ZYAD-0" + (i + 3), n, "", "SHM-112", "خضراء", "female", 7, "فرع زياد"));
+
+            // خالدة
+            addM("KHLD-01", "أسامة", "", "SHM-113", "خالدة", "male", 7, "فرع خالدة");
+            addM("KHLD-02", "محمد", "", "SHM-113", "خالدة", "male", 7, "فرع خالدة");
+            ["زيد", "عمر"].forEach((n, i) => addM("KHLD-02" + (i + 1), n, "", "KHLD-02", "", "male", 8, "فرع خالدة"));
+            addM("KHLD-03", "إبراهيم", "", "SHM-113", "خالدة", "male", 7, "فرع خالدة");
+            addM("KHLD-031", "ياسمين", "", "KHLD-03", "", "female", 8, "فرع خالدة");
+            addM("KHLD-032", "عون", "", "KHLD-03", "", "male", 8, "فرع خالدة");
+            addM("KHLD-04", "بلال", "", "SHM-113", "خالدة", "male", 7, "فرع خالدة");
+
+            return list;
         }
 
-        loadGalaxyInstant();
+        // تشغيل البناء الفوري الشامل
+        initGalaxyMaster();
     </script>
 </body>
 </html>
