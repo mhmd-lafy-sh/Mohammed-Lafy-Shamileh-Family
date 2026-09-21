@@ -3,19 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>مجرة وأطلس آل الشمايلة - الإصدار الفلكي الفوري</title>
     
-    <!-- العنوان النظيف -->
-    <title>أطلس ومجرة آل الشمايلة</title>
-
-    <!-- وسوم الميتا (Meta Tags) لإجبار الواتساب وفيسبوك على قراءة العنوان النظيف -->
-    <meta property="og:title" content="أطلس ومجرة آل الشمايلة">
-    <meta property="og:description" content="المجرة الفلكية الشاملة لكافة أجيال وذرية المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="أطلس ومجرة آل الشمايلة">
-    <meta name="twitter:description" content="المجرة الفلكية الشاملة لكافة أجيال وذرية المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة">
-    
-    <!-- الخطوط والأيقونات والمكتبات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -25,7 +14,7 @@
             --gold-primary: #b45309;
             --gold-border: #d4af37;
             --bg-canvas: #faf8f5;
-            --panel-bg: rgba(255, 255, 255, 0.94);
+            --panel-bg: rgba(255, 255, 255, 0.95);
             --text-main: #0f172a;
             --text-muted: #475569;
             --female-color: #db2777;
@@ -33,276 +22,157 @@
             --wife-1: #f59e0b;
             --wife-2: #10b981;
             --wife-3: #ec4899;
-            --wife-4: #38bdf8;
             --sun-core: #d97706;
             --gen-1: #b45309; --gen-2: #d97706; --gen-3: #059669; --gen-4: #0284c7;
             --gen-5: #7c3aed; --gen-6: #db2777; --gen-7: #e11d48; --gen-8: #9333ea;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
-
-        body {
-            margin: 0; padding: 0; background: var(--bg-canvas); color: var(--text-main);
-            overflow: hidden; height: 100vh; width: 100vw; user-select: none;
-        }
-
+        body { margin: 0; padding: 0; background: var(--bg-canvas); color: var(--text-main); overflow: hidden; height: 100vh; width: 100vw; user-select: none; }
         #stars-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.35; }
 
-        /* شاشة الاستقبال الملكية */
-        #welcome-modal-overlay {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px);
-            z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 16px;
-            transition: opacity 0.5s ease;
+        /* شاشة التحميل السلسة التي تختفي فوراً */
+        #galaxy-loader {
+            position: fixed; inset: 0; background: var(--bg-canvas); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px;
+            transition: opacity 0.4s ease;
         }
-        .welcome-card {
-            background: #ffffff; border: 2.5px solid var(--gold-border); border-radius: 24px;
-            max-width: 520px; width: 100%; padding: 28px 24px; text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: zoomInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        .orbit-spinner {
+            width: 70px; height: 70px; border: 3px dashed var(--gold-border); border-radius: 50%;
+            animation: spinOrbit 3.5s linear infinite; display: flex; justify-content: center; align-items: center;
         }
-        @keyframes zoomInCard { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        
-        .welcome-crest {
-            width: 70px; height: 70px; border-radius: 50%; background: #fffdf6; border: 2px solid var(--gold-border);
-            display: flex; justify-content: center; align-items: center; margin: 0 auto 14px auto;
-            font-size: 2rem; color: var(--gold-primary); box-shadow: 0 4px 15px rgba(180,83,9,0.15);
-        }
-        .welcome-title { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--text-main); margin: 0 0 6px 0; font-weight: 700; }
-        .welcome-dedication { font-size: 0.88rem; color: var(--gold-primary); font-weight: bold; margin-bottom: 16px; }
-        
-        .hadith-quote-box {
-            background: #fffdf9; border: 1.5px dashed var(--gold-border); border-radius: 16px;
-            padding: 14px; margin-bottom: 20px; color: #78350f; font-size: 0.86rem; line-height: 1.6;
-        }
-        .btn-enter-galaxy {
-            background: var(--text-main); color: #fff; border: 2px solid var(--gold-border);
-            padding: 12px 30px; border-radius: 30px; font-weight: 800; font-size: 1rem; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 20px rgba(15,23,42,0.2);
-        }
-        .btn-enter-galaxy:hover { background: var(--gold-primary); transform: translateY(-2px); }
+        .orbit-core { width: 22px; height: 22px; background: var(--gold-primary); border-radius: 50%; }
+        @keyframes spinOrbit { to { transform: rotate(360deg); } }
 
-        /* الهيدر العلوي */
         .galaxy-header {
-            position: fixed; top: 0; left: 0; right: 0; height: 72px;
-            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(15px); z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
-            border-bottom: 2px solid var(--gold-border); box-shadow: 0 4px 20px rgba(180,83,9,0.06);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(15px); z-index: 1000; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; border-bottom: 2px solid var(--gold-border); box-shadow: 0 4px 20px rgba(180, 83, 9, 0.06);
+            transition: all 0.5s ease;
         }
         .galaxy-brand { display: flex; align-items: center; gap: 12px; }
-        .galaxy-brand i { font-size: 2rem; color: var(--gold-border); filter: drop-shadow(0 2px 6px rgba(180,83,9,0.2)); }
-        .galaxy-brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.45rem; color: var(--text-main); font-weight: 700; }
-        .galaxy-brand span { font-size: 0.75rem; color: var(--gold-primary); display: block; font-weight: bold; }
+        .galaxy-brand i { font-size: 2rem; color: var(--gold-border); }
+        .galaxy-brand h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--text-main); font-weight: 700; }
+        .galaxy-brand span { font-size: 0.72rem; color: var(--gold-primary); display: block; font-weight: bold; }
 
         .header-controls { display: flex; align-items: center; gap: 10px; }
-
         .btn-cinema {
             background: #fffdf6; border: 1.5px solid var(--gold-border); color: var(--gold-primary);
-            padding: 7px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 800; cursor: pointer;
-            display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
         }
-        .btn-cinema:hover { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+        .search-galaxy-box { position: relative; width: 200px; }
+        @media (max-width: 650px) { .search-galaxy-box, .galaxy-brand span { display: none; } }
+        .search-galaxy-input { width: 100%; padding: 7px 32px 7px 12px; border-radius: 20px; border: 1.5px solid #cbd5e1; font-size: 0.82rem; }
+        .search-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--gold-primary); font-size: 0.8rem; }
 
-        .search-galaxy-box { position: relative; width: 220px; }
-        @media (max-width: 650px) { .search-galaxy-box { display: none; } }
-        .search-galaxy-input {
-            width: 100%; padding: 8px 34px 8px 12px; border-radius: 20px;
-            border: 1.5px solid #cbd5e1; background: #fff; color: var(--text-main); font-size: 0.85rem;
-        }
-        .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--gold-primary); font-size: 0.8rem; }
-
-        /* مساحة العمل الفلكية D3 */
-        #galaxy-viewport {
-            position: absolute; inset: 0; z-index: 2; cursor: grab; display: flex; justify-content: center; align-items: center;
-        }
+        #galaxy-viewport { position: absolute; inset: 0; z-index: 2; cursor: grab; display: flex; justify-content: center; align-items: center; }
         #galaxy-viewport:active { cursor: grabbing; }
 
-        /* لوحة التحكم بالدوران */
         .rotation-speed-panel {
-            position: fixed; top: 85px; right: 16px; z-index: 900;
-            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
-            border-radius: 30px; padding: 6px 12px; display: flex; align-items: center; gap: 6px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06); backdrop-filter: blur(10px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: fixed; top: 85px; right: 16px; z-index: 900; background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 30px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transition: all 0.5s ease;
         }
-        .speed-pill-group { display: flex; gap: 3px; background: #f1f5f9; padding: 3px; border-radius: 20px; }
-        .btn-speed {
-            background: transparent; border: none; font-size: 0.72rem; font-weight: bold; color: var(--text-muted);
-            padding: 4px 8px; border-radius: 14px; cursor: pointer;
-        }
+        .speed-pill-group { display: flex; gap: 2px; background: #f1f5f9; padding: 3px; border-radius: 20px; }
+        .btn-speed { background: transparent; border: none; font-size: 0.74rem; font-weight: bold; color: var(--text-muted); padding: 4px 8px; border-radius: 14px; cursor: pointer; }
         .btn-speed.active { background: var(--text-main); color: #fff; }
+        .btn-rot-step { background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.75rem; }
 
-        .btn-rot-step {
-            background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); width: 28px; height: 28px;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.75rem;
-        }
-
-        /* أدوات التقريب السريع */
         .quick-zoom-dock {
-            position: fixed; top: 85px; left: 16px; z-index: 900;
-            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
-            border-radius: 30px; padding: 6px 10px; display: flex; align-items: center; gap: 6px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06); backdrop-filter: blur(10px);
+            position: fixed; top: 85px; left: 16px; z-index: 900; background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 30px; padding: 6px 10px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transition: all 0.5s ease;
         }
-        .btn-dock-tool {
-            background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); padding: 4px 10px;
-            border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px;
-        }
-        .btn-dock-tool:hover { background: var(--text-main); color: #fff; }
+        .btn-dock-tool { background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); padding: 4px 10px; border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
 
-        /* شريط الأجيال السفلي */
         .generations-orbit-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--panel-bg); border: 1.5px solid var(--gold-border);
-            border-radius: 40px; padding: 6px 16px; z-index: 1000; backdrop-filter: blur(20px);
-            display: flex; align-items: center; gap: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            max-width: 95vw; overflow-x: auto;
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--panel-bg); border: 1.5px solid var(--gold-border);
+            border-radius: 40px; padding: 6px 14px; z-index: 1000; display: flex; align-items: center; gap: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            max-width: 92vw; overflow-x: auto; transition: all 0.5s ease;
         }
-        .gen-pill {
-            display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px;
-            font-size: 0.74rem; font-weight: 700; cursor: pointer; white-space: nowrap;
-            border: 1px solid #e2e8f0; background: #fff; color: var(--text-main);
-        }
-        .gen-pill.active { background: var(--text-main); border-color: var(--text-main); color: #fff; }
-        .gen-dot { width: 8px; height: 8px; border-radius: 50%; }
-
         .btn-auto-trace {
             background: linear-gradient(45deg, var(--gold-primary), #f59e0b); color: #fff; border: none;
-            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; cursor: pointer;
+            padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; cursor: pointer;
             display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3);
-            animation: pulseGlow 2s infinite; white-space: nowrap; flex-shrink: 0;
+            white-space: nowrap; flex-shrink: 0;
         }
-        .btn-auto-trace.active { background: var(--text-main); animation: none; }
-        @keyframes pulseGlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .btn-auto-trace.active { background: var(--text-main); }
 
-        /* زر الإرجاع لوضع العرض الصافي */
-        .cinema-restore-trigger {
-            position: fixed; top: 18px; right: 18px; z-index: 1100;
-            background: rgba(255, 255, 255, 0.95); border: 2px solid var(--gold-border);
-            border-radius: 30px; padding: 8px 16px; display: none; align-items: center; gap: 8px;
-            box-shadow: 0 6px 25px rgba(180, 83, 9, 0.2); cursor: pointer; font-weight: bold; color: var(--gold-primary);
-        }
+        .gen-pill { display: flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; font-size: 0.74rem; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid #e2e8f0; background: #fff; color: var(--text-main); }
+        .gen-pill.active { background: var(--text-main); color: #fff; }
+        .gen-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-        body.cinema-mode .galaxy-header { opacity: 0; transform: translateY(-100%); pointer-events: none; }
-        body.cinema-mode .rotation-speed-panel { opacity: 0; transform: translateY(-20px); pointer-events: none; }
-        body.cinema-mode .quick-zoom-dock { opacity: 0; transform: translateY(-20px); pointer-events: none; }
-        body.cinema-mode .generations-orbit-bar { opacity: 0; transform: translateX(-50%) translateY(100%); pointer-events: none; }
-        body.cinema-mode .cinema-restore-trigger { display: flex; }
-
-        /* سلسلة النسب الذهبية */
         .golden-chain-bar {
-            position: fixed; top: 85px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            position: fixed; top: 135px; left: 50%; transform: translateX(-50%) translateY(-150px);
             background: #fff; border: 2px solid var(--gold-border); border-radius: 30px; padding: 8px 18px;
-            z-index: 950; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(180,83,9,0.15);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; pointer-events: none;
-            max-width: 90vw; overflow-x: auto;
+            z-index: 950; display: flex; align-items: center; gap: 6px; box-shadow: 0 10px 30px rgba(180,83,9,0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; pointer-events: none; max-width: 90vw; overflow-x: auto;
         }
         .golden-chain-bar.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
-        .chain-step { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 800; color: var(--text-main); white-space: nowrap; }
+        .chain-step { display: flex; align-items: center; gap: 4px; font-size: 0.82rem; font-weight: 800; color: var(--text-main); white-space: nowrap; }
         .chain-step i { color: var(--gold-primary); font-size: 0.7rem; }
         .chain-step.last { color: var(--gold-primary); background: #fef3c7; padding: 2px 8px; border-radius: 12px; }
 
-        /* بطاقة العضو الفنية المتجاوبة */
-        .member-art-card-modal {
-            position: fixed; bottom: 85px; right: 20px; width: 340px; max-width: 90vw;
-            background: #fff; border: 2px solid var(--gold-border);
-            border-radius: 20px; padding: 18px; z-index: 1000;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12); display: none; flex-direction: column;
-        }
-        @media (max-width: 500px) {
-            .member-art-card-modal { right: 5vw; left: 5vw; width: 90vw; bottom: 75px; }
-            .rotation-speed-panel { top: auto; bottom: 80px; right: 50%; transform: translateX(50%); }
-            .quick-zoom-dock { top: 85px; left: 50%; transform: translateX(-50%); width: auto; justify-content: center; }
-            .golden-chain-bar { top: 130px; }
-        }
-        .art-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .art-card-avatar {
-            width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold-border);
-            display: flex; justify-content: center; align-items: center; font-size: 1.3rem; background: #f8fafc;
-        }
-        .art-card-name { font-family: 'Amiri', serif; font-size: 1.35rem; font-weight: 700; color: var(--text-main); margin: 0; }
-        .art-card-meta { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; font-weight: 600; }
-        .art-card-contacts { display: flex; gap: 8px; margin-top: 12px; }
-        .art-btn-icon {
-            flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid var(--gold-border);
-            background: #fffdf6; color: var(--gold-primary); text-decoration: none; font-size: 0.82rem; font-weight: bold;
-            display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer;
+        .cinema-restore-trigger {
+            position: fixed; top: 18px; right: 18px; z-index: 1100; background: rgba(255, 255, 255, 0.95); border: 2px solid var(--gold-border);
+            border-radius: 30px; padding: 8px 16px; display: none; align-items: center; gap: 8px; box-shadow: 0 6px 25px rgba(180, 83, 9, 0.2); cursor: pointer; font-weight: bold; color: var(--gold-primary);
         }
 
-        /* رسومات D3 */
+        body.cinema-mode .galaxy-header, body.cinema-mode .rotation-speed-panel, body.cinema-mode .quick-zoom-dock, body.cinema-mode .generations-orbit-bar { opacity: 0; pointer-events: none; }
+        body.cinema-mode .cinema-restore-trigger { display: flex; }
+
+        @media (max-width: 768px) {
+            .rotation-speed-panel { top: auto; bottom: 75px; right: 50%; transform: translateX(50%); }
+            .quick-zoom-dock { top: 80px; left: 50%; transform: translateX(-50%); }
+        }
+
         .node-circle { cursor: pointer; transition: all 0.3s ease; stroke-width: 2.5px; }
         .node-circle:hover { stroke: var(--text-main) !important; stroke-width: 4px; }
         .node-circle.active-target { stroke: var(--text-main) !important; stroke-width: 4.5px; filter: drop-shadow(0 0 16px var(--gold-border)); }
         
         .spouse-moon { cursor: pointer; stroke: #ffffff; stroke-width: 2px; transition: transform 0.25s ease; }
-        .spouse-moon:hover { transform: scale(1.4); filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); }
+        .spouse-moon:hover { transform: scale(1.4); }
         .spouse-orbit-ring { fill: none; stroke: rgba(180, 83, 9, 0.2); stroke-dasharray: 3 3; stroke-width: 1.2px; }
 
         .link-line { fill: none; stroke: rgba(180, 83, 9, 0.2); stroke-width: 1.5px; transition: all 0.3s ease; }
         .link-line.highlighted { stroke: var(--gold-primary) !important; stroke-width: 3.5px !important; }
 
-        .node-text {
-            font-weight: 800; fill: var(--text-main); text-anchor: middle; pointer-events: none;
-            paint-order: stroke fill; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round;
-        }
+        .node-text { font-weight: 800; fill: var(--text-main); text-anchor: middle; pointer-events: none; paint-order: stroke fill; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
 
-        /* شاشة التحميل الملكية المعدلة للتكسير السطري */
-        #galaxy-loader {
-            position: fixed; inset: 0; background: var(--bg-canvas); z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px;
-            transition: opacity 0.6s ease;
+        .member-art-card-modal {
+            position: fixed; bottom: 85px; right: 20px; width: 340px; max-width: 90vw;
+            background: #fff; border: 2px solid var(--gold-border);
+            border-radius: 20px; padding: 18px; z-index: 1000; box-shadow: 0 15px 40px rgba(0,0,0,0.12); display: none; flex-direction: column;
         }
-        .orbit-spinner {
-            width: 75px; height: 75px; border: 3px dashed var(--gold-border); border-radius: 50%;
-            animation: spinOrbit 3.5s linear infinite; display: flex; justify-content: center; align-items: center;
-        }
-        .orbit-core { width: 24px; height: 24px; background: var(--gold-primary); border-radius: 50%; box-shadow: 0 0 25px var(--gold-border); }
-        @keyframes spinOrbit { to { transform: rotate(360deg); } }
+        @media (max-width: 500px) { .member-art-card-modal { right: 5vw; left: 5vw; width: 90vw; bottom: 75px; } }
+        .art-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .art-card-avatar { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--gold-border); display: flex; justify-content: center; align-items: center; font-size: 1.3rem; background: #f8fafc; }
+        .art-card-name { font-family: 'Amiri', serif; font-size: 1.35rem; font-weight: 700; color: var(--text-main); margin: 0; }
+        .art-card-meta { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; font-weight: 600; }
+        .art-card-contacts { display: flex; gap: 8px; margin-top: 12px; }
+        .art-btn-icon { flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid var(--gold-border); background: #fffdf6; color: var(--gold-primary); text-decoration: none; font-size: 0.82rem; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <canvas id="stars-canvas"></canvas>
 
-    <!-- شاشة التحميل المعدلة للترحم بسطرين -->
     <div id="galaxy-loader">
         <div class="orbit-spinner"><div class="orbit-core"></div></div>
-        <div style="font-family:'Amiri', serif; font-size:1.55rem; color:var(--text-main); font-weight:700;">أطلس مجرة آل الشمايلة</div>
-        <div style="font-size:0.92rem; color:var(--gold-primary); font-weight:bold; line-height:1.6; text-align:center;">
-            صدقة جارية عن روح المرحوم بإذن الله تعالى<br>الحاج أبو علي الشمايلة
-        </div>
-    </div>
-
-    <!-- شاشة الاستقبال الروحانية الملكية -->
-    <div id="welcome-modal-overlay">
-        <div class="welcome-card">
-            <div class="welcome-crest"><i class="fas fa-crown"></i></div>
-            <h2 class="welcome-title">أطلس ومجرة آل الشمايلة</h2>
-            <div class="welcome-dedication">صدقة جارية عن روح المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة</div>
-
-            <div class="hadith-quote-box">
-                <i class="fas fa-quote-right" style="color:var(--gold-border); margin-left:4px;"></i>
-                عَنْ أَنَسِ بْنِ مَالِكٍ رَضِيَ اللَّهُ عَنْهُ، أَنَّ رَسُولَ اللَّهِ ﷺ قَالَ:
-                <br>
-                <strong>«مَنْ أَحَبَّ أَنْ يُبْسَطَ لَهُ فِي رِزْقِهِ، وَيُنْسَأَ لَهُ فِي أَثَرِهِ، فَلْيَصِلْ رَحِمَهُ»</strong>
-                <br>
-                <small style="color:var(--text-muted);">[صحيح البخاري ومسلم]</small>
-            </div>
-
-            <button class="btn-enter-galaxy" onclick="dismissWelcomeModal()">
-                بِسْمِ اللَّهِ نَدْخُلُ المَجَرَّةَ  <i class="fas fa-arrow-left"></i>
-            </button>
-        </div>
+        <div style="font-family:'Amiri', serif; font-size:1.55rem; color:var(--text-main); font-weight:700;">أطلس ومجرة آل الشمايلة المباركة</div>
+        <div style="font-size:0.9rem; color:var(--gold-primary); font-weight:bold;">صدقة جارية عن روح المرحوم بإذن الله تعالى الحاج أبو علي الشمايلة</div>
     </div>
 
     <header class="galaxy-header">
         <div class="galaxy-brand">
             <i class="fas fa-crown"></i>
             <div>
-                <h1>مجرة آل الشمايلة</h1>
-                <span></span>
+                <h1>أطلس ومجرة آل الشمايلة</h1>
+                <span>المجرة الفلكية الشاملة لكافة الأجيال</span>
             </div>
         </div>
+
         <div class="header-controls">
             <button class="btn-cinema" onclick="toggleCinemaMode()"><i class="fas fa-expand"></i> المشهد الصافي</button>
             <div class="search-galaxy-box">
@@ -326,7 +196,6 @@
             <button class="btn-speed active" id="sp0" onclick="setSpinSpeed(0, this)">⏸ إيقاف</button>
             <button class="btn-speed" id="sp1" onclick="setSpinSpeed(1, this)">1x بطيء</button>
             <button class="btn-speed" id="sp2" onclick="setSpinSpeed(2, this)">2x متزن</button>
-            <button class="btn-speed" id="sp3" onclick="setSpinSpeed(3, this)">3x سريع</button>
         </div>
         <button class="btn-rot-step" onclick="rotateGalaxyBy(-30)" title="تدوير يميناً 30°"><i class="fas fa-rotate-left"></i></button>
         <button class="btn-rot-step" onclick="rotateGalaxyBy(30)" title="تدوير يساراً 30°"><i class="fas fa-rotate-right"></i></button>
@@ -344,13 +213,14 @@
 
     <nav class="generations-orbit-bar" id="generationBar">
         <button class="btn-auto-trace" id="btnAutoTrace" onclick="toggleAutoTrace()"><i class="fas fa-magic"></i> إضاءة الأنساب</button>
-        
         <div class="gen-pill active" onclick="filterByGeneration(0, this)"><div class="gen-dot" style="background:#0f172a;"></div> الكل</div>
         <div class="gen-pill" onclick="filterByGeneration(1, this)"><div class="gen-dot" style="background:var(--gen-1);"></div> ج1 (حمد)</div>
+        <div class="gen-pill" onclick="filterByGeneration(2, this)"><div class="gen-dot" style="background:var(--gen-2);"></div> ج2 (قبلان)</div>
         <div class="gen-pill" onclick="filterByGeneration(3, this)"><div class="gen-dot" style="background:var(--gen-3);"></div> ج3 (شهاب)</div>
+        <div class="gen-pill" onclick="filterByGeneration(4, this)"><div class="gen-dot" style="background:var(--gen-4);"></div> ج4 (لافي)</div>
         <div class="gen-pill" onclick="filterByGeneration(5, this)"><div class="gen-dot" style="background:var(--gen-5);"></div> ج5 (محمد)</div>
         <div class="gen-pill" onclick="filterByGeneration(6, this)"><div class="gen-dot" style="background:var(--gen-6);"></div> ج6 (الأبناء)</div>
-        <div class="gen-pill" onclick="filterByGeneration(7, this)"><div class="gen-dot" style="background:var(--gen-7);"></div> ج7-9 (الأحفاد)</div>
+        <div class="gen-pill" onclick="filterByGeneration(7, this)"><div class="gen-dot" style="background:var(--gen-7);"></div> ج7-9 (الذرية)</div>
     </nav>
 
     <div class="member-art-card-modal" id="memberArtCard">
@@ -361,14 +231,12 @@
             </div>
             <div class="art-card-avatar" id="cardAvatar"><i class="fas fa-user-tie" style="color:var(--male-color);"></i></div>
         </div>
-
-        <div style="border-top:1.5px dashed #e2e8f0; padding-top:10px; margin-top:4px;">
+        <div style="border-top:1.5px dashed #e2e8f0; padding-top:8px; margin-top:4px;">
             <div class="art-card-meta" id="cardGenTier"><i class="fas fa-circle-nodes"></i> الجيل: <strong style="color:var(--text-main);">الجيل الرابع</strong></div>
-            <div class="art-card-meta" id="cardMotherBox"><i class="fas fa-heart"></i> الأم المباشرة: <strong id="cardMotherName" style="color:var(--gold-primary);">خضرة الحباشنة</strong></div>
+            <div class="art-card-meta" id="cardMotherBox"><i class="fas fa-heart"></i> الأم المباشرة: <strong id="cardMotherName" style="color:var(--gold-primary);">خضراء</strong></div>
             <div class="art-card-meta" id="cardSpousesBox"><i class="fas fa-ring"></i> الزوجات (الأقمار): <span id="cardSpousesList" style="color:var(--text-main); font-weight:bold;">مهى الأورفه لي</span></div>
             <div class="art-card-meta" id="cardDatesBox"><i class="fas fa-calendar-alt"></i> الحقبة: <span id="cardDates" style="color:var(--text-main); font-weight:bold;">1950 - حي يرزق</span></div>
         </div>
-
         <div class="art-card-contacts">
             <button class="art-btn-icon" onclick="traceFullLineage()"><i class="fas fa-route" style="color:var(--gold-primary);"></i> إضاءة مسار النسب</button>
             <button class="art-btn-icon" onclick="closeArtCard()" style="flex:0.35;"><i class="fas fa-times"></i></button>
@@ -376,68 +244,82 @@
     </div>
 
     <script>
-        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
-        const CACHE_KEY = "shamayleh_galaxy_cache_v2026_instant";
-        
+        const STORAGE_KEY = "shamayleh_active_tree_data_v1";
         let rawTreeData = null;
         let rootHierarchy = null;
         let selectedNodeData = null;
-        let allLeafNodes = []; 
-        
+        let allLeafNodes = [];
+
         let currentRotation = 0;
         let spinSpeedLevel = 0;
         let spinAnimationId = null;
-
         let autoTraceInterval = null;
         let isAutoTracing = false;
 
         const wifeColors = ["#f59e0b", "#10b981", "#ec4899", "#38bdf8", "#8b5cf6"];
+        const genColors = {
+            1: "#b45309", 2: "#d97706", 3: "#059669", 4: "#0284c7",
+            5: "#7c3aed", 6: "#db2777", 7: "#e11d48", 8: "#9333ea", 9: "#6366f1"
+        };
 
-        function dismissWelcomeModal() {
-            const overlay = document.getElementById('welcome-modal-overlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 500);
-        }
-
-        function loadGalaxyDataFast() {
+        // 🌟 بناء وتفكيك الشجرة فورياً من الذاكرة المحلية المشتركة مع صفحة الإدراج
+        function loadGalaxyInstant() {
+            let list = null;
             try {
-                const cached = localStorage.getItem(CACHE_KEY);
-                if (cached) {
-                    rawTreeData = JSON.parse(cached);
-                    initGalaxyVisualization();
-                }
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) list = JSON.parse(saved);
             } catch(e){}
 
-            const script = document.createElement('script');
-            const callback = 'onGalaxyLoaded_' + Date.now();
-            window[callback] = function(res) {
-                if (res && res.status === 'success' && res.tree) {
-                    const newJson = JSON.stringify(res.tree);
-                    if (!rawTreeData || newJson !== localStorage.getItem(CACHE_KEY)) {
-                        localStorage.setItem(CACHE_KEY, newJson);
-                        rawTreeData = res.tree;
-                        initGalaxyVisualization();
-                    } else if (rawTreeData) {
-                        hideLoaderSafely();
-                    }
+            // إذا لم توجد في الذاكرة، يتم استخدام القائمة الأساسية
+            if (!list || list.length === 0) {
+                list = getDefinitiveMasterList();
+            }
+
+            rawTreeData = buildHierarchyFromFlatList(list);
+            initGalaxyVisualization();
+
+            // إخفاء مؤشر التحميل فوراً في 0.2 ثانية
+            setTimeout(() => {
+                const loader = document.getElementById('galaxy-loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => { loader.style.display = 'none'; }, 400);
                 }
-                delete window[callback];
-                try { document.body.removeChild(script); } catch(e){}
-            };
-            script.src = `${API_ENDPOINT}?action=get_full_tree_data&callback=${callback}&t=${Date.now()}`;
-            document.body.appendChild(script);
+            }, 200);
         }
 
-        function hideLoaderSafely() {
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    const loader = document.getElementById('galaxy-loader');
-                    if (loader) {
-                        loader.style.opacity = '0';
-                        setTimeout(() => { loader.style.display = 'none'; }, 600);
-                    }
-                });
+        // خوارزمية ربط الآباء بالأبناء لبناء الهيكل الفلكي
+        function buildHierarchyFromFlatList(list) {
+            const map = {};
+            let root = null;
+
+            list.forEach(item => {
+                map[item.id] = {
+                    id: item.id,
+                    name: item.name,
+                    title: item.title || "",
+                    fatherId: item.fatherId || "",
+                    motherName: item.motherName || "",
+                    gender: item.gender || "male",
+                    generation: item.generation || 1,
+                    branch: item.branch || "الأصل",
+                    spouses: item.spouses || [],
+                    birthDate: item.birthYear || "",
+                    deathDate: item.deathYear || "",
+                    children: []
+                };
             });
+
+            list.forEach(item => {
+                const node = map[item.id];
+                if (item.fatherId && map[item.fatherId]) {
+                    map[item.fatherId].children.push(node);
+                } else if (!root || item.id === "SHM-001") {
+                    root = node;
+                }
+            });
+
+            return root;
         }
 
         const svg = d3.select("#galaxy-svg");
@@ -448,13 +330,8 @@
         function initGalaxyVisualization() {
             if (!rawTreeData) return;
             rootHierarchy = d3.hierarchy(rawTreeData);
-            
             allLeafNodes = rootHierarchy.descendants().filter(d => !d.children || d.children.length === 0);
-            
-            setTimeout(() => {
-                renderRadialGalaxy();
-                hideLoaderSafely();
-            }, 50);
+            renderRadialGalaxy();
         }
 
         let gRadialContainer = null;
@@ -516,6 +393,7 @@
                     traceFullLineage(d);
                 });
 
+            // رسم أقمار الزوجات
             nodeGroup.each(function(d) {
                 if (d.data.spouses && d.data.spouses.length > 0) {
                     const gSpouses = d3.select(this).append("g").attr("class", "spouses-orbit-group");
@@ -564,6 +442,7 @@
             });
         }
 
+        // إضاءة الأنساب العشوائي
         function toggleAutoTrace() {
             const btn = document.getElementById('btnAutoTrace');
             isAutoTracing = !isAutoTracing;
@@ -578,32 +457,24 @@
                     if (allLeafNodes.length > 0) {
                         const randomNode = allLeafNodes[Math.floor(Math.random() * allLeafNodes.length)];
                         traceFullLineage(randomNode);
-                        
-                        const width = window.innerWidth;
-                        const height = window.innerHeight;
-                        const transform = d3.zoomIdentity.translate(width/2, height/2).scale(0.85).translate(-randomNode.y * Math.cos(randomNode.x - Math.PI/2), -randomNode.y * Math.sin(randomNode.x - Math.PI/2));
-                        svg.transition().duration(1500).call(zoomBehavior.transform, transform);
                     }
                     autoTraceInterval = setTimeout(() => {
                         closeGoldenChain();
                         setTimeout(traceNextRandom, 800);
-                    }, 4500); 
+                    }, 4500);
                 }
                 traceNextRandom();
-
             } else {
                 btn.classList.remove('active');
                 btn.innerHTML = '<i class="fas fa-magic"></i> إضاءة الأنساب';
                 clearTimeout(autoTraceInterval);
                 closeGoldenChain();
-                resetView();
             }
         }
 
         function traceFullLineage(node) {
             if (!node) return;
             selectedNodeData = node;
-            
             d3.selectAll(".node-circle").classed("active-target", false);
             d3.select(`#node-g-${node.data.id} circle`).classed("active-target", true);
 
@@ -674,12 +545,7 @@
             svg.transition().duration(800).call(zoomBehavior.transform, d3.zoomIdentity.translate(w/2, h/2).scale(w < 768 ? 0.9 : 1.2).translate(-w/2, -h/2));
         }
         function zoomFitGalaxy() {
-            const w = window.innerWidth;
-            svg.transition().duration(800).call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(w < 768 ? 0.35 : 0.45));
-        }
-        function resetView() {
-            const w = window.innerWidth;
-            svg.transition().duration(800).call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(w < 768 ? 0.6 : 0.65));
+            svg.transition().duration(800).call(zoomBehavior.transform, d3.zoomIdentity.translate(0, 0).scale(window.innerWidth < 768 ? 0.35 : 0.45));
         }
 
         function filterByGeneration(gen, btn) {
@@ -704,14 +570,15 @@
             if (matched) traceFullLineage(matched);
         }
 
+        // ذرات الضوء
         const canvas = document.getElementById("stars-canvas");
         const ctx = canvas.getContext("2d");
         let stars = [];
         function initStars() {
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            stars = Array.from({ length: 40 }, () => ({
+            stars = Array.from({ length: 35 }, () => ({
                 x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5 + 0.3, alpha: Math.random() * 0.4 + 0.1,
+                radius: Math.random() * 1.5 + 0.3, alpha: Math.random() * 0.35 + 0.1,
                 dx: (Math.random() - 0.5) * 0.1, dy: (Math.random() - 0.5) * 0.1
             }));
         }
@@ -729,7 +596,83 @@
         window.addEventListener('resize', () => { initStars(); if (rootHierarchy) renderRadialGalaxy(); });
         initStars(); drawStars();
 
-        loadGalaxyDataFast();
+        // 📜 القائمة الأساسية الشاملة لآل الشمايلة المحققة بالكامل
+        function getDefinitiveMasterList() {
+            return [
+                { id: "SHM-001", name: "حَمَد الشمايلة", title: "الجد الأكبر", generation: 1, branch: "الأصل" },
+                { id: "SHM-002", name: "قَبْلان", title: "الجد", generation: 2, branch: "فرع قبلان", fatherId: "SHM-001" },
+                { id: "SHM-003", name: "شِهاب", title: "جد السلالة", generation: 3, branch: "فرع شهاب", fatherId: "SHM-002" },
+                { id: "SHM-007", name: "لافي", title: "عميد الأسرة", generation: 4, branch: "فرع لافي", fatherId: "SHM-003" },
+                { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 5, branch: "فرع محمد لافي", fatherId: "SHM-007", spouses: [{ name: "فاطمة", color: "#f59e0b" }, { name: "خضراء", color: "#10b981" }] },
+                
+                // بيت فاطمة
+                { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 6, branch: "فرع علي", fatherId: "SHM-010", motherName: "فاطمة" },
+                { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 6, branch: "فرع سارة", fatherId: "SHM-010", motherName: "فاطمة" },
+                { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 6, branch: "فرع جميلة", fatherId: "SHM-010", motherName: "فاطمة" },
+                { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 6, branch: "فرع يحيى", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة", color: "#ec4899" }] },
+                { id: "SHM-105", name: "صالح", title: "أبو طلال", generation: 6, branch: "فرع صالح", fatherId: "SHM-010", motherName: "فاطمة" },
+                { id: "SHM-106", name: "خالد", title: "أبو وليد", generation: 6, branch: "فرع خالد", fatherId: "SHM-010", motherName: "فاطمة" },
+                { id: "SHM-107", name: "طه", title: "أبو محمد", generation: 6, branch: "فرع طه", fatherId: "SHM-010", motherName: "فاطمة" },
+
+                // بيت خضراء
+                { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 6, branch: "فرع فيصل", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي", color: "#ec4899" }] },
+                { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 6, branch: "فرع حنان", fatherId: "SHM-010", motherName: "خضراء" },
+                { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 6, branch: "فرع زيد", fatherId: "SHM-010", motherName: "خضراء" },
+                { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء" },
+                { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 6, branch: "فرع زياد", fatherId: "SHM-010", motherName: "خضراء" },
+                { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 6, branch: "فرع خالدة", fatherId: "SHM-010", motherName: "خضراء" },
+                { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء" },
+
+                // ذرية سارة (أم أحمد)
+                { id: "SAR-01", name: "نوال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+                { id: "SAR-02", name: "أحمد", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+                { id: "SAR-03", name: "منال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+                { id: "SAR-04", name: "محمود", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+                { id: "SAR-05", name: "ماري", title: "زوجة غالب", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+                { id: "SAR-06", name: "مالك", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+                { id: "SAR-07", name: "رابعة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+                { id: "SAR-08", name: "رائدة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
+
+                // أبناء أحمد بن سارة
+                { id: "SA-01", name: "حسن", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
+                { id: "SA-02", name: "عبدالله", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
+                { id: "SA-03", name: "محمد", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
+                { id: "SA-04", name: "ياسين", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
+                { id: "SA-05", name: "عبدالرحمن", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
+                { id: "SA-06", name: "نوف", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
+                { id: "SA-061", name: "فهد", generation: 9, branch: "فرع سارة", fatherId: "SA-06", motherName: "نوف" },
+                { id: "SA-062", name: "رفيف", generation: 9, branch: "فرع سارة", fatherId: "SA-06", motherName: "نوف" },
+                { id: "SA-07", name: "شهد", generation: 8, branch: "فرع سارة", fatherId: "SAR-02" },
+
+                // سلالة جميلة (8 فروع كاملين)
+                { id: "JAM-01", name: "فاطمة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
+                { id: "JAM-02", name: "غالب بن جميلة", title: "زوج ماري", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
+                { id: "JAM-03", name: "سميرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
+                { id: "JAM-04", name: "عبدالله بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
+                { id: "JAM-05", name: "أميرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
+                { id: "JAM-06", name: "وزيرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
+                { id: "JAM-07", name: "سمير بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
+                { id: "JAM-08", name: "زيدان بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
+
+                // أبناء عبدالله بن جميلة
+                { id: "JA-01", name: "براءة", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-02", name: "عبدالرحمن", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-021", name: "آدم", generation: 9, branch: "أبناء جميلة", fatherId: "JA-02" },
+                { id: "JA-022", name: "نبيل", generation: 9, branch: "أبناء جميلة", fatherId: "JA-02" },
+                { id: "JA-023", name: "كرم", generation: 9, branch: "أبناء جميلة", fatherId: "JA-02" },
+                { id: "JA-03", name: "ملاك", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-04", name: "نماء", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-05", name: "عمر", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-06", name: "ندى", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-061", name: "وسيم", generation: 9, branch: "أبناء جميلة", fatherId: "JA-06", motherName: "ندى" },
+                { id: "JA-07", name: "علي", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-08", name: "عثمان", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-09", name: "نورة", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" },
+                { id: "JA-10", name: "مريم", generation: 8, branch: "أبناء جميلة", fatherId: "JAM-04" }
+            ];
+        }
+
+        loadGalaxyInstant();
     </script>
 </body>
 </html>
