@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>استوديو الإدراج والإلحاق النسبي الذكي - آل الشمايلة</title>
     
-    <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -127,7 +126,7 @@
             <i class="fas fa-network-wired"></i>
             <div>
                 <h1>استوديو الإدراج والإلحاق النسبي الذكي</h1>
-                <span>التحميل اللحظي المباشر لكافة أسر وعشيرة آل الشمايلة</span>
+                <span>نظام المراقبة السحابية الفورية لمنع أي تعليق في الحفظ</span>
             </div>
         </div>
     </header>
@@ -158,7 +157,6 @@
                 <i class="fas fa-user-plus"></i> إضافة ابن / ابنة لأسرة محددة
             </h3>
 
-            <!-- قائمة اختيار الأب / الفرد المرجعي (تفتح فوراً) -->
             <div class="form-group" id="parentSelectGroup">
                 <label id="parentSelectLabel">اختر الأب (رب الأسرة):</label>
                 <select id="selectParent" onchange="onParentSelected(this.value)">
@@ -166,7 +164,6 @@
                 </select>
             </div>
 
-            <!-- اختيار الأم -->
             <div class="form-group" id="motherSelectGroup">
                 <label>من هي الأم؟ (الزوجات المسجلات للأب):</label>
                 <select id="selectMother" onchange="onMotherChanged(this.value)">
@@ -175,7 +172,6 @@
                 <input type="text" id="inputCustomMother" placeholder="أو اكتب اسم الأم هنا مباشرة إذا لم تكن بالقائمة..." style="margin-top:6px; display:none;">
             </div>
 
-            <!-- تحديد الترتيب بين الأشقاء -->
             <div class="siblings-order-box" id="siblingsOrderBox" style="display:none;">
                 <label style="font-size:0.85rem; font-weight:bold; color:#78350f;">
                     <i class="fas fa-arrow-down-1-9"></i> تحديد ترتيبه بين إخوته وأخواته:
@@ -190,7 +186,6 @@
                 </div>
             </div>
 
-            <!-- في حالة الجيل الوسيط -->
             <div id="intermediateChildrenGroup" style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:14px; margin-bottom:15px;">
                 <label style="font-size:0.85rem; font-weight:bold; color:#166534; display:block; margin-bottom:6px;">
                     اختر الأبناء المراد نقلهم ليكون هذا العضو الجديد والدهم:
@@ -245,57 +240,39 @@
         let currentMode = 'child';
         let currentParentChildren = [];
 
-        // 🌟 قاعدة بيانات الشمايلة المدمجة للتحميل الفوري اللحظي في (0.00 ثانية)
+        // قاعدة الأفراد المجهزة سلفاً للفتح في 0.00 ثانية
         const embeddedBaseMembers = [
             { id: "SHM-001", name: "حَمَد الشمايلة", title: "الجد الأكبر", generation: 1, branch: "الأصل", spouses: [] },
             { id: "SHM-002", name: "قَبْلان", title: "الجد", generation: 2, branch: "فرع قبلان", fatherId: "SHM-001", spouses: [] },
-            { id: "SHM-003", name: "لافي", title: "عميد الأسرة", generation: 3, branch: "فرع لافي", fatherId: "SHM-002", spouses: [] },
-            { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 4, branch: "فرع محمد لافي", fatherId: "SHM-003", spouses: [{ name: "فاطمة" }, { name: "خضراء" }] },
+            { id: "SHM-003", name: "شِهاب", title: "جد السلالة", generation: 3, branch: "فرع شهاب", fatherId: "SHM-002", spouses: [] },
+            { id: "SHM-007", name: "لافي", title: "عميد الأسرة", generation: 4, branch: "فرع لافي", fatherId: "SHM-003", spouses: [] },
+            { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 5, branch: "فرع محمد لافي", fatherId: "SHM-007", spouses: [{ name: "فاطمة" }, { name: "خضراء" }] },
             
             // أبناء فاطمة
-            { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 5, branch: "فرع علي بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 5, branch: "فرع سارة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 5, branch: "فرع جميلة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 5, branch: "فرع يحيى بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة" }] },
-            { id: "SHM-105", name: "صالح", title: "أبو طلال", generation: 5, branch: "فرع صالح بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-106", name: "خالد", title: "أبو وليد", generation: 5, branch: "فرع خالد بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-107", name: "طه", title: "أبو محمد", generation: 5, branch: "فرع طه بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 6, branch: "فرع علي بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 6, branch: "فرع جميلة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 6, branch: "فرع يحيى بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة" }] },
+            { id: "SHM-105", "name": "صالح", title: "أبو طلال", generation: 6, branch: "فرع صالح بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-106", "name": "خالد", title: "أبو وليد", generation: 6, branch: "فرع خالد بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-107", "name": "طه", title: "أبو محمد", generation: 6, branch: "فرع طه بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
 
             // أبناء خضراء
-            { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 5, branch: "فرع فيصل بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي" }] },
-            { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 5, branch: "فرع حنان بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 5, branch: "فرع زيد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 5, branch: "فرع إيمان بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 5, branch: "فرع زياد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 5, branch: "فرع خالدة بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 5, branch: "فرع عبلة بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-
-            // كبار الفروع
-            { id: "JAM-01", name: "فاطمة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
-            { id: "JAM-02", name: "غالب بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [{ name: "ماري" }] },
-            { id: "JAM-03", name: "سميرة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
-            { id: "JAM-04", name: "عبدالله بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
-            { id: "JAM-05", name: "أميرة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
-            { id: "JAM-06", name: "وزيرة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
-            { id: "JAM-07", name: "سمير بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
-            { id: "JAM-08", name: "زيدان بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
-
-            { id: "SAR-02", name: "أحمد بن سارة", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-102", motherName: "سارة", spouses: [] },
-            { id: "SAR-04", name: "محمود بن سارة", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-102", motherName: "سارة", spouses: [] },
-            { id: "SAR-06", name: "مالك بن سارة", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-102", motherName: "سارة", spouses: [] },
-            { id: "ALI-02", name: "صفوان بن علي", generation: 6, branch: "فرع علي بن محمد", fatherId: "SHM-101", spouses: [] },
-            { id: "FSL-01", name: "هيثم بن فيصل", generation: 6, branch: "فرع فيصل بن محمد", fatherId: "SHM-108", spouses: [{ name: "علا الجمال" }] }
+            { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 6, branch: "فرع فيصل بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي" }] },
+            { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 6, branch: "فرع حنان بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 6, branch: "فرع زيد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 6, branch: "فرع محمد بن لافي", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 6, branch: "فرع زياد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 6, branch: "فرع خالدة بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 6, branch: "فرع محمد بن لافي", fatherId: "SHM-010", motherName: "خضراء", spouses: [] }
         ];
 
-        // بدء التشغيل اللحظي الفوري
         function initInstantLoader() {
-            // 1. تعبئة القائمة فوراً في 0 ثانية من الذاكرة المدمجة أو الكاش المحلي
             try {
                 const cached = localStorage.getItem("shamayleh_galaxy_cache_v2026_perfect") || localStorage.getItem("shamayleh_galaxy_cache_v2026_instant");
                 if (cached) {
-                    const parsed = JSON.parse(cached);
                     flattenedMembers = [];
-                    flattenTree(parsed);
+                    flattenTree(JSON.parse(cached));
                 } else {
                     flattenedMembers = [...embeddedBaseMembers];
                 }
@@ -303,8 +280,6 @@
                 flattenedMembers = [...embeddedBaseMembers];
             }
             populateParentSelector();
-
-            // 2. مزامنة سحابية هادئة في الخلفية لتحديث أي أسماء إضافية
             loadTreeDataBackground();
         }
 
@@ -478,6 +453,7 @@
             }
         }
 
+        // دالة الإدراج المحصنة بمؤقت حماية يمنع التعليق
         function executeInsertMember() {
             const name = document.getElementById('newMemberName').value.trim();
             if (!name) return alert("يرجى إدخال اسم العضو الجديد.");
@@ -523,10 +499,24 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق والحفظ في الجداول...';
             btn.style.pointerEvents = 'none';
 
-            const script = document.createElement('script');
+            let requestDone = false;
             const callback = 'onInsertVerify_' + Date.now();
-            
+
+            // 🛡️ مؤقت حماية أوتوماتيكي: إذا تأخر السيرفر 6 ثوانٍ، يفك التعليق ويعطيك رسالة صريحة
+            const watchdogTimer = setTimeout(() => {
+                if (!requestDone) {
+                    requestDone = true;
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
+                    btn.style.pointerEvents = 'auto';
+                    alert("⚠️ تنبيه: تأخر سيرفر Google في الرد! يرجى التأكد من الضغط على (نشر ➔ إدارة عمليات النشر ➔ تعديل ➔ إصدار جديد) في Apps Script لتفعيل التحديث.");
+                }
+            }, 6000);
+
             window[callback] = function(res) {
+                if (requestDone) return;
+                requestDone = true;
+                clearTimeout(watchdogTimer);
+
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
                 btn.style.pointerEvents = 'auto';
 
@@ -542,12 +532,22 @@
                     document.getElementById('newMemberBirth').value = '';
                     loadTreeDataBackground();
                 } else {
-                    alert("⚠️ تنبيه من السيرفر: " + (res.message || "لم يقبل السيرفر الإضافة! تأكد من تحديث النشر New version في Apps Script."));
+                    alert("⚠️ تنبيه من السيرفر: " + (res.message || "حدث خطأ غير متوقع في الحفظ"));
                     showToast("فشلت عملية الإضافة في الجداول!", false);
                 }
 
                 delete window[callback];
                 try { document.body.removeChild(script); } catch(e){}
+            };
+
+            const script = document.createElement('script');
+            script.onerror = function() {
+                if (requestDone) return;
+                requestDone = true;
+                clearTimeout(watchdogTimer);
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
+                btn.style.pointerEvents = 'auto';
+                alert("⚠️ تعذر الاتصال بسيرفر Google! تأكد من حفظ ونشر السكربت كإصدار جديد.");
             };
 
             const encoded = encodeURIComponent(JSON.stringify(payload));
@@ -572,7 +572,6 @@
             setTimeout(() => t.classList.remove('active'), 4000);
         }
 
-        // تشغيل التحميل اللحظي الفوري
         initInstantLoader();
     </script>
 </body>
