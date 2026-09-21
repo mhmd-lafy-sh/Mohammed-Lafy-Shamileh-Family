@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>استوديو الإدراج والإلحاق النسبي الذكي - آل الشمايلة</title>
+    <title>استوديو الإدراج والإلحاق النسبي الفعلي - آل الشمايلة</title>
     
     <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -15,13 +15,13 @@
             --gold-primary: #b45309;
             --gold-border: #d4af37;
             --bg-color: #f8fafc;
-            --card-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border: #cbd5e1;
             --female-color: #db2777;
             --male-color: #0284c7;
             --success: #10b981;
+            --danger: #ef4444;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
@@ -32,7 +32,6 @@
             background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px); background-size: 28px 28px;
         }
 
-        /* الهيدر العلوي */
         .insert-header {
             background: #fff; border-bottom: 2px solid var(--gold-border); height: 72px;
             display: flex; justify-content: space-between; align-items: center; padding: 0 24px;
@@ -43,12 +42,10 @@
         .brand-block h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.45rem; color: var(--text-main); font-weight: 700; }
         .brand-block span { font-size: 0.75rem; color: var(--gold-primary); display: block; font-weight: bold; }
 
-        /* الحاوية المركزية */
         .main-container {
             flex: 1; max-width: 900px; width: 100%; margin: 24px auto; padding: 0 16px 40px 16px;
         }
 
-        /* محدد أنماط الإدراج الثلاثة */
         .mode-cards-grid {
             display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px;
         }
@@ -68,7 +65,6 @@
         .mode-tab-card strong { font-size: 0.92rem; color: var(--primary); }
         .mode-tab-card span { font-size: 0.75rem; color: var(--text-muted); }
 
-        /* لوحة إدخال البيانات */
         .form-panel {
             background: #fff; border-radius: 20px; border: 1.5px solid var(--border);
             box-shadow: 0 10px 30px rgba(0,0,0,0.04); padding: 24px;
@@ -93,7 +89,6 @@
             border-color: var(--gold-border); background: #fff; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
         }
 
-        /* محدد موضع الترتيب بين الأشقاء */
         .siblings-order-box {
             background: #fffdf9; border: 1.5px solid #fed7aa; border-radius: 14px; padding: 14px; margin-top: 10px;
         }
@@ -108,7 +103,6 @@
             background: #fef3c7; border: 2px dashed var(--gold-primary); color: #92400e;
         }
 
-        /* زر الإرسال والحفظ */
         .btn-submit-insert {
             background: var(--primary); color: #fff; border: 2px solid var(--gold-border);
             padding: 14px 28px; border-radius: 12px; font-weight: bold; font-size: 1rem; cursor: pointer;
@@ -117,11 +111,10 @@
         }
         .btn-submit-insert:hover { background: var(--gold-primary); transform: translateY(-2px); }
 
-        /* رسالة التنبيه العائمة */
         .toast-msg {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: var(--primary); color: #fff; padding: 12px 24px; border-radius: 30px;
-            border: 1.5px solid var(--gold-border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-weight: bold;
+            background: var(--primary); color: #fff; padding: 14px 28px; border-radius: 30px;
+            border: 1.5px solid var(--gold-border); box-shadow: 0 10px 30px rgba(0,0,0,0.25); font-weight: bold;
             display: flex; align-items: center; gap: 10px; z-index: 9999; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .toast-msg.active { transform: translateX(-50%) translateY(0); }
@@ -129,20 +122,18 @@
 </head>
 <body>
 
-    <!-- الهيدر -->
     <header class="insert-header">
         <div class="brand-block">
             <i class="fas fa-network-wired"></i>
             <div>
-                <h1>استوديو الإدراج والإلحاق النسبي الذكي</h1>
-                <span>إضافة وتوثيق الأفراد بين الأجيال وترتيب الأسر بدقة تامة</span>
+                <h1>استوديو الإدراج والإلحاق النسبي الفعلي</h1>
+                <span>التحقق السحابي المباشر لضمان حفظ كل فرد في الجداول 100%</span>
             </div>
         </div>
     </header>
 
     <main class="main-container">
         
-        <!-- بطاقات اختيار نمط الإدراج -->
         <div class="mode-cards-grid">
             <div class="mode-tab-card active" id="tabModeChild" onclick="setInsertMode('child')">
                 <i class="fas fa-child-reaching"></i>
@@ -157,18 +148,16 @@
             <div class="mode-tab-card" id="tabModeIntermediate" onclick="setInsertMode('intermediate')">
                 <i class="fas fa-layer-group"></i>
                 <strong>إدراج جيل وسيط بين جيلين</strong>
-                <span>إدراج أب/جد بين جيل سابق وأبنائه</span>
+                <span>إدراج أب/جد ونقل الأبناء إليه</span>
             </div>
         </div>
 
-        <!-- اللوحة التفاعلية للنموذج -->
         <div class="form-panel">
             
             <h3 class="section-title" id="modeSectionTitle">
                 <i class="fas fa-user-plus"></i> إضافة ابن / ابنة لأسرة محددة
             </h3>
 
-            <!-- 1. تحديد الأب / الفرد المرجعي -->
             <div class="form-group" id="parentSelectGroup">
                 <label id="parentSelectLabel">اختر الأب (رب الأسرة):</label>
                 <select id="selectParent" onchange="onParentSelected(this.value)">
@@ -176,7 +165,6 @@
                 </select>
             </div>
 
-            <!-- 2. تحديد الأم (ديناميكي بحسب زوجات الأب) -->
             <div class="form-group" id="motherSelectGroup">
                 <label>من هي الأم؟ (الزوجات المسجلات للأب):</label>
                 <select id="selectMother" onchange="onMotherChanged(this.value)">
@@ -185,7 +173,6 @@
                 <input type="text" id="inputCustomMother" placeholder="أو اكتب اسم الأم هنا مباشرة إذا لم تكن بالقائمة..." style="margin-top:6px; display:none;">
             </div>
 
-            <!-- 3. لوحة الترتيب النسبي بين الأشقاء -->
             <div class="siblings-order-box" id="siblingsOrderBox" style="display:none;">
                 <label style="font-size:0.85rem; font-weight:bold; color:#78350f;">
                     <i class="fas fa-arrow-down-1-9"></i> تحديد ترتيبه بين إخوته وأخواته:
@@ -200,7 +187,6 @@
                 </div>
             </div>
 
-            <!-- 4. في حالة الإدراج الوسيط بين جيلين -->
             <div id="intermediateChildrenGroup" style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:14px; margin-bottom:15px;">
                 <label style="font-size:0.85rem; font-weight:bold; color:#166534; display:block; margin-bottom:6px;">
                     اختر الأبناء المراد نقلهم ليكون هذا العضو الجديد والدهم:
@@ -208,7 +194,6 @@
                 <div id="transferChildrenCheckboxes" style="max-height:160px; overflow-y:auto; padding:4px;"></div>
             </div>
 
-            <!-- 5. بيانات العضو الجديد الأساسية -->
             <div style="border-top:1.5px dashed #cbd5e1; padding-top:16px; margin-top:16px;">
                 <div class="form-grid-2">
                     <div class="form-group">
@@ -244,9 +229,8 @@
 
     </main>
 
-    <!-- إشعار عائم -->
     <div id="toast" class="toast-msg">
-        <i class="fas fa-circle-check" style="color:var(--success); font-size:1.2rem;"></i>
+        <i id="toastIcon" class="fas fa-circle-check" style="color:var(--success); font-size:1.3rem;"></i>
         <span id="toastText">تمت العملية بنجاح!</span>
     </div>
 
@@ -254,7 +238,7 @@
         const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
         let fullTree = null;
         let flattenedMembers = [];
-        let currentMode = 'child'; // 'child' | 'sibling' | 'intermediate'
+        let currentMode = 'child';
         let currentParentChildren = [];
 
         function loadTreeData() {
@@ -331,12 +315,10 @@
             let actualParent = targetNode;
 
             if (currentMode === 'sibling') {
-                // في نمط الأخ: الأب هو والد هذا الشخص
                 const father = flattenedMembers.find(m => m.id === targetNode.fatherId);
                 if (father) actualParent = father;
             }
 
-            // 1. تعبئة قائمة أمهات الأسرة (الزوجات)
             const mSelect = document.getElementById('selectMother');
             mSelect.innerHTML = '<option value="">غير محدد / زوجة جديدة</option>';
 
@@ -349,13 +331,11 @@
                 });
             }
 
-            // إذا كان في نمط الأخ، نحدد أمه تلقائياً إن وجدت
             if (currentMode === 'sibling' && targetNode.motherName) {
                 document.getElementById('inputCustomMother').value = targetNode.motherName;
                 document.getElementById('inputCustomMother').style.display = 'block';
             }
 
-            // 2. عرض الأبناء الحاليين وضبط الترتيب
             currentParentChildren = actualParent.children || [];
             const siblingsBox = document.getElementById('siblingsOrderBox');
             const posSelect = document.getElementById('selectOrderPosition');
@@ -367,7 +347,6 @@
                     <option value="first">في أول الترتيب (الأكبر سناً)</option>
                 `;
 
-                // خيارات الإدراج بين فلان وفلان
                 currentParentChildren.forEach((child, idx) => {
                     if (idx < currentParentChildren.length - 1) {
                         const opt = document.createElement('option');
@@ -382,7 +361,6 @@
                 siblingsBox.style.display = 'none';
             }
 
-            // 3. في حالة إدراج جيل وسيط
             if (currentMode === 'intermediate') {
                 const checkContainer = document.getElementById('transferChildrenCheckboxes');
                 checkContainer.innerHTML = '';
@@ -431,6 +409,7 @@
             }
         }
 
+        // دالة الإدراج الصارمة التي تفحص استجابة السيرفر 100%
         function executeInsertMember() {
             const name = document.getElementById('newMemberName').value.trim();
             if (!name) return alert("يرجى إدخال اسم العضو الجديد.");
@@ -451,7 +430,6 @@
             let finalMother = document.getElementById('selectMother').value;
             if (!finalMother) finalMother = document.getElementById('inputCustomMother').value.trim();
 
-            // تجهيز مصفوفة الأبناء المنقولين في حالة الجيل الوسيط
             let transferIds = [];
             if (currentMode === 'intermediate') {
                 document.querySelectorAll('input[name="transfer_child"]:checked').forEach(cb => {
@@ -474,38 +452,60 @@
             };
 
             const btn = document.getElementById('btnSubmitInsert');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التوثيق والإدراج السحابي...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق والحفظ في الجداول...';
             btn.style.pointerEvents = 'none';
 
-            sendCloudApi("insert_member_flexible", payload, (res) => {
-                showToast(`تمت إضافة وتوثيق [${name}] في سحاب Google بنجاح!`);
+            const script = document.createElement('script');
+            const callback = 'onInsertVerify_' + Date.now();
+            
+            window[callback] = function(res) {
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
                 btn.style.pointerEvents = 'auto';
-                document.getElementById('newMemberName').value = '';
-                document.getElementById('newMemberTitle').value = '';
-                document.getElementById('newMemberBirth').value = '';
-                loadTreeData();
-            });
-        }
 
-        function sendCloudApi(action, payload, onSuccess) {
-            const script = document.createElement('script');
-            const callback = 'onInsertDone_' + Date.now();
-            window[callback] = function(res) {
-                if (onSuccess) onSuccess(res);
+                // فحص دقيق: هل وافق السيرفر فعلاً؟
+                if (res && res.status === 'success') {
+                    // مسح الذاكرة المؤقتة للشجرة في المتصفح لضمان ظهوره فوراً في المجرة
+                    try {
+                        localStorage.removeItem("shamayleh_galaxy_cache_v2026_instant");
+                        localStorage.removeItem("shamayleh_galaxy_cache_v2026_perfect");
+                        localStorage.removeItem("shamayleh_galaxy_cache_v2026");
+                    } catch(e){}
+
+                    showToast(`✓ تم توثيق [${name}] رسمياً برقم: (${res.new_id}) في جداول Google!`, true);
+                    document.getElementById('newMemberName').value = '';
+                    document.getElementById('newMemberTitle').value = '';
+                    document.getElementById('newMemberBirth').value = '';
+                    loadTreeData();
+                } else {
+                    // إظهار سبب الرفض الحقيقي
+                    alert("⚠️ تنبيه من السيرفر: " + (res.message || "لم يقبل السيرفر الإضافة! تأكد من عمل (نشر إصدار جديد New version) في Apps Script."));
+                    showToast("فشلت عملية الإضافة في الجداول!", false);
+                }
+
                 delete window[callback];
                 try { document.body.removeChild(script); } catch(e){}
             };
-            const encoded = encodeURIComponent(JSON.stringify(payload || {}));
-            script.src = `${API_ENDPOINT}?action=${action}&data=${encoded}&callback=${callback}`;
+
+            const encoded = encodeURIComponent(JSON.stringify(payload));
+            script.src = `${API_ENDPOINT}?action=insert_member_flexible&data=${encoded}&callback=${callback}`;
             document.body.appendChild(script);
         }
 
-        function showToast(text) {
+        function showToast(text, isSuccess = true) {
             const t = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
             document.getElementById('toastText').innerText = text;
+            
+            if (isSuccess) {
+                icon.className = "fas fa-circle-check";
+                icon.style.color = "var(--success)";
+            } else {
+                icon.className = "fas fa-triangle-exclamation";
+                icon.style.color = "var(--danger)";
+            }
+
             t.classList.add('active');
-            setTimeout(() => t.classList.remove('active'), 3500);
+            setTimeout(() => t.classList.remove('active'), 4000);
         }
 
         loadTreeData();
