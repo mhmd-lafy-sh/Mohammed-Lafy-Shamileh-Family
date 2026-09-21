@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>استوديو الإدراج والإلحاق النسبي الفعلي - آل الشمايلة</title>
+    <title>استوديو الإدراج والإلحاق النسبي الذكي - آل الشمايلة</title>
     
     <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -126,8 +126,8 @@
         <div class="brand-block">
             <i class="fas fa-network-wired"></i>
             <div>
-                <h1>استوديو الإدراج والإلحاق النسبي الفعلي</h1>
-                <span>التحقق السحابي المباشر لضمان حفظ كل فرد في الجداول 100%</span>
+                <h1>استوديو الإدراج والإلحاق النسبي الذكي</h1>
+                <span>التحميل اللحظي المباشر لكافة أسر وعشيرة آل الشمايلة</span>
             </div>
         </div>
     </header>
@@ -143,7 +143,7 @@
             <div class="mode-tab-card" id="tabModeSibling" onclick="setInsertMode('sibling')">
                 <i class="fas fa-people-arrows"></i>
                 <strong>إضافة أخ/أخت لشخص</strong>
-                <span>إضافة شقيق إلى جانب فرد موجود</span>
+                <span>إضافة شقيق إلى جانب فرد مسجل</span>
             </div>
             <div class="mode-tab-card" id="tabModeIntermediate" onclick="setInsertMode('intermediate')">
                 <i class="fas fa-layer-group"></i>
@@ -158,13 +158,15 @@
                 <i class="fas fa-user-plus"></i> إضافة ابن / ابنة لأسرة محددة
             </h3>
 
+            <!-- قائمة اختيار الأب / الفرد المرجعي (تفتح فوراً) -->
             <div class="form-group" id="parentSelectGroup">
                 <label id="parentSelectLabel">اختر الأب (رب الأسرة):</label>
                 <select id="selectParent" onchange="onParentSelected(this.value)">
-                    <option value="">-- جاري تحميل أسماء العائلة... --</option>
+                    <option value="">-- اختر من قائمة الأفراد --</option>
                 </select>
             </div>
 
+            <!-- اختيار الأم -->
             <div class="form-group" id="motherSelectGroup">
                 <label>من هي الأم؟ (الزوجات المسجلات للأب):</label>
                 <select id="selectMother" onchange="onMotherChanged(this.value)">
@@ -173,6 +175,7 @@
                 <input type="text" id="inputCustomMother" placeholder="أو اكتب اسم الأم هنا مباشرة إذا لم تكن بالقائمة..." style="margin-top:6px; display:none;">
             </div>
 
+            <!-- تحديد الترتيب بين الأشقاء -->
             <div class="siblings-order-box" id="siblingsOrderBox" style="display:none;">
                 <label style="font-size:0.85rem; font-weight:bold; color:#78350f;">
                     <i class="fas fa-arrow-down-1-9"></i> تحديد ترتيبه بين إخوته وأخواته:
@@ -187,6 +190,7 @@
                 </div>
             </div>
 
+            <!-- في حالة الجيل الوسيط -->
             <div id="intermediateChildrenGroup" style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:14px; margin-bottom:15px;">
                 <label style="font-size:0.85rem; font-weight:bold; color:#166534; display:block; margin-bottom:6px;">
                     اختر الأبناء المراد نقلهم ليكون هذا العضو الجديد والدهم:
@@ -241,7 +245,70 @@
         let currentMode = 'child';
         let currentParentChildren = [];
 
-        function loadTreeData() {
+        // 🌟 قاعدة بيانات الشمايلة المدمجة للتحميل الفوري اللحظي في (0.00 ثانية)
+        const embeddedBaseMembers = [
+            { id: "SHM-001", name: "حَمَد الشمايلة", title: "الجد الأكبر", generation: 1, branch: "الأصل", spouses: [] },
+            { id: "SHM-002", name: "قَبْلان", title: "الجد", generation: 2, branch: "فرع قبلان", fatherId: "SHM-001", spouses: [] },
+            { id: "SHM-003", name: "لافي", title: "عميد الأسرة", generation: 3, branch: "فرع لافي", fatherId: "SHM-002", spouses: [] },
+            { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 4, branch: "فرع محمد لافي", fatherId: "SHM-003", spouses: [{ name: "فاطمة" }, { name: "خضراء" }] },
+            
+            // أبناء فاطمة
+            { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 5, branch: "فرع علي بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 5, branch: "فرع سارة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 5, branch: "فرع جميلة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 5, branch: "فرع يحيى بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة" }] },
+            { id: "SHM-105", name: "صالح", title: "أبو طلال", generation: 5, branch: "فرع صالح بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-106", name: "خالد", title: "أبو وليد", generation: 5, branch: "فرع خالد بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+            { id: "SHM-107", name: "طه", title: "أبو محمد", generation: 5, branch: "فرع طه بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+
+            // أبناء خضراء
+            { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 5, branch: "فرع فيصل بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي" }] },
+            { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 5, branch: "فرع حنان بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 5, branch: "فرع زيد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 5, branch: "فرع إيمان بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 5, branch: "فرع زياد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 5, branch: "فرع خالدة بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+            { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 5, branch: "فرع عبلة بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+
+            // كبار الفروع
+            { id: "JAM-01", name: "فاطمة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
+            { id: "JAM-02", name: "غالب بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [{ name: "ماري" }] },
+            { id: "JAM-03", name: "سميرة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
+            { id: "JAM-04", name: "عبدالله بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
+            { id: "JAM-05", name: "أميرة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
+            { id: "JAM-06", name: "وزيرة بنت جميلة", generation: 6, branch: "بنات جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
+            { id: "JAM-07", name: "سمير بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
+            { id: "JAM-08", name: "زيدان بن جميلة", generation: 6, branch: "أبناء جميلة", fatherId: "SHM-103", motherName: "جميلة", spouses: [] },
+
+            { id: "SAR-02", name: "أحمد بن سارة", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-102", motherName: "سارة", spouses: [] },
+            { id: "SAR-04", name: "محمود بن سارة", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-102", motherName: "سارة", spouses: [] },
+            { id: "SAR-06", name: "مالك بن سارة", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-102", motherName: "سارة", spouses: [] },
+            { id: "ALI-02", name: "صفوان بن علي", generation: 6, branch: "فرع علي بن محمد", fatherId: "SHM-101", spouses: [] },
+            { id: "FSL-01", name: "هيثم بن فيصل", generation: 6, branch: "فرع فيصل بن محمد", fatherId: "SHM-108", spouses: [{ name: "علا الجمال" }] }
+        ];
+
+        // بدء التشغيل اللحظي الفوري
+        function initInstantLoader() {
+            // 1. تعبئة القائمة فوراً في 0 ثانية من الذاكرة المدمجة أو الكاش المحلي
+            try {
+                const cached = localStorage.getItem("shamayleh_galaxy_cache_v2026_perfect") || localStorage.getItem("shamayleh_galaxy_cache_v2026_instant");
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    flattenedMembers = [];
+                    flattenTree(parsed);
+                } else {
+                    flattenedMembers = [...embeddedBaseMembers];
+                }
+            } catch(e) {
+                flattenedMembers = [...embeddedBaseMembers];
+            }
+            populateParentSelector();
+
+            // 2. مزامنة سحابية هادئة في الخلفية لتحديث أي أسماء إضافية
+            loadTreeDataBackground();
+        }
+
+        function loadTreeDataBackground() {
             const script = document.createElement('script');
             const callback = 'onInsertTreeLoaded_' + Date.now();
             window[callback] = function(res) {
@@ -268,12 +335,14 @@
 
         function populateParentSelector() {
             const select = document.getElementById('selectParent');
+            const currentVal = select.value;
             select.innerHTML = '<option value="">-- اختر من قائمة الأفراد --</option>';
 
             flattenedMembers.forEach(m => {
                 const opt = document.createElement('option');
                 opt.value = m.id;
                 opt.text = `${m.name} (${m.title ? m.title + ' | ' : ''}الجيل ${m.generation || 1} • ${m.branch || 'الأصل'})`;
+                if (m.id === currentVal) opt.selected = true;
                 select.appendChild(opt);
             });
         }
@@ -409,7 +478,6 @@
             }
         }
 
-        // دالة الإدراج الصارمة التي تفحص استجابة السيرفر 100%
         function executeInsertMember() {
             const name = document.getElementById('newMemberName').value.trim();
             if (!name) return alert("يرجى إدخال اسم العضو الجديد.");
@@ -462,23 +530,19 @@
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
                 btn.style.pointerEvents = 'auto';
 
-                // فحص دقيق: هل وافق السيرفر فعلاً؟
                 if (res && res.status === 'success') {
-                    // مسح الذاكرة المؤقتة للشجرة في المتصفح لضمان ظهوره فوراً في المجرة
                     try {
                         localStorage.removeItem("shamayleh_galaxy_cache_v2026_instant");
                         localStorage.removeItem("shamayleh_galaxy_cache_v2026_perfect");
-                        localStorage.removeItem("shamayleh_galaxy_cache_v2026");
                     } catch(e){}
 
                     showToast(`✓ تم توثيق [${name}] رسمياً برقم: (${res.new_id}) في جداول Google!`, true);
                     document.getElementById('newMemberName').value = '';
                     document.getElementById('newMemberTitle').value = '';
                     document.getElementById('newMemberBirth').value = '';
-                    loadTreeData();
+                    loadTreeDataBackground();
                 } else {
-                    // إظهار سبب الرفض الحقيقي
-                    alert("⚠️ تنبيه من السيرفر: " + (res.message || "لم يقبل السيرفر الإضافة! تأكد من عمل (نشر إصدار جديد New version) في Apps Script."));
+                    alert("⚠️ تنبيه من السيرفر: " + (res.message || "لم يقبل السيرفر الإضافة! تأكد من تحديث النشر New version في Apps Script."));
                     showToast("فشلت عملية الإضافة في الجداول!", false);
                 }
 
@@ -508,7 +572,8 @@
             setTimeout(() => t.classList.remove('active'), 4000);
         }
 
-        loadTreeData();
+        // تشغيل التحميل اللحظي الفوري
+        initInstantLoader();
     </script>
 </body>
 </html>
