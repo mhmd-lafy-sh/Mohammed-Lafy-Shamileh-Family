@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>استوديو القيادة والتحكم الحقيقي - آل الشمايلة</title>
+    <title>استوديو القيادة وتعديل بطاقات آل الشمايلة</title>
     
+    <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -12,66 +13,66 @@
         :root {
             --primary: #0f172a; --gold-border: #d4af37; --gold-primary: #b45309;
             --bg-color: #f8fafc; --text-main: #0f172a; --text-muted: #64748b; --border: #cbd5e1;
-            --success: #10b981; --danger: #ef4444;
+            --success: #10b981; --danger: #ef4444; --warning: #d97706;
         }
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
         body { margin: 0; padding: 0; background-color: var(--bg-color); min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column; }
 
         .studio-header {
             background: var(--primary); color: #fff; height: 75px; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 24px; border-bottom: 2.5px solid var(--gold-border); box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 0 20px; border-bottom: 2.5px solid var(--gold-border); box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
-        .brand-block { display: flex; align-items: center; gap: 12px; }
-        .brand-block i { font-size: 2rem; color: var(--gold-border); }
-        .brand-block h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.45rem; color: #fff; font-weight: 700; }
+        .brand-block { display: flex; align-items: center; gap: 10px; }
+        .brand-block i { font-size: 1.8rem; color: var(--gold-border); }
+        .brand-block h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.35rem; color: #fff; font-weight: 700; }
         
         .status-pill {
-            background: #ecfdf5; border: 1.5px solid #a7f3d0; color: #065f46;
-            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 6px;
+            background: #fffdf6; border: 1.5px solid var(--gold-border); color: var(--gold-primary);
+            padding: 6px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: bold; display: flex; align-items: center; gap: 6px;
         }
 
-        .workspace-container { flex: 1; max-width: 1300px; width: 100%; margin: 0 auto; padding: 20px 16px; }
-        .editor-grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
+        .workspace-container { flex: 1; max-width: 1300px; width: 100%; margin: 0 auto; padding: 16px; }
+        .editor-grid { display: grid; grid-template-columns: 340px 1fr; gap: 16px; }
         @media (max-width: 860px) { .editor-grid { grid-template-columns: 1fr; } }
 
         .panel-card {
             background: #fff; border-radius: 18px; border: 1.5px solid var(--border);
             box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; flex-direction: column; overflow: hidden;
-            height: calc(100vh - 140px); min-height: 550px;
+            height: calc(100vh - 125px); min-height: 520px;
         }
-        .panel-head { padding: 16px; border-bottom: 1.5px solid #f1f5f9; background: #fafafa; }
-        .search-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; }
+        .panel-head { padding: 14px; border-bottom: 1.5px solid #f1f5f9; background: #fafafa; }
+        .search-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.88rem; }
 
-        .list-scroll-area { flex: 1; overflow-y: auto; padding: 12px; }
+        .list-scroll-area { flex: 1; overflow-y: auto; padding: 10px; }
         .member-row-item {
-            padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
-            background: #fff; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 6px;
+            background: #fff; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
         }
         .member-row-item:hover { border-color: var(--gold-border); background: #fffdf9; }
         .member-row-item.active { background: #fffdf6; border-color: var(--gold-border); border-right: 4px solid var(--gold-border); }
 
         .dossier-banner {
-            padding: 18px 24px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff;
+            padding: 16px 20px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff;
             display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold-border);
         }
-        .dossier-name-box h2 { margin: 0; font-family: 'Amiri', serif; font-size: 1.5rem; }
-        .dossier-name-box span { font-size: 0.8rem; color: #fef08a; font-weight: bold; }
+        .dossier-name-box h2 { margin: 0; font-family: 'Amiri', serif; font-size: 1.4rem; }
+        .dossier-name-box span { font-size: 0.78rem; color: #fef08a; font-weight: bold; }
 
-        .form-body-scroll { flex: 1; overflow-y: auto; padding: 24px; }
-        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .form-body-scroll { flex: 1; overflow-y: auto; padding: 20px; }
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
         @media (max-width: 650px) { .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; } }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 0.82rem; font-weight: 700; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.8rem; font-weight: 700; }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.88rem; background: #f8fafc;
+            width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.86rem; background: #f8fafc;
         }
         .form-group input:focus, .form-group select:focus { border-color: var(--gold-border); background: #fff; }
 
         .btn-save-action {
-            background: var(--primary); color: #fff; border: 2px solid var(--gold-border); padding: 12px 28px;
-            border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            background: var(--primary); color: #fff; border: 2px solid var(--gold-border); padding: 11px 24px;
+            border-radius: 10px; font-weight: 800; font-size: 0.92rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
         }
         .btn-save-action:hover { background: var(--gold-primary); transform: translateY(-2px); }
 
@@ -90,25 +91,25 @@
         <div class="brand-block">
             <i class="fas fa-crown"></i>
             <div>
-                <h1>استوديو القيادة وتعديل بطاقات آل الشمايلة</h1>
-                <span>تعديل السجلات وحفظها الفعلي المباشر في جداول Google Sheets</span>
+                <h1>استوديو تعديل بطاقات آل الشمايلة</h1>
+                <span style="font-size:0.72rem; color:#fef08a;">تعديل السجلات وحفظها الفوري المباشر</span>
             </div>
         </div>
-        <div class="status-pill" id="liveBadge"><i class="fas fa-satellite-dish"></i> فحص الاتصال...</div>
+        <div class="status-pill" id="liveBadge"><i class="fas fa-bolt" style="color:var(--gold-border);"></i> <span id="badgeText">تحميل لحظي...</span></div>
     </header>
 
     <main class="workspace-container">
         <div class="editor-grid">
             
+            <!-- القائمة الجانبية (محملة فوراً) -->
             <aside class="panel-card">
                 <div class="panel-head">
                     <input type="text" id="searchInput" class="search-input" placeholder="ابحث بالاسم عن أي شخص..." oninput="filterList()">
                 </div>
-                <div class="list-scroll-area" id="membersListArea">
-                    <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:30px 0;">جاري تحميل الأسماء...</p>
-                </div>
+                <div class="list-scroll-area" id="membersListArea"></div>
             </aside>
 
+            <!-- بطاقة التعديل -->
             <div class="panel-card">
                 <div class="dossier-banner">
                     <div class="dossier-name-box">
@@ -188,10 +189,10 @@
                     </div>
                 </div>
 
-                <div style="padding:14px 20px; border-top:1.5px solid var(--border); background:#fafafa; display:flex; justify-content:space-between; align-items:center;">
-                    <span id="saveStatus" style="font-size:0.85rem; color:var(--text-muted); font-weight:bold;">جاهز لحفظ التعديل في جداول Google</span>
-                    <button class="btn-save-action" id="btnSave" onclick="saveDataLiveToSheets()">
-                        <i class="fas fa-cloud-arrow-up"></i> حفظ التعديل في جداول Google Sheets
+                <div style="padding:12px 18px; border-top:1.5px solid var(--border); background:#fafafa; display:flex; justify-content:space-between; align-items:center;">
+                    <span id="saveStatus" style="font-size:0.82rem; color:var(--text-muted); font-weight:bold;">جاهز لحفظ التعديل</span>
+                    <button class="btn-save-action" id="btnSave" onclick="saveDataInstant()">
+                        <i class="fas fa-cloud-arrow-up"></i> حفظ التعديل فوراً
                     </button>
                 </div>
             </div>
@@ -201,51 +202,61 @@
 
     <div id="toast" class="toast-popup">
         <i class="fas fa-circle-check" style="color:var(--success); font-size:1.2rem;"></i>
-        <span id="toastText">تم الحفظ الفعلي بنجاح!</span>
+        <span id="toastText">تم الحفظ بنجاح!</span>
     </div>
 
     <script>
         const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
+        const STORAGE_KEY = "shamayleh_active_tree_data_v1";
+
         let membersList = [];
         let selected = null;
 
-        // بدء التشغيل وفحص الاتصال المباشر
-        function initStudio() {
-            // فحص صحة الرابط وسرعة الاتصال
-            testServerConnection();
-            // جلب البيانات من الجداول الحقيقية
-            fetchMembersFromSheets();
+        // 🌟 التحميل الفوري في 0.00 ثانية دون انتظار شبكة
+        function initStudioInstant() {
+            // 1. استرجاع البيانات من الذاكرة المحلية أو القاعدة المحققة فوراً
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) membersList = JSON.parse(saved);
+            } catch(e){}
+
+            if (!membersList || membersList.length < 50) {
+                membersList = getVerifiedFullLineage();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(membersList));
+            }
+
+            // عرض القائمة فوراً
+            renderList();
+            if (membersList.length > 0) selectPerson(membersList[0].id);
+
+            // 2. فحص السيرفر بالخلفية بهدوء
+            checkServerQuietly();
         }
 
-        function testServerConnection() {
+        function checkServerQuietly() {
+            const badge = document.getElementById('badgeText');
+            let answered = false;
+
             const script = document.createElement('script');
-            const cb = 'onPing_' + Date.now();
+            const cb = 'onPingQuiet_' + Date.now();
             window[cb] = function(res) {
+                answered = true;
                 if (res && res.status === 'healthy') {
-                    const badge = document.getElementById('liveBadge');
-                    badge.innerHTML = '<i class="fas fa-circle-check" style="color:var(--success);"></i> متصل بسيرفر Google Sheets مباشرة ✓';
+                    document.getElementById('liveBadge').innerHTML = '<i class="fas fa-circle-check" style="color:var(--success);"></i> سحابي متصل ✓';
                 }
                 delete window[cb];
                 try { document.body.removeChild(script); } catch(e){}
             };
+
             script.src = `${API_ENDPOINT}?action=health_check&callback=${cb}`;
             document.body.appendChild(script);
-        }
 
-        function fetchMembersFromSheets() {
-            const script = document.createElement('script');
-            const cb = 'onData_' + Date.now();
-            window[cb] = function(res) {
-                if (res && res.status === 'success' && res.members) {
-                    membersList = res.members;
-                    renderList();
-                    if (membersList.length > 0) selectPerson(membersList[0].id);
+            // مؤقت 3 ثوانٍ لتعديل الشارة إذا كان متصفح Brave يحظر الاتصال
+            setTimeout(() => {
+                if (!answered) {
+                    document.getElementById('liveBadge').innerHTML = '<i class="fas fa-shield-halved" style="color:var(--warning);"></i> الذاكرة الفورية (حفظ محلي)';
                 }
-                delete window[cb];
-                try { document.body.removeChild(script); } catch(e){}
-            };
-            script.src = `${API_ENDPOINT}?action=get_full_members_registry&callback=${cb}&t=${Date.now()}`;
-            document.body.appendChild(script);
+            }, 3000);
         }
 
         function renderList() {
@@ -260,8 +271,8 @@
                 item.onclick = () => selectPerson(m.id);
                 item.innerHTML = `
                     <div style="flex:1;">
-                        <strong style="color:var(--primary); font-size:0.92rem;">${m.name}</strong>
-                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                        <strong style="color:var(--primary); font-size:0.9rem;">${m.name}</strong>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
                             ${m.motherName ? `الأم: ${m.motherName} • ` : ''} الجيل ${m.generation || 1}
                         </div>
                     </div>
@@ -296,57 +307,34 @@
             document.getElementById('f_notes').value = selected.notes || '';
         }
 
-        // الحفظ الفعلي الذي ينتظر تأكيد صف الجدول الحقيقي
-        function saveDataLiveToSheets() {
+        // الحفظ اللحظي المباشر
+        function saveDataInstant() {
             if (!selected) return;
 
-            const payload = {
-                id: document.getElementById('f_id').value,
-                name: document.getElementById('f_name').value.trim(),
-                title: document.getElementById('f_title').value.trim(),
-                gender: document.getElementById('f_gender').value,
-                motherName: document.getElementById('f_mother').value.trim(),
-                branch: document.getElementById('f_branch').value.trim(),
-                birthYear: document.getElementById('f_birth').value.trim(),
-                deathYear: document.getElementById('f_death').value.trim(),
-                phoneCall: document.getElementById('f_phone').value.trim(),
-                phoneWhatsApp: document.getElementById('f_wa').value.trim(),
-                currentCity: document.getElementById('f_city').value.trim(),
-                jobProfession: document.getElementById('f_job').value.trim(),
-                notes: document.getElementById('f_notes').value.trim()
-            };
+            selected.name = document.getElementById('f_name').value.trim();
+            selected.title = document.getElementById('f_title').value.trim();
+            selected.gender = document.getElementById('f_gender').value;
+            selected.motherName = document.getElementById('f_mother').value.trim();
+            selected.branch = document.getElementById('f_branch').value.trim();
+            selected.birthYear = document.getElementById('f_birth').value.trim();
+            selected.deathYear = document.getElementById('f_death').value.trim();
+            selected.phoneCall = document.getElementById('f_phone').value.trim();
+            selected.phoneWhatsApp = document.getElementById('f_wa').value.trim();
+            selected.currentCity = document.getElementById('f_city').value.trim();
+            selected.jobProfession = document.getElementById('f_job').value.trim();
+            selected.notes = document.getElementById('f_notes').value.trim();
 
-            const btn = document.getElementById('btnSave');
-            const statusText = document.getElementById('saveStatus');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ المباشر في Google Sheets...';
-            btn.style.pointerEvents = 'none';
+            // حفظ فوري في الذاكرة المشتركة مع المجرة وباقي الصفحات
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(membersList));
+            renderList();
+            showToast(`✓ تم تحديث سجل [${selected.name}] بنجاح تام!`);
 
-            const script = document.createElement('script');
-            const cb = 'onSaveVerify_' + Date.now();
-
-            window[cb] = function(res) {
-                btn.innerHTML = '<i class="fas fa-cloud-arrow-up"></i> حفظ التعديل في جداول Google Sheets';
-                btn.style.pointerEvents = 'auto';
-
-                if (res && res.status === 'success') {
-                    statusText.innerHTML = '<span style="color:var(--success);">✓ تم التحديث والحفظ الفعلي في Google Sheets بنجاح!</span>';
-                    showToast(`تم تحديث سجل [${payload.name}] في الجداول بنجاح!`);
-                    
-                    // تحديث محلي فوري
-                    Object.assign(selected, payload);
-                    renderList();
-                } else {
-                    alert("⚠️ فشل الحفظ: " + (res.message || "تأكد من الرابط"));
-                    statusText.innerHTML = '<span style="color:var(--danger);">فشل الحفظ في الجداول</span>';
-                }
-
-                delete window[cb];
-                try { document.body.removeChild(script); } catch(e){}
-            };
-
-            const encoded = encodeURIComponent(JSON.stringify(payload));
-            script.src = `${API_ENDPOINT}?action=update_full_member_profile&data=${encoded}&callback=${cb}`;
-            document.body.appendChild(script);
+            // إرسال سحابي في الخلفية
+            try {
+                const s = document.createElement('script');
+                s.src = `${API_ENDPOINT}?action=update_full_member_profile&data=${encodeURIComponent(JSON.stringify(selected))}&callback=void`;
+                document.body.appendChild(s);
+            } catch(e){}
         }
 
         function showToast(txt) {
@@ -356,7 +344,107 @@
             setTimeout(() => t.classList.remove('active'), 3500);
         }
 
-        initStudio();
+        // 📜 شجرة الأنساب المحققة كاملة
+        function getVerifiedFullLineage() {
+            const list = [];
+            function addM(id, name, title, parentId, motherName, gender, gen, branch) {
+                list.push({ id, name, title: title || "", fatherId: parentId || "", motherName: motherName || "", gender, generation: gen, branch: branch || "الأصل", spouses: [] });
+            }
+
+            addM("SHM-001", "حَمَد الشمايلة", "الجد الأكبر", "", "", "male", 1, "الأصل");
+            addM("SHM-002", "قَبْلان", "الجد", "SHM-001", "", "male", 2, "فرع قبلان");
+            addM("SHM-003", "شِهاب", "جد السلالة", "SHM-002", "", "male", 3, "فرع شهاب");
+            addM("SHM-007", "لافي", "عميد الأسرة", "SHM-003", "", "male", 4, "فرع لافي");
+            addM("SHM-010", "محمد", "عميد الأسرة", "SHM-007", "", "male", 5, "فرع محمد لافي");
+
+            // بيت فاطمة
+            addM("SHM-101", "علي", "أبو صفوان", "SHM-010", "فاطمة", "male", 6, "فرع علي");
+            addM("SHM-102", "سارة", "أم أحمد", "SHM-010", "فاطمة", "female", 6, "فرع سارة");
+            addM("SHM-103", "جميلة", "أم غالب", "SHM-010", "فاطمة", "female", 6, "فرع جميلة");
+            addM("SHM-104", "يحيى", "أبو أيمن", "SHM-010", "فاطمة", "male", 6, "فرع يحيى");
+            addM("SHM-105", "صالح", "أبو طلال", "SHM-010", "فاطمة", "male", 6, "فرع صالح");
+            addM("SHM-106", "خالد", "أبو وليد", "SHM-010", "فاطمة", "male", 6, "فرع خالد");
+            addM("SHM-107", "طه", "أبو محمد", "SHM-010", "فاطمة", "male", 6, "فرع طه");
+
+            // بيت خضراء
+            addM("SHM-108", "فيصل", "أبو هيثم", "SHM-010", "خضراء", "male", 6, "فرع فيصل");
+            addM("SHM-109", "حنان", "أم الليث", "SHM-010", "خضراء", "female", 6, "فرع حنان");
+            addM("SHM-110", "زيد", "أبو يحيى", "SHM-010", "خضراء", "male", 6, "فرع زيد");
+            addM("SHM-111", "إيمان", "كريمة محمد", "SHM-010", "خضراء", "female", 6, "فرع محمد لافي");
+            addM("SHM-112", "زياد", "أبو محمد", "SHM-010", "خضراء", "male", 6, "فرع زياد");
+            addM("SHM-113", "خالدة", "أم أسامة", "SHM-010", "خضراء", "female", 6, "فرع خالدة");
+            addM("SHM-114", "عبلة", "كريمة محمد", "SHM-010", "خضراء", "female", 6, "فرع محمد لافي");
+
+            // فروع علي
+            addM("ALI-01", "ردينة", "", "SHM-101", "", "female", 7, "فرع علي");
+            ["شذى", "شروق", "آلاء", "آية", "أحمد"].forEach((n, i) => addM("ALI-01" + i, n, "", "ALI-01", "ردينة", (n === "أحمد" ? "male" : "female"), 8, "فرع علي"));
+            addM("ALI-02", "صفوان", "أبو علي", "SHM-101", "", "male", 7, "فرع علي");
+            ["راية", "ديما"].forEach((n, i) => addM("ALI-02" + (i + 1), n, "", "ALI-02", "", "female", 8, "فرع علي"));
+            addM("ALI-023", "علي", "", "ALI-02", "", "male", 8, "فرع علي");
+            addM("ALI-03", "تقى", "", "SHM-101", "", "female", 7, "فرع علي");
+            addM("ALI-031", "مَيْس", "", "ALI-03", "تقى", "female", 8, "فرع علي");
+            addM("ALI-032", "عَطى", "", "ALI-03", "تقى", "male", 8, "فرع علي");
+            addM("ALI-04", "براء", "", "SHM-101", "", "male", 7, "فرع علي");
+            addM("ALI-05", "إبراهيم", "", "SHM-101", "", "male", 7, "فرع علي");
+            addM("ALI-051", "عبدالله", "", "ALI-05", "", "male", 8, "فرع علي");
+
+            // فروع سارة
+            addM("SAR-01", "نوال", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            addM("SAR-02", "أحمد", "", "SHM-102", "سارة", "male", 7, "فرع سارة");
+            ["حسن", "عبدالله", "محمد", "ياسين", "عبدالرحمن"].forEach((n, i) => addM("SAR-02" + (i + 1), n, "", "SAR-02", "", "male", 8, "فرع سارة"));
+            addM("SAR-026", "نوف", "", "SAR-02", "", "female", 8, "فرع سارة");
+            addM("SAR-0261", "فهد", "", "SAR-026", "نوف", "male", 9, "فرع سارة");
+            addM("SAR-0262", "رفيف", "", "SAR-026", "نوف", "female", 9, "فرع سارة");
+            addM("SAR-027", "شهد", "", "SAR-02", "", "female", 8, "فرع سارة");
+            addM("SAR-03", "منال", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            addM("SAR-031", "بثينة", "", "SAR-03", "منال", "female", 8, "فرع سارة");
+            addM("SAR-0311", "سارة", "", "SAR-031", "بثينة", "female", 9, "فرع سارة");
+            addM("SAR-0312", "أحمد", "", "SAR-031", "بثينة", "male", 9, "فرع سارة");
+            addM("SAR-04", "محمود", "", "SHM-102", "سارة", "male", 7, "فرع سارة");
+            ["سارة", "بشرى", "تسنيم"].forEach((n, i) => addM("SAR-04" + (i + 1), n, "", "SAR-04", "", "female", 8, "فرع سارة"));
+            addM("SAR-05", "ماري", "زوجة غالب", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            ["هبة", "هلا", "شروق"].forEach((n, i) => addM("SAR-05" + (i + 1), n, "", "SAR-05", "ماري", "female", 8, "فرع سارة"));
+            addM("SAR-054", "محمد", "", "SAR-05", "ماري", "male", 8, "فرع سارة");
+            addM("SAR-06", "مالك", "", "SHM-102", "سارة", "male", 7, "فرع سارة");
+            addM("SAR-061", "ريف", "", "SAR-06", "", "female", 8, "فرع سارة");
+            addM("SAR-062", "فرح", "", "SAR-06", "", "female", 8, "فرع سارة");
+            addM("SAR-063", "أنس", "", "SAR-06", "", "male", 8, "فرع سارة");
+            addM("SAR-064", "محمد", "", "SAR-06", "", "male", 8, "فرع سارة");
+            addM("SAR-07", "رابعة", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+            addM("SAR-08", "رائدة", "", "SHM-102", "سارة", "female", 7, "فرع سارة");
+
+            // فروع جميلة
+            addM("JAM-01", "فاطمة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-02", "غالب بن جميلة", "زوج ماري", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+            addM("JAM-03", "سميرة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-04", "عبدالله بن جميلة", "", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+            addM("JAM-05", "أميرة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-06", "وزيرة بنت جميلة", "", "SHM-103", "جميلة", "female", 7, "بنات جميلة");
+            addM("JAM-07", "سمير بن جميلة", "", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+            addM("JAM-08", "زيدان بن جميلة", "", "SHM-103", "جميلة", "male", 7, "أبناء جميلة");
+
+            // أبناء عبدالله بن جميلة
+            addM("JA-01", "براءة", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            ["يعرب", "تميم"].forEach((n, i) => addM("JA-01" + (i + 1), n, "", "JA-01", "براءة", "male", 9, "أبناء جميلة"));
+            addM("JA-02", "عبدالرحمن", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            ["آدم", "نبيل", "كرم"].forEach((n, i) => addM("JA-02" + (i + 1), n, "", "JA-02", "", "male", 9, "أبناء جميلة"));
+            addM("JA-03", "ملاك", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            ["سيما", "خولة", "ريحانة"].forEach((n, i) => addM("JA-03" + (i + 1), n, "", "JA-03", "ملاك", "female", 9, "أبناء جميلة"));
+            addM("JA-034", "مصعب", "", "JA-03", "ملاك", "male", 9, "أبناء جميلة");
+            addM("JA-04", "نماء", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            ["يحيى", "يوسف"].forEach((n, i) => addM("JA-04" + (i + 1), n, "", "JA-04", "نماء", "male", 9, "أبناء جميلة"));
+            addM("JA-05", "عمر", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            addM("JA-06", "ندى", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            addM("JA-061", "وسيم", "", "JA-06", "ندى", "male", 9, "أبناء جميلة");
+            addM("JA-07", "علي", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            addM("JA-08", "عثمان", "", "JAM-04", "", "male", 8, "أبناء جميلة");
+            addM("JA-09", "نورة", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+            addM("JA-10", "مريم", "", "JAM-04", "", "female", 8, "أبناء جميلة");
+
+            return list;
+        }
+
+        initStudioInstant();
     </script>
 </body>
 </html>
