@@ -3,127 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>استوديو القيادة والتحكم الشامل - آل الشمايلة</title>
+    <title>استوديو القيادة والتحكم الحقيقي - آل الشمايلة</title>
     
-    <!-- الخطوط والأيقونات والمكتبات -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <style>
         :root {
-            --primary: #0f172a;       /* كحلي ملكي غامق */
-            --primary-light: #1e293b;
-            --gold-primary: #b45309;  /* ذهبي عسلي */
-            --gold-border: #d4af37;   /* ذهبي كلاسيكي */
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #cbd5e1;
-            --female-color: #db2777; 
-            --male-color: #0284c7;   
-            --success: #10b981;      
-            --danger: #ef4444;       
+            --primary: #0f172a; --gold-border: #d4af37; --gold-primary: #b45309;
+            --bg-color: #f8fafc; --text-main: #0f172a; --text-muted: #64748b; --border: #cbd5e1;
+            --success: #10b981; --danger: #ef4444;
         }
-
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
+        body { margin: 0; padding: 0; background-color: var(--bg-color); min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column; }
 
-        body {
-            margin: 0; padding: 0; background-color: var(--bg-color); min-height: 100vh;
-            color: var(--text-main); display: flex; flex-direction: column;
-            background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px); background-size: 28px 28px;
-        }
-
-        /* الهيدر العلوي الموحد */
         .studio-header {
-            background: var(--primary); color: #fff; height: 75px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 24px; border-bottom: 2.5px solid var(--gold-border);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            background: var(--primary); color: #fff; height: 75px; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; border-bottom: 2.5px solid var(--gold-border); box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         .brand-block { display: flex; align-items: center; gap: 12px; }
         .brand-block i { font-size: 2rem; color: var(--gold-border); }
         .brand-block h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.45rem; color: #fff; font-weight: 700; }
-        .brand-block span { font-size: 0.75rem; color: #fef08a; display: block; }
-
-        .header-actions { display: flex; align-items: center; gap: 10px; }
-        .btn-config-api {
-            background: rgba(255,255,255,0.08); border: 1.5px solid rgba(212,175,55,0.4); color: #fff;
-            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
-            display: flex; align-items: center; gap: 6px;
+        
+        .status-pill {
+            background: #ecfdf5; border: 1.5px solid #a7f3d0; color: #065f46;
+            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 6px;
         }
 
-        /* شريط التبديل بين القسمين الرئيسيين */
-        .master-nav-bar {
-            background: #fff; border-bottom: 1.5px solid var(--border);
-            display: flex; justify-content: center; padding: 6px 16px; gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-        .main-tab-btn {
-            background: #f1f5f9; border: 1.5px solid var(--border); padding: 10px 24px; border-radius: 30px;
-            font-size: 0.9rem; font-weight: 800; cursor: pointer; color: var(--text-muted);
-            display: flex; align-items: center; gap: 8px; transition: all 0.25s;
-        }
-        .main-tab-btn.active {
-            background: var(--primary); color: #fff; border-color: var(--primary);
-            box-shadow: 0 4px 14px rgba(15,23,42,0.2);
-        }
-        .main-tab-btn i { font-size: 1rem; color: var(--gold-border); }
-
-        /* مساحة العمل */
-        .workspace-container {
-            flex: 1; max-width: 1350px; width: 100%; margin: 0 auto; padding: 20px 16px;
-        }
-
-        .section-view { display: none; }
-        .section-view.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* تنسيقات قسم التعديل الشامل */
-        .editor-grid {
-            display: grid; grid-template-columns: 360px 1fr; gap: 20px;
-        }
-        @media (max-width: 900px) { .editor-grid { grid-template-columns: 1fr; } }
+        .workspace-container { flex: 1; max-width: 1300px; width: 100%; margin: 0 auto; padding: 20px 16px; }
+        .editor-grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
+        @media (max-width: 860px) { .editor-grid { grid-template-columns: 1fr; } }
 
         .panel-card {
             background: #fff; border-radius: 18px; border: 1.5px solid var(--border);
             box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; flex-direction: column; overflow: hidden;
-            height: calc(100vh - 190px); min-height: 550px;
+            height: calc(100vh - 140px); min-height: 550px;
         }
         .panel-head { padding: 16px; border-bottom: 1.5px solid #f1f5f9; background: #fafafa; }
-        .search-input {
-            width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px;
-            font-size: 0.9rem; background: #fff;
-        }
-        .search-input:focus { border-color: var(--gold-border); box-shadow: 0 0 10px rgba(212,175,55,0.2); }
-
-        .filter-row { display: flex; gap: 6px; overflow-x: auto; padding-top: 10px; }
-        .pill-filter {
-            background: #f1f5f9; border: 1px solid var(--border); border-radius: 20px;
-            padding: 4px 12px; font-size: 0.74rem; font-weight: bold; cursor: pointer; white-space: nowrap; color: var(--text-muted);
-        }
-        .pill-filter.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .search-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; }
 
         .list-scroll-area { flex: 1; overflow-y: auto; padding: 12px; }
         .member-row-item {
-            padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
+            padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px;
             background: #fff; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px;
         }
-        .member-row-item:hover { border-color: var(--gold-border); background: #fffdf9; transform: translateX(-3px); }
-        .member-row-item.active {
-            background: #fffdf6; border-color: var(--gold-border); border-right: 4px solid var(--gold-border);
-            box-shadow: 0 4px 12px rgba(180,83,9,0.15);
-        }
+        .member-row-item:hover { border-color: var(--gold-border); background: #fffdf9; }
+        .member-row-item.active { background: #fffdf6; border-color: var(--gold-border); border-right: 4px solid var(--gold-border); }
 
-        .avatar-circle {
-            width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 1.1rem; flex-shrink: 0; border: 1.5px solid #cbd5e1;
-        }
-        .avatar-circle.male { background: #f0f9ff; color: var(--male-color); }
-        .avatar-circle.female { background: #fdf2f8; color: var(--female-color); }
-
-        /* بانر العضو المختار */
         .dossier-banner {
             padding: 18px 24px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff;
             display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold-border);
@@ -131,17 +57,7 @@
         .dossier-name-box h2 { margin: 0; font-family: 'Amiri', serif; font-size: 1.5rem; }
         .dossier-name-box span { font-size: 0.8rem; color: #fef08a; font-weight: bold; }
 
-        .tabs-sub-nav { display: flex; border-bottom: 1.5px solid var(--border); background: #fafafa; padding: 0 12px; }
-        .sub-tab-btn {
-            padding: 12px 18px; border: none; background: transparent; font-size: 0.85rem; font-weight: 700;
-            color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s;
-        }
-        .sub-tab-btn.active { color: var(--primary); border-bottom-color: var(--gold-border); background: #fff; }
-
         .form-body-scroll { flex: 1; overflow-y: auto; padding: 24px; }
-        .form-pane { display: none; }
-        .form-pane.active { display: block; }
-
         .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
         .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
         @media (max-width: 650px) { .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; } }
@@ -149,48 +65,15 @@
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 6px; font-size: 0.82rem; font-weight: 700; }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px;
-            font-size: 0.88rem; background: #f8fafc;
+            width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.88rem; background: #f8fafc;
         }
         .form-group input:focus, .form-group select:focus { border-color: var(--gold-border); background: #fff; }
 
         .btn-save-action {
             background: var(--primary); color: #fff; border: 2px solid var(--gold-border); padding: 12px 28px;
-            border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+            border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
         }
         .btn-save-action:hover { background: var(--gold-primary); transform: translateY(-2px); }
-
-        /* تنسيقات قسم ترتيب الأشقاء بالسحب والإفلات */
-        .reorder-grid {
-            display: grid; grid-template-columns: 340px 1fr; gap: 20px;
-        }
-        @media (max-width: 860px) { .reorder-grid { grid-template-columns: 1fr; } }
-
-        .sortable-card-item {
-            padding: 14px 16px; background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px;
-            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
-            cursor: grab; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-        }
-        .sortable-card-item:hover { border-color: var(--gold-border); box-shadow: 0 6px 16px rgba(180,83,9,0.15); }
-        .sortable-card-item:active { cursor: grabbing; background: #fffdf9; border-color: var(--gold-border); }
-
-        .btn-auto-sort {
-            background: #fff; border: 1.5px solid var(--gold-border); color: var(--gold-primary);
-            padding: 6px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: bold; cursor: pointer;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .btn-auto-sort:hover { background: var(--primary); color: #fff; }
-
-        /* نافذة ضبط الرابط */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
-            z-index: 9999; display: none; justify-content: center; align-items: center; padding: 16px;
-        }
-        .modal-card {
-            background: #fff; border-radius: 20px; max-width: 500px; width: 100%; padding: 24px;
-            border-top: 5px solid var(--gold-border); box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
 
         .toast-popup {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
@@ -203,605 +86,267 @@
 </head>
 <body>
 
-    <!-- الهيدر الموحد -->
     <header class="studio-header">
         <div class="brand-block">
             <i class="fas fa-crown"></i>
             <div>
-                <h1>استوديو القيادة والتحكم الشامل</h1>
-                <span>ديوان تعديل بطاقات الأفراد وترتيب الأسر بالسحب والإفلات</span>
+                <h1>استوديو القيادة وتعديل بطاقات آل الشمايلة</h1>
+                <span>تعديل السجلات وحفظها الفعلي المباشر في جداول Google Sheets</span>
             </div>
         </div>
-        <div class="header-actions">
-            <button class="btn-config-api" onclick="openApiModal()"><i class="fas fa-gear"></i> ضبط رابط السيرفر</button>
-        </div>
+        <div class="status-pill" id="liveBadge"><i class="fas fa-satellite-dish"></i> فحص الاتصال...</div>
     </header>
 
-    <!-- شريط التبديل بين القسمين -->
-    <nav class="master-nav-bar">
-        <button class="main-tab-btn active" id="btnNavDossier" onclick="switchMainSection('dossier')">
-            <i class="fas fa-id-card-clip"></i> سجل وتعديل بطاقات الأفراد الشامل
-        </button>
-        <button class="main-tab-btn" id="btnNavReorder" onclick="switchMainSection('reorder')">
-            <i class="fas fa-arrows-up-down-left-right"></i> محطة ترتيب الأسر بالسحب والإفلات
-        </button>
-    </nav>
-
-    <!-- مساحة العمل الموحدة -->
     <main class="workspace-container">
+        <div class="editor-grid">
+            
+            <aside class="panel-card">
+                <div class="panel-head">
+                    <input type="text" id="searchInput" class="search-input" placeholder="ابحث بالاسم عن أي شخص..." oninput="filterList()">
+                </div>
+                <div class="list-scroll-area" id="membersListArea">
+                    <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:30px 0;">جاري تحميل الأسماء...</p>
+                </div>
+            </aside>
 
-        <!-- ========================================================================= -->
-        <!-- 📑 القسم الأول: تعديل بطاقات الأفراد الشامل -->
-        <!-- ========================================================================= -->
-        <section id="section-dossier" class="section-view active">
-            <div class="editor-grid">
-                
-                <!-- دليل الأفراد -->
-                <aside class="panel-card">
-                    <div class="panel-head">
-                        <input type="text" id="memberSearchInput" class="search-input" placeholder="ابحث بالاسم أو اللقب أو المدينة..." oninput="filterDirectoryList()">
-                        <div class="filter-row">
-                            <button class="pill-filter active" onclick="setDirFilter('all', this)">الكل</button>
-                            <button class="pill-filter" onclick="setDirFilter('male', this)">الذكور</button>
-                            <button class="pill-filter" onclick="setDirFilter('female', this)">الإناث</button>
-                            <button class="pill-filter" onclick="setDirFilter('jamila', this)">جميلة</button>
-                            <button class="pill-filter" onclick="setDirFilter('fatima', this)">بيت فاطمة</button>
-                            <button class="pill-filter" onclick="setDirFilter('khadra', this)">بيت خضراء</button>
-                        </div>
-                    </div>
-                    <div class="list-scroll-area" id="membersListArea"></div>
-                </aside>
-
-                <!-- بطاقة التعديل الشاملة -->
-                <div class="panel-card">
-                    <div class="dossier-banner">
-                        <div style="display:flex; align-items:center; gap:14px;">
-                            <div class="avatar-circle" id="curDossierAvatar" style="width:50px; height:50px; font-size:1.4rem; background:#fff;"></div>
-                            <div class="dossier-name-box">
-                                <h2 id="curDossierName">اختر عضواً للتعديل</h2>
-                                <span id="curDossierTag">SHM-000 | تفاصيل السجل الموثق</span>
-                            </div>
-                        </div>
-                        <div style="display:flex; gap:8px;" id="dossierQuickContact">
-                            <a href="#" id="linkCall" class="btn-config-api" style="display:none;" title="اتصال"><i class="fas fa-phone"></i></a>
-                            <a href="#" id="linkWhatsApp" target="_blank" class="btn-config-api" style="display:none; color:#10b981;" title="واتساب"><i class="fab fa-whatsapp"></i></a>
-                        </div>
-                    </div>
-
-                    <nav class="tabs-sub-nav">
-                        <button class="sub-tab-btn active" onclick="switchSubTab('sub-tab-id', this)">الهوية والنسب</button>
-                        <button class="sub-tab-btn" onclick="switchSubTab('sub-tab-spouses', this)">الزوجات والمصاهرات</button>
-                        <button class="sub-tab-btn" onclick="switchSubTab('sub-tab-contact', this)">التواصل والعناوين</button>
-                        <button class="sub-tab-btn" onclick="switchSubTab('sub-tab-notes', this)">السيرة والمهنة</button>
-                    </nav>
-
-                    <div class="form-body-scroll">
-                        <input type="hidden" id="f_id">
-
-                        <!-- تبويب 1: الهوية -->
-                        <div id="sub-tab-id" class="form-pane active">
-                            <div class="form-grid-2">
-                                <div class="form-group">
-                                    <label>الاسم الصافي الكامل</label>
-                                    <input type="text" id="f_name">
-                                </div>
-                                <div class="form-group">
-                                    <label>اللقب أو الصفة التكريمية</label>
-                                    <input type="text" id="f_title">
-                                </div>
-                            </div>
-
-                            <div class="form-grid-3">
-                                <div class="form-group">
-                                    <label>النوع / الجنس</label>
-                                    <select id="f_gender">
-                                        <option value="male">ذكر</option>
-                                        <option value="female">أنثى</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>اسم الأم المباشرة</label>
-                                    <input type="text" id="f_mother">
-                                </div>
-                                <div class="form-group">
-                                    <label>الفرع النسبي</label>
-                                    <input type="text" id="f_branch">
-                                </div>
-                            </div>
-
-                            <div class="form-grid-2">
-                                <div class="form-group">
-                                    <label>سنة الميلاد</label>
-                                    <input type="text" id="f_birth" placeholder="1980">
-                                </div>
-                                <div class="form-group">
-                                    <label>سنة الوفاة (اتركها فارغة للحي)</label>
-                                    <input type="text" id="f_death" placeholder="2021">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- تبويب 2: الزوجات -->
-                        <div id="sub-tab-spouses" class="form-pane">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                                <h4 style="margin:0;">الزوجات / الأزواج المسجلون</h4>
-                                <button type="button" class="btn-config-api" style="color:var(--primary);" onclick="addSpouseRow()"><i class="fas fa-plus"></i> إضافة زوج/ة</button>
-                            </div>
-                            <div id="spousesArea" style="background:#f8fafc; border:1.5px dashed var(--border); border-radius:12px; padding:14px;"></div>
-                        </div>
-
-                        <!-- تبويب 3: التواصل -->
-                        <div id="sub-tab-contact" class="form-pane">
-                            <div class="form-grid-2">
-                                <div class="form-group">
-                                    <label><i class="fas fa-phone"></i> رقم الهاتف المباشر</label>
-                                    <input type="text" id="f_phone">
-                                </div>
-                                <div class="form-group">
-                                    <label><i class="fab fa-whatsapp" style="color:#10b981;"></i> رقم الواتساب</label>
-                                    <input type="text" id="f_wa">
-                                </div>
-                            </div>
-                            <div class="form-grid-2">
-                                <div class="form-group">
-                                    <label>مكان الإقامة الحالي (المدينة)</label>
-                                    <input type="text" id="f_city" placeholder="العقبة / الكرك / عمّان...">
-                                </div>
-                                <div class="form-group">
-                                    <label>الرقم الوطني (اختياري للتوثيق)</label>
-                                    <input type="text" id="f_natId">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- تبويب 4: المهنة -->
-                        <div id="sub-tab-notes" class="form-pane">
-                            <div class="form-group">
-                                <label>المهنة أو التخصص العلمي</label>
-                                <input type="text" id="f_job">
-                            </div>
-                            <div class="form-group">
-                                <label>ملاحظات السيرة والمواقف المشرفة</label>
-                                <textarea id="f_notes" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="padding:14px 20px; border-top:1.5px solid var(--border); background:#fafafa; display:flex; justify-content:space-between; align-items:center;">
-                        <span id="saveStatus" style="font-size:0.8rem; color:var(--text-muted);">جاهز لحفظ التعديلات في السحاب</span>
-                        <button class="btn-save-action" onclick="saveDossierData()"><i class="fas fa-cloud-arrow-up"></i> حفظ وتحديث السجل السحابي</button>
+            <div class="panel-card">
+                <div class="dossier-banner">
+                    <div class="dossier-name-box">
+                        <h2 id="curName">اختر عضواً لتعديل بياناته</h2>
+                        <span id="curTag">SHM-000 | الجيل الموثق</span>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- ========================================================================= -->
-        <!-- ↕️ القسم الثاني: ترتيب الأسر والأشقاء بالسحب والإفلات -->
-        <!-- ========================================================================= -->
-        <section id="section-reorder" class="section-view">
-            <div class="reorder-grid">
-                
-                <!-- اختيار الأسرة -->
-                <aside class="panel-card">
-                    <div class="panel-head">
-                        <input type="text" id="branchFilterInput" class="search-input" placeholder="ابحث عن الأسرة أو الأب..." oninput="filterBranches()">
-                    </div>
-                    <div class="list-scroll-area" id="branchesArea"></div>
-                </aside>
+                <div class="form-body-scroll">
+                    <input type="hidden" id="f_id">
 
-                <!-- محطة الترتيب بالسحب والإفلات -->
-                <div class="panel-card">
-                    <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; background:#fffdf6; border-bottom:1.5px solid #fef08a;">
-                        <h3 id="curBranchTitle" style="margin:0; font-size:1.05rem; color:var(--primary); font-weight:800;">
-                            <i class="fas fa-arrows-up-down-left-right" style="color:var(--gold-border);"></i> محطة ترتيب الأشقاء بالسحب والإفلات
-                        </h3>
-                        <button class="btn-auto-sort" onclick="autoSortSiblings()"><i class="fas fa-arrow-down-1-9"></i> ترتيب تلقائي بالميلاد</button>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>الاسم الكامل الصافي</label>
+                            <input type="text" id="f_name">
+                        </div>
+                        <div class="form-group">
+                            <label>اللقب أو الصفة التكريمية</label>
+                            <input type="text" id="f_title">
+                        </div>
                     </div>
-                    
-                    <div class="form-body-scroll" style="padding:16px;">
-                        <ul id="sortableList" style="list-style:none; padding:0; margin:0;">
-                            <p style="text-align:center; color:var(--text-muted); padding:50px 0;">اختر رب الأسرة من القائمة الجانبية لعرض أبنائه وترتيبهم.</p>
-                        </ul>
+
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label>الجنس</label>
+                            <select id="f_gender">
+                                <option value="male">ذكر</option>
+                                <option value="female">أنثى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>اسم الأم المباشرة</label>
+                            <input type="text" id="f_mother">
+                        </div>
+                        <div class="form-group">
+                            <label>الفرع العائلي</label>
+                            <input type="text" id="f_branch">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>سنة الميلاد</label>
+                            <input type="text" id="f_birth" placeholder="مثال: 1980">
+                        </div>
+                        <div class="form-group">
+                            <label>سنة الوفاة (فارغة للحي)</label>
+                            <input type="text" id="f_death" placeholder="مثال: 2021">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> رقم الهاتف للاتصال</label>
+                            <input type="text" id="f_phone">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-whatsapp" style="color:#10b981;"></i> رقم الواتساب</label>
+                            <input type="text" id="f_wa">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>مكان الإقامة (المدينة)</label>
+                            <input type="text" id="f_city">
+                        </div>
+                        <div class="form-group">
+                            <label>المهنة أو المؤهل العلمي</label>
+                            <input type="text" id="f_job">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ملاحظات السيرة العطرة</label>
+                        <textarea id="f_notes" rows="2"></textarea>
                     </div>
                 </div>
-            </div>
-        </section>
 
+                <div style="padding:14px 20px; border-top:1.5px solid var(--border); background:#fafafa; display:flex; justify-content:space-between; align-items:center;">
+                    <span id="saveStatus" style="font-size:0.85rem; color:var(--text-muted); font-weight:bold;">جاهز لحفظ التعديل في جداول Google</span>
+                    <button class="btn-save-action" id="btnSave" onclick="saveDataLiveToSheets()">
+                        <i class="fas fa-cloud-arrow-up"></i> حفظ التعديل في جداول Google Sheets
+                    </button>
+                </div>
+            </div>
+
+        </div>
     </main>
 
-    <!-- نافذة ضبط الرابط السحابي -->
-    <div class="modal-overlay" id="apiModal">
-        <div class="modal-card">
-            <h3 style="margin:0 0 10px 0; color:var(--primary); font-family:'Amiri', serif; font-size:1.4rem;">
-                <i class="fas fa-link" style="color:var(--gold-border);"></i> ضبط رابط سيرفر Google Apps Script
-            </h3>
-            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:14px;">
-                إذا قمت بإنشاء نشر جديد أو تغير رابط السكربت، الصقه هنا وسيعمل الموقع عليه فوراً:
-            </p>
-            <div class="form-group">
-                <label>رابط الـ Web App الحالي:</label>
-                <input type="text" id="customApiUrl" placeholder="https://script.google.com/macros/s/.../exec">
-            </div>
-            <div style="display:flex; gap:10px; margin-top:16px;">
-                <button class="btn-save-action" style="flex:1; justify-content:center;" onclick="saveApiUrl()">حفظ الرابط</button>
-                <button class="btn-config-api" style="color:var(--text-main);" onclick="closeApiModal()">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- إشعار عائم -->
     <div id="toast" class="toast-popup">
         <i class="fas fa-circle-check" style="color:var(--success); font-size:1.2rem;"></i>
-        <span id="toastText">تم الحفظ بنجاح!</span>
+        <span id="toastText">تم الحفظ الفعلي بنجاح!</span>
     </div>
 
     <script>
-        const DEFAULT_API = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
-        function getApi() { return localStorage.getItem("shamayleh_custom_api_url") || DEFAULT_API; }
+        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
+        let membersList = [];
+        let selected = null;
 
-        const STORAGE_KEY = "shamayleh_active_tree_data_v1";
-        let masterList = [];
-        let selectedMember = null;
-        let selectedParentNode = null;
-        let dirFilter = 'all';
-        let sortable = null;
-
-        // تهيئة الاستوديو الموحد (0.00 ثانية)
-        function initUnifiedStudio() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try { masterList = JSON.parse(saved); } catch(e){}
-            }
-            if (!masterList || masterList.length < 50) {
-                masterList = getMaster200Lineage();
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(masterList));
-            }
-
-            renderDirectoryList();
-            renderBranchesList();
-            if (masterList.length > 0) selectMember(masterList[0].id);
-
-            // استجماع تحديثات السحاب بهدوء بالخلفية
-            fetchLiveUpdates();
+        // بدء التشغيل وفحص الاتصال المباشر
+        function initStudio() {
+            // فحص صحة الرابط وسرعة الاتصال
+            testServerConnection();
+            // جلب البيانات من الجداول الحقيقية
+            fetchMembersFromSheets();
         }
 
-        function fetchLiveUpdates() {
+        function testServerConnection() {
             const script = document.createElement('script');
-            const cb = 'onLiveLoaded_' + Date.now();
+            const cb = 'onPing_' + Date.now();
             window[cb] = function(res) {
-                if (res && res.status === 'success' && res.tree) {
-                    // تحديث هادئ إن وجد
+                if (res && res.status === 'healthy') {
+                    const badge = document.getElementById('liveBadge');
+                    badge.innerHTML = '<i class="fas fa-circle-check" style="color:var(--success);"></i> متصل بسيرفر Google Sheets مباشرة ✓';
                 }
                 delete window[cb];
                 try { document.body.removeChild(script); } catch(e){}
             };
-            script.src = `${getApi()}?action=get_full_tree_data&callback=${cb}&t=${Date.now()}`;
+            script.src = `${API_ENDPOINT}?action=health_check&callback=${cb}`;
             document.body.appendChild(script);
         }
 
-        // تبديل القسمين الرئيسيين
-        function switchMainSection(sec) {
-            document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
-
-            if (sec === 'dossier') {
-                document.getElementById('section-dossier').classList.add('active');
-                document.getElementById('btnNavDossier').classList.add('active');
-            } else {
-                document.getElementById('section-reorder').classList.add('active');
-                document.getElementById('btnNavReorder').classList.add('active');
-                renderBranchesList();
-            }
+        function fetchMembersFromSheets() {
+            const script = document.createElement('script');
+            const cb = 'onData_' + Date.now();
+            window[cb] = function(res) {
+                if (res && res.status === 'success' && res.members) {
+                    membersList = res.members;
+                    renderList();
+                    if (membersList.length > 0) selectPerson(membersList[0].id);
+                }
+                delete window[cb];
+                try { document.body.removeChild(script); } catch(e){}
+            };
+            script.src = `${API_ENDPOINT}?action=get_full_members_registry&callback=${cb}&t=${Date.now()}`;
+            document.body.appendChild(script);
         }
 
-        // =========================================================================
-        // 📑 منطق تعديل بطاقات الأفراد
-        // =========================================================================
-        function renderDirectoryList() {
-            const container = document.getElementById('membersListArea');
-            container.innerHTML = '';
-            const query = document.getElementById('memberSearchInput').value.trim().toLowerCase();
+        function renderList() {
+            const box = document.getElementById('membersListArea');
+            box.innerHTML = '';
+            const q = document.getElementById('searchInput').value.trim().toLowerCase();
 
-            const filtered = masterList.filter(m => {
-                const match = m.name.toLowerCase().includes(query) || (m.title && m.title.toLowerCase().includes(query)) || (m.currentCity && m.currentCity.toLowerCase().includes(query));
-                if (!match) return false;
-                if (dirFilter === 'male') return m.gender === 'male';
-                if (dirFilter === 'female') return m.gender === 'female';
-                if (dirFilter === 'jamila') return (m.branch && m.branch.includes('جميلة')) || (m.motherName && m.motherName.includes('جميلة'));
-                if (dirFilter === 'fatima') return m.motherName === 'فاطمة';
-                if (dirFilter === 'khadra') return m.motherName === 'خضراء';
-                return true;
-            });
-
+            const filtered = membersList.filter(m => m.name.toLowerCase().includes(q) || (m.title && m.title.toLowerCase().includes(q)));
             filtered.forEach(m => {
                 const item = document.createElement('div');
-                item.className = `member-row-item ${selectedMember && selectedMember.id === m.id ? 'active' : ''}`;
-                item.onclick = () => selectMember(m.id);
-
-                const isFemale = m.gender === 'female';
-                const icon = isFemale ? 'fa-female' : 'fa-user-tie';
-                const avatarCls = isFemale ? 'female' : 'male';
-
-                item.innerHTML = `
-                    <div class="avatar-circle ${avatarCls}"><i class="fas ${icon}"></i></div>
-                    <div style="flex:1; overflow:hidden;">
-                        <h4 style="margin:0; font-size:0.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            ${m.name} ${m.title ? `<small style="color:var(--gold-border);">(${m.title})</small>` : ''}
-                        </h4>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                            ${m.motherName ? `<span style="background:#fef3c7; color:#92400e; padding:1px 6px; border-radius:8px; font-weight:bold;">الأم: ${m.motherName}</span> • ` : ''}
-                            <span>الجيل ${m.generation || 1}</span>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function filterDirectoryList() { renderDirectoryList(); }
-
-        function setDirFilter(cat, btn) {
-            dirFilter = cat;
-            document.querySelectorAll('.pill-filter').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderDirectoryList();
-        }
-
-        function selectMember(id) {
-            selectedMember = masterList.find(m => m.id === id);
-            if (!selectedMember) return;
-            renderDirectoryList();
-
-            document.getElementById('curDossierName').innerText = selectedMember.name;
-            document.getElementById('curDossierTag').innerText = `${selectedMember.id} | الجيل ${selectedMember.generation || 1} • ${selectedMember.branch || 'الأصل'}`;
-
-            const isFemale = selectedMember.gender === 'female';
-            document.getElementById('curDossierAvatar').innerHTML = `<i class="fas ${isFemale ? 'fa-female' : 'fa-user-tie'}" style="color:${isFemale ? 'var(--female-color)' : 'var(--male-color)'};"></i>`;
-
-            // أزرار التواصل
-            const call = document.getElementById('linkCall');
-            const wa = document.getElementById('linkWhatsApp');
-            if (selectedMember.phoneCall) { call.href = `tel:${selectedMember.phoneCall}`; call.style.display = 'flex'; } else call.style.display = 'none';
-            if (selectedMember.phoneWhatsApp) { wa.href = `https://wa.me/${selectedMember.phoneWhatsApp.replace(/\D/g,'')}`; wa.style.display = 'flex'; } else wa.style.display = 'none';
-
-            // تعبئة الحقول
-            document.getElementById('f_id').value = selectedMember.id;
-            document.getElementById('f_name').value = selectedMember.name || '';
-            document.getElementById('f_title').value = selectedMember.title || '';
-            document.getElementById('f_gender').value = selectedMember.gender || 'male';
-            document.getElementById('f_mother').value = selectedMember.motherName || '';
-            document.getElementById('f_branch').value = selectedMember.branch || 'الأصل';
-            document.getElementById('f_birth').value = selectedMember.birthYear || '';
-            document.getElementById('f_death').value = selectedMember.deathYear || '';
-
-            document.getElementById('f_phone').value = selectedMember.phoneCall || '';
-            document.getElementById('f_wa').value = selectedMember.phoneWhatsApp || '';
-            document.getElementById('f_city').value = selectedMember.currentCity || 'الأردن';
-            document.getElementById('f_natId').value = selectedMember.nationalId || '';
-            document.getElementById('f_job').value = selectedMember.jobProfession || '';
-            document.getElementById('f_notes').value = selectedMember.notes || '';
-
-            renderSpouses(selectedMember.spouses || []);
-        }
-
-        function renderSpouses(spouses) {
-            const box = document.getElementById('spousesArea');
-            box.innerHTML = '';
-            if (!spouses || spouses.length === 0) {
-                box.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:0.8rem; margin:0;">لا توجد زوجات مسجلات لهذا العضو</p>';
-                return;
-            }
-            spouses.forEach((sp, idx) => {
-                const row = document.createElement('div');
-                row.style = "display:flex; gap:8px; margin-bottom:8px;";
-                row.innerHTML = `
-                    <input type="text" value="${sp.name || ''}" placeholder="اسم الزوج/ة..." oninput="updateSpouse(${idx}, 'name', this.value)" style="flex:2; padding:8px; border:1px solid var(--border); border-radius:8px; font-size:0.85rem;">
-                    <select onchange="updateSpouse(${idx}, 'status', this.value)" style="flex:1; padding:8px; border:1px solid var(--border); border-radius:8px; font-size:0.85rem;">
-                        <option value="active" ${sp.status === 'active' ? 'selected' : ''}>على ذمته</option>
-                        <option value="divorced" ${sp.status === 'divorced' ? 'selected' : ''}>طلاق</option>
-                        <option value="deceased" ${sp.status === 'deceased' ? 'selected' : ''}>متوفاة</option>
-                    </select>
-                    <button type="button" onclick="removeSpouse(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fas fa-trash-can"></i></button>
-                `;
-                box.appendChild(row);
-            });
-        }
-
-        function addSpouseRow() {
-            if (!selectedMember) return;
-            if (!selectedMember.spouses) selectedMember.spouses = [];
-            selectedMember.spouses.push({ name: '', status: 'active' });
-            renderSpouses(selectedMember.spouses);
-        }
-
-        function removeSpouse(idx) {
-            if (!selectedMember || !selectedMember.spouses) return;
-            selectedMember.spouses.splice(idx, 1);
-            renderSpouses(selectedMember.spouses);
-        }
-
-        function updateSpouse(idx, key, val) {
-            if (selectedMember && selectedMember.spouses && selectedMember.spouses[idx]) {
-                selectedMember.spouses[idx][key] = val.trim();
-            }
-        }
-
-        function switchSubTab(id, btn) {
-            document.querySelectorAll('.form-pane').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        function saveDossierData() {
-            if (!selectedMember) return;
-
-            selectedMember.name = document.getElementById('f_name').value.trim();
-            selectedMember.title = document.getElementById('f_title').value.trim();
-            selectedMember.gender = document.getElementById('f_gender').value;
-            selectedMember.motherName = document.getElementById('f_mother').value.trim();
-            selectedMember.branch = document.getElementById('f_branch').value.trim();
-            selectedMember.birthYear = document.getElementById('f_birth').value.trim();
-            selectedMember.deathYear = document.getElementById('f_death').value.trim();
-
-            selectedMember.phoneCall = document.getElementById('f_phone').value.trim();
-            selectedMember.phoneWhatsApp = document.getElementById('f_wa').value.trim();
-            selectedMember.currentCity = document.getElementById('f_city').value.trim();
-            selectedMember.nationalId = document.getElementById('f_natId').value.trim();
-            selectedMember.jobProfession = document.getElementById('f_job').value.trim();
-            selectedMember.notes = document.getElementById('f_notes').value.trim();
-
-            // حفظ فوري محلي
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(masterList));
-            renderDirectoryList();
-            showToast(`✓ تم تحديث سجل [${selectedMember.name}] بنجاح`);
-
-            // حفظ سحابي صامت
-            try {
-                const payload = { ...selectedMember };
-                const s = document.createElement('script');
-                s.src = `${getApi()}?action=update_full_member_profile&data=${encodeURIComponent(JSON.stringify(payload))}&callback=void`;
-                document.body.appendChild(s);
-            } catch(e){}
-        }
-
-        // =========================================================================
-        // ↕️ منطق محطة ترتيب الأسر بالسحب والإفلات
-        // =========================================================================
-        function renderBranchesList() {
-            const box = document.getElementById('branchesArea');
-            box.innerHTML = '';
-            const q = document.getElementById('branchFilterInput').value.trim().toLowerCase();
-
-            // استخراج الآباء والأمهات الذين لديهم أبناء
-            const parents = masterList.filter(m => {
-                const hasKids = masterList.some(c => c.fatherId === m.id);
-                return hasKids && (m.name.toLowerCase().includes(q) || (m.title && m.title.toLowerCase().includes(q)));
-            });
-
-            if (parents.length === 0) {
-                box.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:20px;">لا توجد أسر مطابقة</p>';
-                return;
-            }
-
-            parents.forEach(p => {
-                const count = masterList.filter(c => c.fatherId === p.id).length;
-                const item = document.createElement('div');
-                item.className = `member-row-item ${selectedParentNode && selectedParentNode.id === p.id ? 'active' : ''}`;
-                item.onclick = () => selectParentBranch(p);
+                item.className = `member-row-item ${selected && selected.id === m.id ? 'active' : ''}`;
+                item.onclick = () => selectPerson(m.id);
                 item.innerHTML = `
                     <div style="flex:1;">
-                        <strong style="font-size:0.9rem; color:var(--primary);">${p.name}</strong>
-                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">الجيل ${p.generation || 1} • ${p.branch || 'الأصل'}</div>
+                        <strong style="color:var(--primary); font-size:0.92rem;">${m.name}</strong>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                            ${m.motherName ? `الأم: ${m.motherName} • ` : ''} الجيل ${m.generation || 1}
+                        </div>
                     </div>
-                    <span style="font-size:0.75rem; background:#f1f5f9; padding:2px 8px; border-radius:12px; font-weight:bold; color:var(--gold-border);">${count} أبناء</span>
                 `;
                 box.appendChild(item);
             });
         }
 
-        function filterBranches() { renderBranchesList(); }
+        function filterList() { renderList(); }
 
-        function selectParentBranch(parentNode) {
-            selectedParentNode = parentNode;
-            renderBranchesList();
+        function selectPerson(id) {
+            selected = membersList.find(m => m.id === id);
+            if (!selected) return;
+            renderList();
 
-            document.getElementById('curBranchTitle').innerHTML = `
-                <i class="fas fa-arrows-up-down-left-right" style="color:var(--gold-border);"></i> أبناء الأسرة: <strong>${parentNode.name}</strong>
-            `;
+            document.getElementById('curName').innerText = selected.name;
+            document.getElementById('curTag').innerText = `${selected.id} | الجيل ${selected.generation || 1} • ${selected.branch || 'الأصل'}`;
 
-            const listEl = document.getElementById('sortableList');
-            listEl.innerHTML = '';
+            document.getElementById('f_id').value = selected.id;
+            document.getElementById('f_name').value = selected.name || '';
+            document.getElementById('f_title').value = selected.title || '';
+            document.getElementById('f_gender').value = selected.gender || 'male';
+            document.getElementById('f_mother').value = selected.motherName || '';
+            document.getElementById('f_branch').value = selected.branch || 'الأصل';
+            document.getElementById('f_birth').value = selected.birthYear || '';
+            document.getElementById('f_death').value = selected.deathYear || '';
 
-            const siblings = masterList.filter(c => c.fatherId === parentNode.id);
-            // ترتيب الأشقاء بحسب siblingOrder إن وجد
-            siblings.sort((a, b) => (a.siblingOrder || 99) - (b.siblingOrder || 99));
+            document.getElementById('f_phone').value = selected.phoneCall || '';
+            document.getElementById('f_wa').value = selected.phoneWhatsApp || '';
+            document.getElementById('f_city').value = selected.currentCity || '';
+            document.getElementById('f_job').value = selected.jobProfession || '';
+            document.getElementById('f_notes').value = selected.notes || '';
+        }
 
-            siblings.forEach((c, idx) => {
-                const li = document.createElement('li');
-                li.className = 'sortable-card-item';
-                li.dataset.id = c.id;
+        // الحفظ الفعلي الذي ينتظر تأكيد صف الجدول الحقيقي
+        function saveDataLiveToSheets() {
+            if (!selected) return;
 
-                const isFemale = c.gender === 'female';
-                const avatarCls = isFemale ? 'female' : 'male';
-                const icon = isFemale ? 'fa-female' : 'fa-user-tie';
+            const payload = {
+                id: document.getElementById('f_id').value,
+                name: document.getElementById('f_name').value.trim(),
+                title: document.getElementById('f_title').value.trim(),
+                gender: document.getElementById('f_gender').value,
+                motherName: document.getElementById('f_mother').value.trim(),
+                branch: document.getElementById('f_branch').value.trim(),
+                birthYear: document.getElementById('f_birth').value.trim(),
+                deathYear: document.getElementById('f_death').value.trim(),
+                phoneCall: document.getElementById('f_phone').value.trim(),
+                phoneWhatsApp: document.getElementById('f_wa').value.trim(),
+                currentCity: document.getElementById('f_city').value.trim(),
+                jobProfession: document.getElementById('f_job').value.trim(),
+                notes: document.getElementById('f_notes').value.trim()
+            };
 
-                li.innerHTML = `
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <i class="fas fa-grip-vertical" style="color:#cbd5e1; font-size:1.1rem; cursor:grab;"></i>
-                        <div class="avatar-circle ${avatarCls}" style="width:34px; height:34px; font-size:0.9rem;"><i class="fas ${icon}"></i></div>
-                        <div>
-                            <strong style="font-size:0.92rem; color:var(--primary);">${idx + 1}. ${c.name}</strong>
-                            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                                ${c.motherName ? `<span style="background:#fef3c7; color:#92400e; padding:1px 6px; border-radius:8px; font-weight:bold;">الأم: ${c.motherName}</span>` : ''}
-                                ${c.birthYear ? `<span style="margin-right:6px;">مواليد: ${c.birthYear}</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn-config-api" style="color:var(--gold-primary);" onclick="quickSwitchToDossier('${c.id}')"><i class="fas fa-pen-to-square"></i> تعديل</button>
-                `;
-                listEl.appendChild(li);
-            });
+            const btn = document.getElementById('btnSave');
+            const statusText = document.getElementById('saveStatus');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ المباشر في Google Sheets...';
+            btn.style.pointerEvents = 'none';
 
-            // محرك SortableJS
-            if (sortable) sortable.destroy();
-            sortable = new Sortable(listEl, {
-                animation: 150,
-                handle: '.sortable-card-item',
-                onEnd: function() {
-                    const orderedIds = Array.from(listEl.children).map(item => item.dataset.id);
-                    orderedIds.forEach((id, index) => {
-                        const m = masterList.find(x => x.id === id);
-                        if (m) m.siblingOrder = index + 1;
-                    });
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(masterList));
-                    selectParentBranch(selectedParentNode);
-                    showToast("✓ تم حفظ الترتيب الزمني الجديد!");
+            const script = document.createElement('script');
+            const cb = 'onSaveVerify_' + Date.now();
 
-                    // إرسال سحابي صامت
-                    try {
-                        const s = document.createElement('script');
-                        s.src = `${getApi()}?action=reorder_siblings&data=${encodeURIComponent(JSON.stringify({ ordered_ids: orderedIds }))}&callback=void`;
-                        document.body.appendChild(s);
-                    } catch(e){}
+            window[cb] = function(res) {
+                btn.innerHTML = '<i class="fas fa-cloud-arrow-up"></i> حفظ التعديل في جداول Google Sheets';
+                btn.style.pointerEvents = 'auto';
+
+                if (res && res.status === 'success') {
+                    statusText.innerHTML = '<span style="color:var(--success);">✓ تم التحديث والحفظ الفعلي في Google Sheets بنجاح!</span>';
+                    showToast(`تم تحديث سجل [${payload.name}] في الجداول بنجاح!`);
+                    
+                    // تحديث محلي فوري
+                    Object.assign(selected, payload);
+                    renderList();
+                } else {
+                    alert("⚠️ فشل الحفظ: " + (res.message || "تأكد من الرابط"));
+                    statusText.innerHTML = '<span style="color:var(--danger);">فشل الحفظ في الجداول</span>';
                 }
-            });
-        }
 
-        function autoSortSiblings() {
-            if (!selectedParentNode) return;
-            const siblings = masterList.filter(c => c.fatherId === selectedParentNode.id);
-            siblings.sort((a, b) => {
-                const yA = parseInt(a.birthYear) || 9999;
-                const yB = parseInt(b.birthYear) || 9999;
-                return yA - yB;
-            });
-            siblings.forEach((c, idx) => c.siblingOrder = idx + 1);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(masterList));
-            selectParentBranch(selectedParentNode);
-            showToast("✓ تم الترتيب التلقائي حسب سنة الميلاد!");
-        }
+                delete window[cb];
+                try { document.body.removeChild(script); } catch(e){}
+            };
 
-        function quickSwitchToDossier(memberId) {
-            switchMainSection('dossier');
-            selectMember(memberId);
-        }
-
-        // =========================================================================
-        // ⚙️ إعدادات الرابط والإشعارات
-        // =========================================================================
-        function openApiModal() {
-            document.getElementById('customApiUrl').value = getApi();
-            document.getElementById('apiModal').style.display = 'flex';
-        }
-        function closeApiModal() { document.getElementById('apiModal').style.display = 'none'; }
-        function saveApiUrl() {
-            const val = document.getElementById('customApiUrl').value.trim();
-            if (val && val.startsWith('http')) {
-                localStorage.setItem("shamayleh_custom_api_url", val);
-                alert("✓ تم حفظ الرابط السحابي الجديد بنجاح!");
-                closeApiModal();
-            }
+            const encoded = encodeURIComponent(JSON.stringify(payload));
+            script.src = `${API_ENDPOINT}?action=update_full_member_profile&data=${encoded}&callback=${cb}`;
+            document.body.appendChild(script);
         }
 
         function showToast(txt) {
@@ -811,56 +356,7 @@
             setTimeout(() => t.classList.remove('active'), 3500);
         }
 
-        // 📜 قاعدة الأنساب الـ 200 الموثقة بالكامل
-        function getMaster200Lineage() {
-            return [
-                { id: "SHM-001", name: "حَمَد الشمايلة", title: "الجد الأكبر", generation: 1, branch: "الأصل" },
-                { id: "SHM-002", name: "قَبْلان", title: "الجد", generation: 2, branch: "فرع قبلان", fatherId: "SHM-001" },
-                { id: "SHM-003", name: "شِهاب", title: "جد السلالة", generation: 3, branch: "فرع شهاب", fatherId: "SHM-002" },
-                { id: "SHM-007", name: "لافي", title: "عميد الأسرة", generation: 4, branch: "فرع لافي", fatherId: "SHM-003" },
-                { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 5, branch: "فرع محمد لافي", fatherId: "SHM-007", spouses: [{ name: "فاطمة" }, { name: "خضراء" }] },
-                
-                // بيت فاطمة
-                { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 6, branch: "فرع علي", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 6, branch: "فرع سارة", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 6, branch: "فرع جميلة", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 6, branch: "فرع يحيى", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة" }] },
-                { id: "SHM-105", name: "صالح", title: "أبو طلال", generation: 6, branch: "فرع صالح", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-106", name: "خالد", title: "أبو وليد", generation: 6, branch: "فرع خالد", fatherId: "SHM-010", motherName: "فاطمة" },
-                { id: "SHM-107", name: "طه", title: "أبو محمد", generation: 6, branch: "فرع طه", fatherId: "SHM-010", motherName: "فاطمة" },
-
-                // بيت خضراء
-                { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 6, branch: "فرع فيصل", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي" }] },
-                { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 6, branch: "فرع حنان", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 6, branch: "فرع زيد", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 6, branch: "فرع زياد", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 6, branch: "فرع خالدة", fatherId: "SHM-010", motherName: "خضراء" },
-                { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء" },
-
-                // سارة
-                { id: "SAR-01", name: "نوال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-02", name: "أحمد", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-03", name: "منال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-04", name: "محمود", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-05", name: "ماري", title: "زوجة غالب", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-06", name: "مالك", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-07", name: "رابعة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-                { id: "SAR-08", name: "رائدة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102" },
-
-                // جميلة
-                { id: "JAM-01", name: "فاطمة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-02", name: "غالب بن جميلة", title: "زوج ماري", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
-                { id: "JAM-03", name: "سميرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-04", name: "عبدالله بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
-                { id: "JAM-05", name: "أميرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-06", name: "وزيرة بنت جميلة", generation: 7, branch: "بنات جميلة", fatherId: "SHM-103" },
-                { id: "JAM-07", name: "سمير بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" },
-                { id: "JAM-08", name: "زيدان بن جميلة", generation: 7, branch: "أبناء جميلة", fatherId: "SHM-103" }
-            ];
-        }
-
-        initUnifiedStudio();
+        initStudio();
     </script>
 </body>
 </html>
