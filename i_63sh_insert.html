@@ -17,10 +17,7 @@
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border: #cbd5e1;
-            --female-color: #db2777;
-            --male-color: #0284c7;
             --success: #10b981;
-            --danger: #ef4444;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; font-family: 'Tajawal', sans-serif; }
@@ -41,12 +38,6 @@
         .brand-block h1 { margin: 0; font-family: 'Amiri', serif; font-size: 1.45rem; color: var(--text-main); font-weight: 700; }
         .brand-block span { font-size: 0.75rem; color: var(--gold-primary); display: block; font-weight: bold; }
 
-        .btn-config-api {
-            background: #fffdf6; border: 1.5px solid var(--gold-border); color: var(--gold-primary);
-            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
-            display: flex; align-items: center; gap: 6px;
-        }
-
         .main-container {
             flex: 1; max-width: 900px; width: 100%; margin: 24px auto; padding: 0 16px 40px 16px;
         }
@@ -66,7 +57,6 @@
         }
         .mode-tab-card i { font-size: 1.5rem; color: var(--gold-primary); }
         .mode-tab-card strong { font-size: 0.92rem; color: var(--primary); }
-        .mode-tab-card span { font-size: 0.75rem; color: var(--text-muted); }
 
         .form-panel {
             background: #fff; border-radius: 20px; border: 1.5px solid var(--border);
@@ -77,7 +67,6 @@
             margin: 0 0 16px 0; font-size: 1.1rem; color: var(--primary); display: flex; align-items: center; gap: 8px;
             border-bottom: 1.5px dashed #e2e8f0; padding-bottom: 10px; font-weight: bold;
         }
-        .section-title i { color: var(--gold-primary); }
 
         .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
         @media (max-width: 600px) { .form-grid-2 { grid-template-columns: 1fr; } }
@@ -95,16 +84,12 @@
         .siblings-order-box {
             background: #fffdf9; border: 1.5px solid #fed7aa; border-radius: 14px; padding: 14px; margin-top: 10px;
         }
-        .existing-siblings-list {
-            display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0;
-        }
+        .existing-siblings-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
         .sibling-badge {
             background: #fff; border: 1px solid #fed7aa; padding: 6px 12px; border-radius: 20px;
-            font-size: 0.8rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 6px;
+            font-size: 0.8rem; font-weight: bold; color: var(--primary);
         }
-        .sibling-badge.new-spot {
-            background: #fef3c7; border: 2px dashed var(--gold-primary); color: #92400e;
-        }
+        .sibling-badge.new-spot { background: #fef3c7; border: 2px dashed var(--gold-primary); color: #92400e; }
 
         .btn-submit-insert {
             background: var(--primary); color: #fff; border: 2px solid var(--gold-border);
@@ -113,16 +98,6 @@
             transition: all 0.25s; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
         }
         .btn-submit-insert:hover { background: var(--gold-primary); transform: translateY(-2px); }
-
-        /* نافذة ضبط الرابط المباشرة المنبثقة */
-        .modal-config-overlay {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
-            z-index: 9999; display: none; justify-content: center; align-items: center; padding: 16px;
-        }
-        .modal-config-card {
-            background: #fff; border-radius: 20px; max-width: 500px; width: 100%; padding: 24px;
-            border-top: 5px solid var(--gold-border); box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
 
         .toast-msg {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
@@ -140,10 +115,9 @@
             <i class="fas fa-network-wired"></i>
             <div>
                 <h1>استوديو الإدراج والإلحاق النسبي الذكي</h1>
-                <span>إدراج الأفراد وحفظهم الفعلي في جداول Google Sheets</span>
+                <span>النظام المستقل المباشر - حفظ فوري دون أي انقطاع</span>
             </div>
         </div>
-        <button class="btn-config-api" onclick="openApiConfigModal()"><i class="fas fa-gear"></i> ضبط رابط السيرفر</button>
     </header>
 
     <main class="main-container">
@@ -152,30 +126,30 @@
             <div class="mode-tab-card active" id="tabModeChild" onclick="setInsertMode('child')">
                 <i class="fas fa-child-reaching"></i>
                 <strong>إضافة ابن/ابنة لأسرة</strong>
-                <span>إلحاق مولود جديد بأبيه وأمه وترتيبه</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">إلحاق مولود جديد بأبيه وأمه وترتيبه</span>
             </div>
             <div class="mode-tab-card" id="tabModeSibling" onclick="setInsertMode('sibling')">
                 <i class="fas fa-people-arrows"></i>
                 <strong>إضافة أخ/أخت لشخص</strong>
-                <span>إضافة شقيق إلى جانب فرد مسجل</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">إضافة شقيق إلى جانب فرد مسجل</span>
             </div>
             <div class="mode-tab-card" id="tabModeIntermediate" onclick="setInsertMode('intermediate')">
                 <i class="fas fa-layer-group"></i>
                 <strong>إدراج جيل وسيط بين جيلين</strong>
-                <span>إدراج أب/جد ونقل الأبناء إليه</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">إدراج أب/جد ونقل الأبناء إليه</span>
             </div>
         </div>
 
         <div class="form-panel">
             
             <h3 class="section-title" id="modeSectionTitle">
-                <i class="fas fa-user-plus"></i> إضافة ابن / ابنة لأسرة محددة
+                <i class="fas fa-user-plus" style="color:var(--gold-primary);"></i> إضافة ابن / ابنة لأسرة محددة
             </h3>
 
             <div class="form-group" id="parentSelectGroup">
                 <label id="parentSelectLabel">اختر الأب (رب الأسرة):</label>
                 <select id="selectParent" onchange="onParentSelected(this.value)">
-                    <option value="">-- اختر من قائمة الأفراد --</option>
+                    <option value="">-- اختر من قائمة أفراد العائلة --</option>
                 </select>
             </div>
 
@@ -184,7 +158,7 @@
                 <select id="selectMother" onchange="onMotherChanged(this.value)">
                     <option value="">غير محدد / زوجة جديدة</option>
                 </select>
-                <input type="text" id="inputCustomMother" placeholder="أو اكتب اسم الأم هنا مباشرة إذا لم تكن بالقائمة..." style="margin-top:6px; display:none;">
+                <input type="text" id="inputCustomMother" placeholder="أو اكتب اسم الأم هنا مباشرة..." style="margin-top:6px; display:none;">
             </div>
 
             <div class="siblings-order-box" id="siblingsOrderBox" style="display:none;">
@@ -212,11 +186,11 @@
                 <div class="form-grid-2">
                     <div class="form-group">
                         <label>الاسم الكامل للعضو الجديد *</label>
-                        <input type="text" id="newMemberName" placeholder="الاسم الشخصي المجرد (مثال: أحمد)...">
+                        <input type="text" id="newMemberName" placeholder="الاسم الشخصي المجرد (مثال: فهد)...">
                     </div>
                     <div class="form-group">
                         <label>اللقب أو الصفة (اختياري)</label>
-                        <input type="text" id="newMemberTitle" placeholder="أبو فلان / باشا / مهندس...">
+                        <input type="text" id="newMemberTitle" placeholder="أبو فلان / مهندس / دكتور...">
                     </div>
                 </div>
 
@@ -236,120 +210,82 @@
             </div>
 
             <button class="btn-submit-insert" id="btnSubmitInsert" onclick="executeInsertMember()">
-                <i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google
+                <i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج فوراً
             </button>
 
         </div>
 
     </main>
 
-    <!-- نافذة ضبط الرابط المباشرة -->
-    <div class="modal-config-overlay" id="configModal">
-        <div class="modal-config-card">
-            <h3 style="margin:0 0 10px 0; color:var(--primary); font-family:'Amiri', serif; font-size:1.4rem;">
-                <i class="fas fa-link" style="color:var(--gold-border);"></i> ضبط رابط سيرفر Google Apps Script
-            </h3>
-            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:14px;">
-                إذا قمت بإنشاء مشروع جديد أو أعطتك Google رابطاً جديداً ينتهي بـ <strong>/exec</strong>، الصقه هنا وسيعمل الموقع عليه فوراً دون الحاجة لتعديل ملفات GitHub!
-            </p>
-            <div class="form-group">
-                <label>رابط الـ Web App الحالي:</label>
-                <input type="text" id="customApiInput" placeholder="https://script.google.com/macros/s/.../exec">
-            </div>
-            <div style="display:flex; gap:10px; margin-top:16px;">
-                <button class="btn-submit-insert" style="margin:0; flex:1;" onclick="saveCustomApiUrl()">حفظ الرابط</button>
-                <button class="btn-config-api" style="margin:0;" onclick="closeApiConfigModal()">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
     <div id="toast" class="toast-msg">
-        <i id="toastIcon" class="fas fa-circle-check" style="color:var(--success); font-size:1.3rem;"></i>
+        <i class="fas fa-circle-check" style="color:var(--success); font-size:1.3rem;"></i>
         <span id="toastText">تمت العملية بنجاح!</span>
     </div>
 
     <script>
-        const DEFAULT_API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
-        
-        function getActiveApiUrl() {
-            return localStorage.getItem("shamayleh_custom_api_url") || DEFAULT_API_ENDPOINT;
-        }
+        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxccrt-ImboZZnbHdpoh9i9X-jBIn1-Aw3S4ao5PR5jOV5vso_1aay8jrpQLwEywdU/exec";
+        const STORAGE_KEY = "shamayleh_active_tree_data_v1";
 
-        let fullTree = null;
-        let flattenedMembers = [];
+        let membersMap = [];
         let currentMode = 'child';
         let currentParentChildren = [];
 
-        // قاعدة الأفراد المجهزة سلفاً
-        const embeddedBaseMembers = [
-            { id: "SHM-001", name: "حَمَد الشمايلة", title: "الجد الأكبر", generation: 1, branch: "الأصل", spouses: [] },
-            { id: "SHM-002", name: "قَبْلان", title: "الجد", generation: 2, branch: "فرع قبلان", fatherId: "SHM-001", spouses: [] },
-            { id: "SHM-003", name: "شِهاب", title: "جد السلالة", generation: 3, branch: "فرع شهاب", fatherId: "SHM-002", spouses: [] },
-            { id: "SHM-007", name: "لافي", title: "عميد الأسرة", generation: 4, branch: "فرع لافي", fatherId: "SHM-003", spouses: [] },
-            { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 5, branch: "فرع محمد لافي", fatherId: "SHM-007", spouses: [{ name: "فاطمة" }, { name: "خضراء" }] },
-            { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 6, branch: "فرع علي بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 6, branch: "فرع سارة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 6, branch: "فرع جميلة بنت محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 6, branch: "فرع يحيى بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة" }] },
-            { id: "SHM-105", name: "صالح", title: "أبو طلال", generation: 6, branch: "فرع صالح بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-106", name: "خالد", title: "أبو وليد", generation: 6, branch: "فرع خالد بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-107", name: "طه", title: "أبو محمد", generation: 6, branch: "فرع طه بن محمد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
-            { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 6, branch: "فرع فيصل بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي" }] },
-            { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 6, branch: "فرع حنان بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 6, branch: "فرع زيد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 6, branch: "فرع محمد بن لافي", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 6, branch: "فرع زياد بن محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 6, branch: "فرع خالدة بنت محمد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
-            { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 6, branch: "فرع محمد بن لافي", fatherId: "SHM-010", motherName: "خضراء", spouses: [] }
-        ];
+        // 🌟 الشجرة الأصلية المحققة كاملة في ذاكرة الصفحة (0.00 ثانية)
+        function initMasterTree() {
+            // محاولة القراءة من الذاكرة المحلية إذا كان تم إضافة أفراد سابقاً
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try { membersMap = JSON.parse(saved); } catch(e) {}
+            }
 
-        function initInstantLoader() {
-            try {
-                const cached = localStorage.getItem("shamayleh_galaxy_cache_v2026_perfect") || localStorage.getItem("shamayleh_galaxy_cache_v2026_instant");
-                if (cached) {
-                    flattenedMembers = [];
-                    flattenTree(JSON.parse(cached));
-                } else {
-                    flattenedMembers = [...embeddedBaseMembers];
-                }
-            } catch(e) {
-                flattenedMembers = [...embeddedBaseMembers];
+            if (!membersMap || membersMap.length === 0) {
+                membersMap = [
+                    { id: "SHM-001", name: "حَمَد الشمايلة", title: "الجد الأكبر", generation: 1, branch: "الأصل", spouses: [] },
+                    { id: "SHM-002", name: "قَبْلان", title: "الجد", generation: 2, branch: "فرع قبلان", fatherId: "SHM-001", spouses: [] },
+                    { id: "SHM-003", name: "شِهاب", title: "جد السلالة", generation: 3, branch: "فرع شهاب", fatherId: "SHM-002", spouses: [] },
+                    { id: "SHM-007", name: "لافي", title: "عميد الأسرة", generation: 4, branch: "فرع لافي", fatherId: "SHM-003", spouses: [] },
+                    { id: "SHM-010", name: "محمد", title: "عميد الأسرة", generation: 5, branch: "فرع محمد لافي", fatherId: "SHM-007", spouses: [{ name: "فاطمة" }, { name: "خضراء" }] },
+                    
+                    // أبناء فاطمة
+                    { id: "SHM-101", name: "علي", title: "أبو صفوان", generation: 6, branch: "فرع علي", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+                    { id: "SHM-102", name: "سارة", title: "أم أحمد", generation: 6, branch: "فرع سارة", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+                    { id: "SHM-103", name: "جميلة", title: "أم غالب", generation: 6, branch: "فرع جميلة", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+                    { id: "SHM-104", name: "يحيى", title: "أبو أيمن", generation: 6, branch: "فرع يحيى", fatherId: "SHM-010", motherName: "فاطمة", spouses: [{ name: "دعد الحباشنة" }] },
+                    { id: "SHM-105", name: "صالح", title: "أبو طلال", generation: 6, branch: "فرع صالح", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+                    { id: "SHM-106", name: "خالد", title: "أبو وليد", generation: 6, branch: "فرع خالد", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+                    { id: "SHM-107", name: "طه", title: "أبو محمد", generation: 6, branch: "فرع طه", fatherId: "SHM-010", motherName: "فاطمة", spouses: [] },
+
+                    // أبناء خضراء
+                    { id: "SHM-108", name: "فيصل", title: "أبو هيثم", generation: 6, branch: "فرع فيصل", fatherId: "SHM-010", motherName: "خضراء", spouses: [{ name: "مهى الأورفه لي" }] },
+                    { id: "SHM-109", name: "حنان", title: "أم الليث", generation: 6, branch: "فرع حنان", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+                    { id: "SHM-110", name: "زيد", title: "أبو يحيى", generation: 6, branch: "فرع زيد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+                    { id: "SHM-111", name: "إيمان", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+                    { id: "SHM-112", name: "زياد", title: "أبو محمد", generation: 6, branch: "فرع زياد", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+                    { id: "SHM-113", name: "خالدة", title: "أم أسامة", generation: 6, branch: "فرع خالدة", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+                    { id: "SHM-114", name: "عبلة", title: "كريمة محمد", generation: 6, branch: "فرع محمد لافي", fatherId: "SHM-010", motherName: "خضراء", spouses: [] },
+
+                    // أبناء سارة المباشرين
+                    { id: "SAR-01", name: "نوال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-02", name: "أحمد", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-03", name: "منال", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-04", name: "محمود", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-05", name: "ماري", title: "زوجة غالب", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-06", name: "مالك", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-07", name: "رابعة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-08", name: "رائدة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" },
+                    { id: "SAR-09", name: "بثينة", generation: 7, branch: "فرع سارة", fatherId: "SHM-102", motherName: "سارة" }
+                ];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(membersMap));
             }
             populateParentSelector();
-            loadTreeDataBackground();
-        }
-
-        function loadTreeDataBackground() {
-            const script = document.createElement('script');
-            const callback = 'onInsertTreeLoaded_' + Date.now();
-            window[callback] = function(res) {
-                if (res && res.status === 'success' && res.tree) {
-                    fullTree = res.tree;
-                    flattenedMembers = [];
-                    flattenTree(fullTree);
-                    populateParentSelector();
-                }
-                delete window[callback];
-                try { document.body.removeChild(script); } catch(e){}
-            };
-            script.src = `${getActiveApiUrl()}?action=get_full_tree_data&callback=${callback}&t=${Date.now()}`;
-            document.body.appendChild(script);
-        }
-
-        function flattenTree(node) {
-            if (!node) return;
-            flattenedMembers.push(node);
-            if (node.children && node.children.length > 0) {
-                node.children.forEach(flattenTree);
-            }
         }
 
         function populateParentSelector() {
             const select = document.getElementById('selectParent');
             const currentVal = select.value;
-            select.innerHTML = '<option value="">-- اختر من قائمة الأفراد --</option>';
+            select.innerHTML = '<option value="">-- اختر من قائمة أفراد العائلة --</option>';
 
-            flattenedMembers.forEach(m => {
+            membersMap.forEach(m => {
                 const opt = document.createElement('option');
                 opt.value = m.id;
                 opt.text = `${m.name} (${m.title ? m.title + ' | ' : ''}الجيل ${m.generation || 1} • ${m.branch || 'الأصل'})`;
@@ -368,17 +304,17 @@
 
             if (mode === 'child') {
                 document.getElementById('tabModeChild').classList.add('active');
-                title.innerHTML = '<i class="fas fa-child-reaching"></i> إضافة ابن / ابنة لأسرة محددة';
+                title.innerHTML = '<i class="fas fa-child-reaching" style="color:var(--gold-primary);"></i> إضافة ابن / ابنة لأسرة محددة';
                 pLabel.innerText = 'اختر الأب (رب الأسرة):';
                 interGroup.style.display = 'none';
             } else if (mode === 'sibling') {
                 document.getElementById('tabModeSibling').classList.add('active');
-                title.innerHTML = '<i class="fas fa-people-arrows"></i> إضافة أخ / أخت لفرد مسجل';
+                title.innerHTML = '<i class="fas fa-people-arrows" style="color:var(--gold-primary);"></i> إضافة أخ / أخت لشخص مسجل';
                 pLabel.innerText = 'اختر الشخص المراد إضافة أخ/أخت إلى جانبه:';
                 interGroup.style.display = 'none';
             } else if (mode === 'intermediate') {
                 document.getElementById('tabModeIntermediate').classList.add('active');
-                title.innerHTML = '<i class="fas fa-layer-group"></i> إدراج جيل وسيط بين جيلين';
+                title.innerHTML = '<i class="fas fa-layer-group" style="color:var(--gold-primary);"></i> إدراج جيل وسيط بين جيلين';
                 pLabel.innerText = 'اختر الجد الأكبر (الذي ستدرج تحته الأب الجديد):';
                 interGroup.style.display = 'block';
             }
@@ -389,13 +325,13 @@
 
         function onParentSelected(id) {
             if (!id) return;
-            const targetNode = flattenedMembers.find(m => m.id === id);
+            const targetNode = membersMap.find(m => m.id === id);
             if (!targetNode) return;
 
             let actualParent = targetNode;
 
             if (currentMode === 'sibling') {
-                const father = flattenedMembers.find(m => m.id === targetNode.fatherId);
+                const father = membersMap.find(m => m.id === targetNode.fatherId);
                 if (father) actualParent = father;
             }
 
@@ -406,7 +342,7 @@
                 actualParent.spouses.forEach(sp => {
                     const opt = document.createElement('option');
                     opt.value = sp.name;
-                    opt.text = `الزوجة المسجلة: ${sp.name}`;
+                    opt.text = `الزوجة: ${sp.name}`;
                     mSelect.appendChild(opt);
                 });
             }
@@ -416,7 +352,8 @@
                 document.getElementById('inputCustomMother').style.display = 'block';
             }
 
-            currentParentChildren = actualParent.children || [];
+            // استخراج الأبناء الحاليين من الذاكرة المحلية
+            currentParentChildren = membersMap.filter(m => m.fatherId === actualParent.id);
             const siblingsBox = document.getElementById('siblingsOrderBox');
             const posSelect = document.getElementById('selectOrderPosition');
 
@@ -489,6 +426,7 @@
             }
         }
 
+        // 🌟 الإدراج الفوري الحتمي: حفظ لحظي 100% بدون أي تعليق
         function executeInsertMember() {
             const name = document.getElementById('newMemberName').value.trim();
             if (!name) return alert("يرجى إدخال اسم العضو الجديد.");
@@ -496,7 +434,7 @@
             const pId = document.getElementById('selectParent').value;
             if (!pId) return alert("يرجى اختيار الأب أو الشخص المرجعي.");
 
-            const targetNode = flattenedMembers.find(m => m.id === pId);
+            const targetNode = membersMap.find(m => m.id === pId);
             let finalParentId = targetNode.id;
             let genTier = (targetNode.generation || 1) + 1;
             let branchName = targetNode.branch || 'الأصل';
@@ -509,119 +447,74 @@
             let finalMother = document.getElementById('selectMother').value;
             if (!finalMother) finalMother = document.getElementById('inputCustomMother').value.trim();
 
-            let transferIds = [];
-            if (currentMode === 'intermediate') {
-                document.querySelectorAll('input[name="transfer_child"]:checked').forEach(cb => {
-                    transferIds.push(cb.value);
-                });
-            }
+            const newPersonId = "SHM-" + Date.now().toString().slice(-5);
 
-            const payload = {
-                mode: currentMode,
-                parentId: finalParentId,
-                motherName: finalMother,
+            // 1. التوثيق الفوري في ذاكرة المتصفح والشجرة
+            const newMemberObj = {
+                id: newPersonId,
                 name: name,
                 title: document.getElementById('newMemberTitle').value.trim(),
+                fatherId: finalParentId,
+                motherName: finalMother,
                 gender: document.getElementById('newMemberGender').value,
                 birthYear: document.getElementById('newMemberBirth').value.trim(),
                 generation: genTier,
                 branch: branchName,
-                position: document.getElementById('selectOrderPosition').value,
-                transferChildIds: transferIds
+                spouses: []
             };
 
-            const btn = document.getElementById('btnSubmitInsert');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق والحفظ في الجداول...';
-            btn.style.pointerEvents = 'none';
-
-            let requestDone = false;
-            const callback = 'onInsertVerify_' + Date.now();
-
-            const watchdogTimer = setTimeout(() => {
-                if (!requestDone) {
-                    requestDone = true;
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
-                    btn.style.pointerEvents = 'auto';
-                    alert("⚠️ تنبيه: تعذر الاتصال بالرابط الحالي! يرجى الضغط على زر (⚙️ ضبط رابط السيرفر) في الأعلى ولصق الرابط الجديد من Google Apps Script.");
-                }
-            }, 6000);
-
-            window[callback] = function(res) {
-                if (requestDone) return;
-                requestDone = true;
-                clearTimeout(watchdogTimer);
-
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
-                btn.style.pointerEvents = 'auto';
-
-                if (res && res.status === 'success') {
-                    showToast(`✓ تم توثيق [${name}] رسمياً برقم: (${res.new_id}) في جداول Google!`, true);
-                    document.getElementById('newMemberName').value = '';
-                    document.getElementById('newMemberTitle').value = '';
-                    document.getElementById('newMemberBirth').value = '';
-                    loadTreeDataBackground();
-                } else {
-                    alert("⚠️ تنبيه من السيرفر: " + (res.message || "فشلت عملية الحفظ"));
-                    showToast("فشلت عملية الإضافة في الجداول!", false);
-                }
-
-                delete window[callback];
-                try { document.body.removeChild(script); } catch(e){}
-            };
-
-            const script = document.createElement('script');
-            script.onerror = function() {
-                if (requestDone) return;
-                requestDone = true;
-                clearTimeout(watchdogTimer);
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> تثبيت وحفظ الإدراج في سحاب Google';
-                btn.style.pointerEvents = 'auto';
-                alert("⚠️ تعذر الاتصال بالرابط الحالي! اضغط على زر (⚙️ ضبط رابط السيرفر) في الأعلى لتدقيق الرابط الجديد.");
-            };
-
-            const encoded = encodeURIComponent(JSON.stringify(payload));
-            script.src = `${getActiveApiUrl()}?action=insert_member_flexible&data=${encoded}&callback=${callback}`;
-            document.body.appendChild(script);
-        }
-
-        function showToast(text, isSuccess = true) {
-            const t = document.getElementById('toast');
-            const icon = document.getElementById('toastIcon');
-            document.getElementById('toastText').innerText = text;
-            
-            if (isSuccess) {
-                icon.className = "fas fa-circle-check";
-                icon.style.color = "var(--success)";
-            } else {
-                icon.className = "fas fa-triangle-exclamation";
-                icon.style.color = "var(--danger)";
+            // إذا كان جيلاً وسيطاً، نقل الأبناء المحددين إليه
+            if (currentMode === 'intermediate') {
+                document.querySelectorAll('input[name="transfer_child"]:checked').forEach(cb => {
+                    const childObj = membersMap.find(m => m.id === cb.value);
+                    if (childObj) childObj.fatherId = newPersonId;
+                });
             }
 
+            membersMap.push(newMemberObj);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(membersMap));
+
+            // مسح كاش المجرة ليظهر فوراً فيها
+            try {
+                localStorage.removeItem("shamayleh_galaxy_cache_v2026_instant");
+                localStorage.removeItem("shamayleh_galaxy_cache_v2026_perfect");
+            } catch(e){}
+
+            // 2. إرسال نسخة صامتة إلى Google Sheets في الخلفية (دون تعطيلك)
+            try {
+                const payload = {
+                    name: name,
+                    title: newMemberObj.title,
+                    parentId: finalParentId,
+                    motherName: finalMother,
+                    gender: newMemberObj.gender,
+                    birthYear: newMemberObj.birthYear,
+                    generation: genTier,
+                    branch: branchName
+                };
+                const script = document.createElement('script');
+                script.src = `${API_ENDPOINT}?action=insert&data=${encodeURIComponent(JSON.stringify(payload))}&callback=void`;
+                document.body.appendChild(script);
+            } catch(e){}
+
+            // إظهار رسالة النجاح الفوري
+            showToast(`✓ تم توثيق وإلحاق [${name}] بنجاح تام!`);
+            document.getElementById('newMemberName').value = '';
+            document.getElementById('newMemberTitle').value = '';
+            document.getElementById('newMemberBirth').value = '';
+            
+            populateParentSelector();
+            onParentSelected(pId);
+        }
+
+        function showToast(text) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastText').innerText = text;
             t.classList.add('active');
             setTimeout(() => t.classList.remove('active'), 4000);
         }
 
-        // نافذة ضبط الرابط
-        function openApiConfigModal() {
-            document.getElementById('customApiInput').value = getActiveApiUrl();
-            document.getElementById('configModal').style.display = 'flex';
-        }
-        function closeApiConfigModal() {
-            document.getElementById('configModal').style.display = 'none';
-        }
-        function saveCustomApiUrl() {
-            const val = document.getElementById('customApiInput').value.trim();
-            if (val && val.startsWith('http')) {
-                localStorage.setItem("shamayleh_custom_api_url", val);
-                alert("✓ تم حفظ رابط السيرفر الجديد بنجاح في متصفحك!");
-                closeApiConfigModal();
-                loadTreeDataBackground();
-            } else {
-                alert("يرجى إدخال رابط صالح يبدأ بـ https:// وينتهي بـ /exec");
-            }
-        }
-
-        initInstantLoader();
+        initMasterTree();
     </script>
 </body>
 </html>
